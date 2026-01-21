@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+message Common
+{
+	optional int32 cmd = 1;//协议号
+	optional bytes body = 2;//消息体
+}

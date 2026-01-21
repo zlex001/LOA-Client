@@ -1,0 +1,18 @@
+﻿syntax = "proto3";
+
+message Account {
+    string id=1;
+    string password = 2;
+    string note = 3;
+}
+
+message UserData {
+    int32 SelectedServerIndex = 1;
+    repeated Account Accounts = 2;
+    int32 SelectedAccountIndex = 3;
+    float ScreenUIAdaptation = 4;
+    float SceneScale= 5;
+    repeated string IAPReceipts = 6;
+    string Language = 7;
+    int32 FontSize = 8;
+}

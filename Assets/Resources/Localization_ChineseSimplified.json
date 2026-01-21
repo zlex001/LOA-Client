@@ -1,0 +1,38 @@
+{
+  "footer": "客户端版本{0} 设备号{1}",
+  "loading": "载入中...",
+  "connecting": "连接中...",
+  "connecting_auth": "正在连接认证服务器...",
+  "auth_failed": "设备认证失败：{0}",
+  "checking_version": "正在检查版本...",
+  "version_check_failed": "版本检查失败：{0}",
+  "comparing_resources": "正在比对资源...",
+  "resources_updated": "资源已是最新",
+  "start_downloading": "开始下载资源...",
+  "downloading_resources": "下载资源 {0}/{1}",
+  "download_complete": "下载完成",
+  "download_failed": "下载失败",
+  "unpacking_resources": "解压资源中 {0}%",
+  "loading_metadata": "正在加载元数据...",
+  "launching_game": "正在启动游戏...",
+  "resource_check_failed": "资源检查失败，请检查网络连接后重试",
+  "metadata_load_failed": "元数据加载失败",
+  "launch_failed": "启动游戏失败：{0}",
+  "network_error": "网络错误",
+  "parse_error": "数据解析错误",
+  "connection_timeout": "连接超时",
+  "connection_refused": "服务器拒绝连接",
+  "connection_failed": "连接失败",
+  "server_disconnected": "与服务器的连接已断开",
+  "network_communication_error": "网络通信异常",
+  "send_failed": "发送数据失败",
+  "rate_limit": "操作频率过快",
+  "reconnecting_countdown": "{1}秒后重连（第{0}次）...",
+  "reconnecting_attempt": "正在重连（第{0}次）...",
+  "reconnect_success": "重连成功",
+  "reconnect_cancel": "已取消重连"
+}
+
+
+
+

@@ -1,0 +1,98 @@
+---
+alwaysApply: true
+---
+
+# 客户端文本处理规则
+
+客户端文本分为三类，遵循不同的处理机制：
+
+---
+
+## 1. 开发者日志（Developer Logs）
+
+**适用范围：** `Utils.Debug.Log` / `LogWarning` / `LogError` / `LogSuccess` / `LogHeartbeat`  
+**受众：** 开发者、测试人员  
+**语言：** 纯英文  
+**处理方式：** 直接硬编码英文字符串  
+**禁止：** 中文、本地化系统
+
+```csharp
+// ✓ 正确
+Utils.Debug.LogError("Socket", $"Connection failed: {e.Message}, ErrorCode: {e.ErrorCode}");
+
+// ✗ 错误
+Utils.Debug.LogError("Socket", $"连接失败: {e.Message}");
+```
+
+---
+
+## 2. 登录前用户文本（Pre-Login User Texts）
+
+**适用范围：** Start、Dark、Account 界面  
+**受众：** 玩家  
+**语言：** 多语言  
+**处理方式：** `Localization.Instance.Get(key)`  
+**数据来源：** 客户端本地 JSON 文件（`Resources/Localization_{language}.json`）
+
+```csharp
+// ✓ 正确
+UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
+
+// ✗ 错误
+UI.Instance.Open(Config.UI.Dark, "");           // 空字符串导致默认显示
+UI.Instance.Open(Config.UI.Dark, "连接中...");  // 硬编码中文
+```
+
+### 组合动态数据
+
+```csharp
+// ✓ 正确 - 使用格式化参数
+Localization.Instance.Get("connection_timeout", ip, port);
+// JSON: "connection_timeout": "Connection timeout. Server: {0}:{1}"
+
+// ✗ 错误 - 字符串拼接中文
+Localization.Instance.Get("timeout") + $"\n服务器: {ip}:{port}";
+```
+
+---
+
+## 3. 登录后用户文本（Post-Login User Texts）
+
+**适用范围：** 游戏内所有界面（Home、Option、Story 等）  
+**受众：** 玩家  
+**语言：** 多语言  
+**处理方式：** SDUI 架构 - 服务器通过 Protocol 推送  
+**数据来源：** Protocol 协议（如 `Protocol.Home`、`Protocol.Option`）
+
+**核心规则：**
+- ✅ 客户端不硬编码任何游戏内 UI 文本
+- ✅ 所有 UI 内容由服务器推送
+- ✅ 客户端只负责渲染服务器推送的数据
+
+```csharp
+// ✓ 正确 - 服务器推送
+public override void OnEnter(params object[] args)
+{
+    var texts = args[0] as Dictionary<string, string>;
+    titleText.text = texts["title"];
+}
+
+// ✗ 错误 - 客户端硬编码
+titleText.text = "游戏主界面";
+titleText.text = "Game Home";
+```
+
+---
+
+## 总结
+
+| 文本类型 | 处理方式 | 示例 |
+|---------|---------|------|
+| **开发者日志** | 英文硬编码 | `Utils.Debug.Log("Socket", "Connection established")` |
+| **登录前UI** | `Localization.Instance.Get(key)` | `Localization.Instance.Get("connecting")` |
+| **登录后UI** | 服务器Protocol推送 | `texts["title"]` |
+
+**硬性禁止：**
+- ❌ 代码中直接写中文字符串（日志、UI、提示等任何地方）
+- ❌ 代码中直接写英文UI文本（只有日志可以）
+- ❌ 字符串拼接中文内容

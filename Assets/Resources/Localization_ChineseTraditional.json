@@ -1,0 +1,38 @@
+{
+  "footer": "客戶端版本{0} 設備號{1}",
+  "loading": "載入中...",
+  "connecting": "連接中...",
+  "connecting_auth": "正在連接認證服務器...",
+  "auth_failed": "設備認證失敗：{0}",
+  "checking_version": "正在檢查版本...",
+  "version_check_failed": "版本檢查失敗：{0}",
+  "comparing_resources": "正在比對資源...",
+  "resources_updated": "資源已是最新",
+  "start_downloading": "開始下載資源...",
+  "downloading_resources": "下載資源 {0}/{1}",
+  "download_complete": "下載完成",
+  "download_failed": "下載失敗",
+  "unpacking_resources": "解壓資源中 {0}%",
+  "loading_metadata": "正在加載元數據...",
+  "launching_game": "正在啟動遊戲...",
+  "resource_check_failed": "資源檢查失敗，請檢查網絡連接後重試",
+  "metadata_load_failed": "元數據加載失敗",
+  "launch_failed": "啟動遊戲失敗：{0}",
+  "network_error": "網絡錯誤",
+  "parse_error": "數據解析錯誤",
+  "connection_timeout": "連接超時",
+  "connection_refused": "服務器拒絕連接",
+  "connection_failed": "連接失敗",
+  "server_disconnected": "與服務器的連接已斷開",
+  "network_communication_error": "網絡通信異常",
+  "send_failed": "發送數據失敗",
+  "rate_limit": "操作頻率過快",
+  "reconnecting_countdown": "{1}秒後重連（第{0}次）...",
+  "reconnecting_attempt": "正在重連（第{0}次）...",
+  "reconnect_success": "重連成功",
+  "reconnect_cancel": "已取消重連"
+}
+
+
+
+

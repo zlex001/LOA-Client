@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+//登录
+message Msg_10010
+{
+	optional string username = 1;//用户名
+	optional string password = 2;//密码
+}
+
+message Msg_10010_
+{
+	optional int32 code = 1;//是否成功
+}
