@@ -1,0 +1,1 @@
+[配置] Enable Mac Retina support and native resolution for better display quality
