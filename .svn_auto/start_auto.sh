@@ -27,9 +27,16 @@ echo "Project directory: $PROJECT_DIR"
 echo "Commit message: $COMMIT_MSG"
 echo ""
 
-# Add all new files
+# Add all new files (excluding Unity generated folders)
 echo "Adding new files..."
 svn add --force . --auto-props --parents --depth infinity -q 2>/dev/null
+
+# Revert Unity generated folders that should not be committed
+svn revert --depth infinity Library/ 2>/dev/null
+svn revert --depth infinity Logs/ 2>/dev/null
+svn revert --depth infinity Temp/ 2>/dev/null
+svn revert --depth infinity UserSettings/ 2>/dev/null
+svn revert --depth infinity obj/ 2>/dev/null
 
 # Check for changes
 svn status
