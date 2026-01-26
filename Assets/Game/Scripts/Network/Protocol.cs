@@ -507,24 +507,65 @@ namespace Game.Protocol
             Game.Data.Instance.StoryDialogues = dialogues;
         }
     }
+    /// <summary>
+    /// Tutorial guidance protocol (downstream)
+    /// Server sends this to highlight specific UI elements or game objects
+    /// </summary>
     public class Tutorial : Base
     {
-        public int id;
+        /// <summary>Target type enumeration</summary>
+        public enum TargetType
+        {
+            UI = 1,
+            Map = 2,
+            Creature = 3,
+            Item = 4
+        }
+
+        public int step;           // Step ID
+        public int targetType;     // 1=UI, 2=Map, 3=Creature, 4=Item
+        public int targetId;       // Config ID (map/creature/item ID when targetType != UI)
+        public string targetPath;  // UI element path (when targetType == UI)
+        public string hint;        // Hint text (optional)
+
         public override void Processed()
         {
-            switch (id)
-            {
-                case 1:
-                    Game.Data.Instance.Tutorial = new List<((string, string, int, bool), string, string)>
-                    {
-                        (Config.UI.Home, "Area/Viewport/Content/Item(Clone)", "请点击【自己】，打开功能。"),
-                        (Config.UI.Option,"Right/Viewport/Content/OptionButton(Clone)", "请点击【记载】，打开任务。"),
-                        (Config.UI.Option,"Right/Viewport/Content/OptionButton(Clone)", "请点击【任务】，打开任务详情。"),
-                        (Config.UI.Option,"Right/Viewport/Content/OptionButton(Clone)", "请点击【自动】，等待任务自动完成获得的奖励。"),
-                    };
-                    Game.Data.Instance.TutorialIndex = 0;
-                    break;
-            }
+            Game.Data.Instance.TutorialStep = this;
+        }
+    }
+
+    /// <summary>
+    /// Cutscene playback protocol (downstream)
+    /// Server sends this to trigger fullscreen black cutscene with text
+    /// </summary>
+    public class Cutscene : Base
+    {
+        public int id;             // Cutscene ID
+        public string[] texts;     // Text array (play in sequence)
+        public int charInterval;   // Character interval in ms (default 30)
+        public int textInterval;   // Interval between texts in ms (default 2000)
+        public string bgm;         // Optional background music asset name
+        public string sfx;         // Optional sound effect asset name
+
+        public override void Processed()
+        {
+            Game.Data.Instance.Cutscene = this;
+        }
+    }
+
+    /// <summary>
+    /// Cutscene complete callback protocol (upstream)
+    /// Client sends this when cutscene finishes or player skips
+    /// </summary>
+    public class CutsceneComplete : Base
+    {
+        public int id;             // Cutscene ID
+        public bool skipped;       // True if player skipped
+
+        public CutsceneComplete(int id, bool skipped)
+        {
+            this.id = id;
+            this.skipped = skipped;
         }
     }
 
