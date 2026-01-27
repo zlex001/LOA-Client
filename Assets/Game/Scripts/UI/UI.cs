@@ -139,6 +139,12 @@ namespace Game
             if (core == null)
             {
                 GameObject prefab = AssetManager.Instance.LoadPrefab(config.Item1, config.Item2);
+                if (prefab == null)
+                {
+                    Utils.Debug.LogError("UI", $"Prefab not found: {config.Item1}/{config.Item2}");
+                    return null;
+                }
+
                 GameObject obj = Instantiate(prefab);
                 obj.name = config.Item2;
                 obj.transform.SetParent(root.transform);
@@ -148,6 +154,13 @@ namespace Game
                 canvas.sortingOrder = config.Item3;
 
                 core = obj.GetComponent<Core>();
+                if (core == null)
+                {
+                    Utils.Debug.LogError("UI", $"Prefab missing UI.Core component: {config.Item1}/{config.Item2}");
+                    Destroy(obj);
+                    return null;
+                }
+
                 core.Id = $"{config.Item1}_{config.Item2}";
                 core.gameObject.AddComponent<GraphicRaycaster>();
                 core.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, config.Item4 ? 0f : 1f);
@@ -160,6 +173,12 @@ namespace Game
         public void Open((string, string, int, bool) config, params object[] args)
         {
             Core ui = Get(config);
+            if (ui == null)
+            {
+                Utils.Debug.LogError("UI", $"Failed to open UI: {config.Item1}/{config.Item2}");
+                return;
+            }
+
             if (!ui.isInit)
             {
                 ui.isInit = true;
