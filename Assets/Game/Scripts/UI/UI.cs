@@ -95,7 +95,6 @@ namespace Game
             Data.Instance.after.Register(Data.Type.StoryDialogues, OnAfterStoryChanged);
             Data.Instance.after.Register(Data.Type.TutorialIndex, OnAfterTutorialIndexChanged);
             Data.Instance.after.Register(Data.Type.TutorialStep, OnAfterTutorialStepChanged);
-            Data.Instance.after.Register(Data.Type.Cutscene, OnAfterCutsceneChanged);
             Data.Instance.after.Register(Data.Type.Dark, OnAfterDataDark);
 
             Data.Instance.after.Register(Data.Type.Tip, OnAfterTipChanged);
@@ -618,15 +617,6 @@ namespace Game
             else
             {
                 Close(Config.UI.Tutorial);
-            }
-        }
-
-        private void OnAfterCutsceneChanged(params object[] args)
-        {
-            var cutscene = args[0] as Protocol.Cutscene;
-            if (cutscene != null)
-            {
-                Open(Config.UI.Cutscene);
             }
         }
     }

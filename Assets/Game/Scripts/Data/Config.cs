@@ -18,8 +18,7 @@ namespace Game
             public static (string, string, int, bool) Option = ("Prefabs/UI", "Option", 2, true);
             public static (string, string, int, bool) Story = ("Prefabs/UI", "Story", 3, false);
             public static (string, string, int, bool) Tutorial = ("Prefabs/UI", "Tutorial", 4, true);
-            public static (string, string, int, bool) Cutscene = ("Prefabs/UI", "Cutscene", 5, false);
-            public static (string, string, int, bool) Dark = ("Prefabs/UI", "Dark", 6, false);
+            public static (string, string, int, bool) Dark = ("Prefabs/UI", "Dark", 5, false);
         }
         public static class Audio
         {

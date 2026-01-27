@@ -123,7 +123,6 @@ namespace Game
             Tutorial,
             TutorialIndex,
             TutorialStep,
-            Cutscene,
             SocketMissedHeartbeats,
             Servers,
             Language,
@@ -225,7 +224,6 @@ namespace Game
         }
         public int TutorialIndex { get => Get<int>(Type.TutorialIndex); set => Change(Type.TutorialIndex, value); }
         public Protocol.Tutorial TutorialStep { get => Get<Protocol.Tutorial>(Type.TutorialStep); set => Change(Type.TutorialStep, value); }
-        public Protocol.Cutscene Cutscene { get => Get<Protocol.Cutscene>(Type.Cutscene); set => Change(Type.Cutscene, value); }
         public List<Information> Informations
         {
             get

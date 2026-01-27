@@ -1,8 +1,8 @@
-[功能] 新增新手引导系统协议和Cutscene剧情播放UI
+[删除] 移除Cutscene协议和UI，Tutorial移除遮罩
 
-- 扩展Protocol.Tutorial支持SDUI架构（step/targetType/targetId/targetPath/hint）
-- 新增Protocol.Cutscene下行协议（黑屏剧情播放）
-- 新增Protocol.CutsceneComplete上行协议（剧情完成回调）
-- 新增Cutscene.cs UI脚本（打字机效果/跳过功能）
-- 重构Tutorial.cs支持UI/地图/生物/物品高亮
-- 保留旧版TutorialIndex兼容逻辑
+- 删除Cutscene.cs及相关协议（复用现有Story）
+- 删除Protocol.Cutscene和Protocol.CutsceneComplete
+- 删除Data.Type.Cutscene和Config.UI.Cutscene
+- Tutorial移除遮罩：设置raycastTarget=false允许点击穿透
+- Tutorial移除Canvas/GraphicRaycaster提升逻辑
+- 保留水波纹高亮效果和提示文本

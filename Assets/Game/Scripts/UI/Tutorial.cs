@@ -8,18 +8,28 @@ namespace Game
 {
     /// <summary>
     /// Tutorial guidance UI that highlights targets based on server instructions.
+    /// No mask overlay - users can freely click other areas.
     /// Supports UI elements, map locations, creatures, and items.
     /// </summary>
     public class Tutorial : UI.Core
     {
         #region Fields
         private Protocol.Tutorial currentStep;
-        private Canvas targetCanvas;
-        private GraphicRaycaster targetRaycaster;
         private Transform highlightedTarget;
+        private Coroutine rippleCoroutine;
         #endregion
 
         #region Lifecycle Methods
+        public override void OnCreate(params object[] args)
+        {
+            // Disable raycast on background to allow clicking through
+            var image = GetComponent<Image>();
+            if (image != null)
+            {
+                image.raycastTarget = false;
+            }
+        }
+
         public override void OnEnter(params object[] args)
         {
             currentStep = Data.Instance.TutorialStep;
@@ -35,7 +45,7 @@ namespace Game
 
         public override void OnClose()
         {
-            CleanupHighlight();
+            StopHighlight();
             Data.Instance.Tip = (UI.Tips.Attach, null);
         }
         #endregion
@@ -100,20 +110,14 @@ namespace Game
 
             highlightedTarget = target;
 
-            // Elevate target above tutorial mask
-            targetCanvas = target.gameObject.AddComponent<Canvas>();
-            targetCanvas.overrideSorting = true;
-            targetCanvas.sortingOrder = GetComponent<Canvas>().sortingOrder + 1;
-            targetRaycaster = target.gameObject.AddComponent<GraphicRaycaster>();
-
-            // Add click handler
+            // Add click handler to complete tutorial step
             var button = target.GetComponent<Button>();
             if (button != null)
             {
                 button.onClick.AddListener(OnTargetClicked);
             }
 
-            // Show ripple effect
+            // Show ripple effect at target position
             RectTransform uiRect = GetComponent<RectTransform>();
             Vector2 localPos = Utils.Pos.LocalPos(uiRect, target);
             Utils.Ring.Loop(gameObject, localPos, this);
@@ -130,7 +134,6 @@ namespace Game
         #region Map Highlighting
         private IEnumerator HighlightMapLocation()
         {
-            // Find HomeMap component
             var homeMap = FindObjectOfType<HomeMap>();
             if (homeMap == null)
             {
@@ -143,7 +146,6 @@ namespace Game
 
             Utils.Debug.Log("Tutorial", $"Map highlight requested for ID: {currentStep.targetId}");
 
-            // Show hint if provided
             if (!string.IsNullOrEmpty(currentStep.hint))
             {
                 Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
@@ -156,7 +158,6 @@ namespace Game
         #region Creature Highlighting
         private IEnumerator HighlightCreature()
         {
-            // Find HomeMap component which manages creatures
             var homeMap = FindObjectOfType<HomeMap>();
             if (homeMap == null)
             {
@@ -165,12 +166,10 @@ namespace Game
             }
 
             // TODO: Implement creature highlighting by config ID
-            // Find closest creature with matching config ID and highlight it
             // homeMap.HighlightCreature(currentStep.targetId, currentStep.hint);
 
             Utils.Debug.Log("Tutorial", $"Creature highlight requested for ID: {currentStep.targetId}");
 
-            // Show hint if provided
             if (!string.IsNullOrEmpty(currentStep.hint))
             {
                 Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
@@ -183,7 +182,6 @@ namespace Game
         #region Item Highlighting
         private IEnumerator HighlightItem()
         {
-            // Find HomeMap component which manages items
             var homeMap = FindObjectOfType<HomeMap>();
             if (homeMap == null)
             {
@@ -192,12 +190,10 @@ namespace Game
             }
 
             // TODO: Implement item highlighting by config ID
-            // Find closest item with matching config ID and highlight it
             // homeMap.HighlightItem(currentStep.targetId, currentStep.hint);
 
             Utils.Debug.Log("Tutorial", $"Item highlight requested for ID: {currentStep.targetId}");
 
-            // Show hint if provided
             if (!string.IsNullOrEmpty(currentStep.hint))
             {
                 Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
@@ -210,14 +206,14 @@ namespace Game
         #region Event Handlers
         private void OnTargetClicked()
         {
-            CleanupHighlight();
+            StopHighlight();
             Data.Instance.TutorialStep = null;
             Close();
         }
         #endregion
 
         #region Cleanup
-        private void CleanupHighlight()
+        private void StopHighlight()
         {
             if (highlightedTarget != null)
             {
@@ -226,28 +222,14 @@ namespace Game
                 {
                     button.onClick.RemoveListener(OnTargetClicked);
                 }
+                highlightedTarget = null;
             }
-
-            if (targetRaycaster != null)
-            {
-                Destroy(targetRaycaster);
-                targetRaycaster = null;
-            }
-
-            if (targetCanvas != null)
-            {
-                Destroy(targetCanvas);
-                targetCanvas = null;
-            }
-
-            highlightedTarget = null;
         }
         #endregion
 
         #region Legacy Support
         /// <summary>
         /// Handles the legacy TutorialIndex-based flow for backward compatibility.
-        /// This will be deprecated once all tutorials migrate to SDUI protocol.
         /// </summary>
         private void HandleLegacyTutorial()
         {
@@ -287,14 +269,9 @@ namespace Game
 
             highlightedTarget = target;
 
-            targetCanvas = target.gameObject.AddComponent<Canvas>();
-            targetCanvas.overrideSorting = true;
-            targetCanvas.sortingOrder = GetComponent<Canvas>().sortingOrder + 1;
-            targetRaycaster = target.gameObject.AddComponent<GraphicRaycaster>();
-
             target.GetComponent<Button>().onClick.AddListener(() =>
             {
-                CleanupHighlight();
+                StopHighlight();
                 Close();
                 if (Data.Instance.TutorialIndex < Data.Instance.Tutorial.Count - 1)
                 {

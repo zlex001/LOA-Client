@@ -534,41 +534,6 @@ namespace Game.Protocol
         }
     }
 
-    /// <summary>
-    /// Cutscene playback protocol (downstream)
-    /// Server sends this to trigger fullscreen black cutscene with text
-    /// </summary>
-    public class Cutscene : Base
-    {
-        public int id;             // Cutscene ID
-        public string[] texts;     // Text array (play in sequence)
-        public int charInterval;   // Character interval in ms (default 30)
-        public int textInterval;   // Interval between texts in ms (default 2000)
-        public string bgm;         // Optional background music asset name
-        public string sfx;         // Optional sound effect asset name
-
-        public override void Processed()
-        {
-            Game.Data.Instance.Cutscene = this;
-        }
-    }
-
-    /// <summary>
-    /// Cutscene complete callback protocol (upstream)
-    /// Client sends this when cutscene finishes or player skips
-    /// </summary>
-    public class CutsceneComplete : Base
-    {
-        public int id;             // Cutscene ID
-        public bool skipped;       // True if player skipped
-
-        public CutsceneComplete(int id, bool skipped)
-        {
-            this.id = id;
-            this.skipped = skipped;
-        }
-    }
-
     public class Dark : Base
     {
 
