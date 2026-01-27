@@ -50,6 +50,12 @@ namespace Game
             UpdateContentHeight();
         }
 
+        public override void OnClose()
+        {
+            // Notify server that story playback is complete
+            Net.Instance.Send(new Protocol.StoryComplete());
+        }
+
         private void ApplyAbsoluteLayout()
         {
             float screenWidth = GetComponent<RectTransform>().rect.width;

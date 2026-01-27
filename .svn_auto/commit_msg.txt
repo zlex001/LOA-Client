@@ -1,8 +1,4 @@
-[删除] 移除Cutscene协议和UI，Tutorial移除遮罩
+[功能] 新增StoryComplete上行协议
 
-- 删除Cutscene.cs及相关协议（复用现有Story）
-- 删除Protocol.Cutscene和Protocol.CutsceneComplete
-- 删除Data.Type.Cutscene和Config.UI.Cutscene
-- Tutorial移除遮罩：设置raycastTarget=false允许点击穿透
-- Tutorial移除Canvas/GraphicRaycaster提升逻辑
-- 保留水波纹高亮效果和提示文本
+- 新增Protocol.StoryComplete（无参数）
+- Story.OnClose时发送StoryComplete通知服务端

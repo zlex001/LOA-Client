@@ -507,6 +507,13 @@ namespace Game.Protocol
             Game.Data.Instance.StoryDialogues = dialogues;
         }
     }
+
+    /// <summary>
+    /// Story complete callback protocol (upstream)
+    /// Client sends this when Story UI is closed
+    /// </summary>
+    public class StoryComplete : Base { }
+
     /// <summary>
     /// Tutorial guidance protocol (downstream)
     /// Server sends this to highlight specific UI elements or game objects
