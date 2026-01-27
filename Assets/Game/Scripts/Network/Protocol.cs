@@ -531,13 +531,15 @@ namespace Game.Protocol
 
         public int step;           // Step ID
         public int targetType;     // 1=UI, 2=Map, 3=Creature, 4=Item
-        public int targetId;       // Config ID (map/creature/item ID when targetType != UI)
-        public string targetPath;  // UI element path (when targetType == UI)
+        public int targetId;       // Config ID (for Creature/Item)
+        public string targetPath;  // UI element path (for targetType=UI)
+        public int[] targetPos;    // Map coordinates [x,y,z] (for targetType=Map)
         public string hint;        // Hint text (optional)
 
         public override void Processed()
         {
-            Utils.Debug.Log("Tutorial", $"Protocol received: step={step}, targetType={targetType}, targetId={targetId}, targetPath={targetPath}, hint={hint}");
+            string posStr = targetPos != null ? $"[{string.Join(",", targetPos)}]" : "null";
+            Utils.Debug.Log("Tutorial", $"Protocol received: step={step}, targetType={targetType}, targetId={targetId}, targetPath={targetPath}, targetPos={posStr}, hint={hint}");
             Game.Data.Instance.TutorialStep = this;
         }
     }

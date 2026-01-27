@@ -156,24 +156,70 @@ namespace Game
         #region Map Highlighting
         private IEnumerator HighlightMapLocation()
         {
-            var homeMap = FindObjectOfType<HomeMap>();
-            if (homeMap == null)
+            if (currentStep.targetPos == null || currentStep.targetPos.Length < 3)
             {
-                Utils.Debug.LogWarning("Tutorial", "HomeMap not found for map highlighting");
+                Utils.Debug.LogWarning("Tutorial", "targetPos is null or invalid for Map target type");
                 yield break;
             }
 
-            // TODO: Implement map tile highlighting by config ID
-            // homeMap.HighlightTile(currentStep.targetId, currentStep.hint);
+            Utils.Debug.Log("Tutorial", $"Map highlight requested for pos: [{currentStep.targetPos[0]},{currentStep.targetPos[1]},{currentStep.targetPos[2]}]");
 
-            Utils.Debug.Log("Tutorial", $"Map highlight requested for ID: {currentStep.targetId}");
+            // Find all HomeMap components and locate the one with matching position
+            var allMaps = FindObjectsOfType<HomeMap>();
+            Utils.Debug.Log("Tutorial", $"Found {allMaps.Length} HomeMap instances");
 
-            if (!string.IsNullOrEmpty(currentStep.hint))
+            HomeMap targetMap = null;
+            foreach (var map in allMaps)
             {
-                Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
+                // Access the map's position through its RectTransform name or internal data
+                // HomeMap stores its Map data internally, we need to find by position
+                var mapField = map.GetType().GetField("map", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (mapField != null)
+                {
+                    var mapData = mapField.GetValue(map) as Map;
+                    if (mapData != null && mapData.pos != null && mapData.pos.Length >= 3)
+                    {
+                        if (mapData.pos[0] == currentStep.targetPos[0] &&
+                            mapData.pos[1] == currentStep.targetPos[1] &&
+                            mapData.pos[2] == currentStep.targetPos[2])
+                        {
+                            targetMap = map;
+                            Utils.Debug.Log("Tutorial", $"Found target map: {mapData.name} at pos [{mapData.pos[0]},{mapData.pos[1]},{mapData.pos[2]}]");
+                            break;
+                        }
+                    }
+                }
             }
 
-            yield break;
+            if (targetMap == null)
+            {
+                Utils.Debug.LogWarning("Tutorial", $"Map not found at pos: [{currentStep.targetPos[0]},{currentStep.targetPos[1]},{currentStep.targetPos[2]}]");
+                yield break;
+            }
+
+            highlightedTarget = targetMap.transform;
+
+            // Show ripple effect at map position
+            RectTransform tutorialRect = GetComponent<RectTransform>();
+            Vector2 localPos = Utils.Pos.LocalPos(tutorialRect, targetMap.transform);
+            Utils.Debug.Log("Tutorial", $"Showing ripple effect at map localPos: {localPos}");
+            Utils.Ring.Loop(gameObject, localPos, this);
+
+            // Add click handler to map button
+            var button = targetMap.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(OnTargetClicked);
+                Utils.Debug.Log("Tutorial", "Click handler added to map button");
+            }
+
+            // Show hint text
+            if (!string.IsNullOrEmpty(currentStep.hint))
+            {
+                Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetMap.transform.position);
+                Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint} at screen pos: {screen}");
+                Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+            }
         }
         #endregion
 
