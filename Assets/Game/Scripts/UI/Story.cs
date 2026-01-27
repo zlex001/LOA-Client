@@ -52,8 +52,18 @@ namespace Game
 
         public override void OnClose()
         {
-            // Notify server that story playback is complete
-            Net.Instance.Send(new Protocol.StoryComplete());
+            // Avoid accessing singleton during application quit to prevent recreation
+            if (!isQuitting)
+            {
+                // Notify server that story playback is complete
+                Net.Instance.Send(new Protocol.StoryComplete());
+            }
+        }
+
+        private static bool isQuitting = false;
+        private void OnApplicationQuit()
+        {
+            isQuitting = true;
         }
 
         private void ApplyAbsoluteLayout()

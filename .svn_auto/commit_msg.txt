@@ -1,4 +1,5 @@
-[修复] Tutorial背景遮罩改为完全透明
+[功能] Tutorial协议新增targetPos字段，实现Map高亮
 
-- OnCreate中遍历所有Image组件设置为透明
-- 同时禁用raycastTarget允许点击穿透
+- Protocol.Tutorial新增targetPos字段（int[]）用于Map类型定位
+- HighlightMapLocation通过targetPos坐标查找HomeMap组件
+- 找到目标后显示水波纹效果并添加点击监听

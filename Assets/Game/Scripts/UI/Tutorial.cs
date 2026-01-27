@@ -51,7 +51,17 @@ namespace Game
         public override void OnClose()
         {
             StopHighlight();
-            Data.Instance.Tip = (UI.Tips.Attach, null);
+            // Avoid accessing singleton during application quit to prevent recreation
+            if (!isQuitting)
+            {
+                Data.Instance.Tip = (UI.Tips.Attach, null);
+            }
+        }
+
+        private static bool isQuitting = false;
+        private void OnApplicationQuit()
+        {
+            isQuitting = true;
         }
         #endregion
 
