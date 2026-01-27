@@ -23,11 +23,12 @@ namespace Game
         public override void OnCreate(params object[] args)
         {
             Utils.Debug.Log("Tutorial", "OnCreate called");
-            // Disable raycast on background to allow clicking through
-            var image = GetComponent<Image>();
-            if (image != null)
+            // Make background fully transparent and non-blocking
+            var images = GetComponents<Image>();
+            foreach (var img in images)
             {
-                image.raycastTarget = false;
+                img.color = new Color(0, 0, 0, 0);
+                img.raycastTarget = false;
             }
         }
 

@@ -1,5 +1,4 @@
-[调试] Tutorial添加详细日志便于定位引导显示问题
+[修复] Tutorial背景遮罩改为完全透明
 
-- Protocol.Tutorial.Processed添加协议接收日志
-- Tutorial.OnCreate/OnEnter添加生命周期日志
-- HighlightUIElement添加目标查找和效果显示日志
+- OnCreate中遍历所有Image组件设置为透明
+- 同时禁用raycastTarget允许点击穿透
