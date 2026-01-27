@@ -1,4 +1,5 @@
-[功能] 新增StoryComplete上行协议
+[调试] Tutorial添加详细日志便于定位引导显示问题
 
-- 新增Protocol.StoryComplete（无参数）
-- Story.OnClose时发送StoryComplete通知服务端
+- Protocol.Tutorial.Processed添加协议接收日志
+- Tutorial.OnCreate/OnEnter添加生命周期日志
+- HighlightUIElement添加目标查找和效果显示日志

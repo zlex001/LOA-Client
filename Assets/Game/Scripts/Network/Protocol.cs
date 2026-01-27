@@ -537,6 +537,7 @@ namespace Game.Protocol
 
         public override void Processed()
         {
+            Utils.Debug.Log("Tutorial", $"Protocol received: step={step}, targetType={targetType}, targetId={targetId}, targetPath={targetPath}, hint={hint}");
             Game.Data.Instance.TutorialStep = this;
         }
     }

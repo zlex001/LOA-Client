@@ -22,6 +22,7 @@ namespace Game
         #region Lifecycle Methods
         public override void OnCreate(params object[] args)
         {
+            Utils.Debug.Log("Tutorial", "OnCreate called");
             // Disable raycast on background to allow clicking through
             var image = GetComponent<Image>();
             if (image != null)
@@ -32,14 +33,17 @@ namespace Game
 
         public override void OnEnter(params object[] args)
         {
+            Utils.Debug.Log("Tutorial", "OnEnter called");
             currentStep = Data.Instance.TutorialStep;
             if (currentStep == null)
             {
+                Utils.Debug.Log("Tutorial", "TutorialStep is null, trying legacy flow");
                 // Fallback to legacy TutorialIndex-based flow
                 HandleLegacyTutorial();
                 return;
             }
 
+            Utils.Debug.Log("Tutorial", $"Processing step: targetType={(Protocol.Tutorial.TargetType)currentStep.targetType}");
             StartCoroutine(ProcessTutorialStep());
         }
 
@@ -84,6 +88,8 @@ namespace Game
         #region UI Element Highlighting
         private IEnumerator HighlightUIElement()
         {
+            Utils.Debug.Log("Tutorial", $"HighlightUIElement: targetPath={currentStep.targetPath}");
+
             if (string.IsNullOrEmpty(currentStep.targetPath))
             {
                 Utils.Debug.LogWarning("Tutorial", "targetPath is empty for UI target type");
@@ -92,14 +98,22 @@ namespace Game
 
             // Find the target UI element across all open UIs
             Transform target = null;
-            foreach (var ui in FindObjectsOfType<UI.Core>())
+            var allUIs = FindObjectsOfType<UI.Core>();
+            Utils.Debug.Log("Tutorial", $"Found {allUIs.Length} UI.Core instances");
+
+            foreach (var ui in allUIs)
             {
                 if (ui == this) continue;
 
+                Utils.Debug.Log("Tutorial", $"Searching in UI: {ui.Id}");
                 target = ui.GetComponentsInChildren<Transform>(true)
                     .FirstOrDefault(t => t.gameObject.activeInHierarchy && Utils.Path.Get(t, ui.transform) == currentStep.targetPath);
 
-                if (target != null) break;
+                if (target != null)
+                {
+                    Utils.Debug.Log("Tutorial", $"Target found in {ui.Id}: {target.name}");
+                    break;
+                }
             }
 
             if (target == null)
@@ -115,17 +129,24 @@ namespace Game
             if (button != null)
             {
                 button.onClick.AddListener(OnTargetClicked);
+                Utils.Debug.Log("Tutorial", "Click handler added to target button");
+            }
+            else
+            {
+                Utils.Debug.LogWarning("Tutorial", "Target has no Button component");
             }
 
             // Show ripple effect at target position
             RectTransform uiRect = GetComponent<RectTransform>();
             Vector2 localPos = Utils.Pos.LocalPos(uiRect, target);
+            Utils.Debug.Log("Tutorial", $"Showing ripple effect at localPos: {localPos}");
             Utils.Ring.Loop(gameObject, localPos, this);
 
             // Show hint text
             if (!string.IsNullOrEmpty(currentStep.hint))
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, target.position);
+                Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint} at screen pos: {screen}");
                 Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
         }
