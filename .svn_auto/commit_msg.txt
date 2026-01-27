@@ -1,5 +1,6 @@
-[功能] Tutorial协议新增targetPos字段，实现Map高亮
+[优化] Singleton基类统一处理应用退出时的实例重建问题
 
-- Protocol.Tutorial新增targetPos字段（int[]）用于Map类型定位
-- HighlightMapLocation通过targetPos坐标查找HomeMap组件
-- 找到目标后显示水波纹效果并添加点击监听
+- 新增_applicationIsQuitting标志
+- Instance getter在退出时不再创建新实例
+- 新增IsAlive静态属性供调用者检查
+- OnDestroy时清理_instance引用
