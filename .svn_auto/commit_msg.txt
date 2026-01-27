@@ -1,6 +1,4 @@
-[优化] Singleton基类统一处理应用退出时的实例重建问题
+[修复] HomeMap.OnDestroy使用Data.IsAlive检查防止空引用
 
-- 新增_applicationIsQuitting标志
-- Instance getter在退出时不再创建新实例
-- 新增IsAlive静态属性供调用者检查
-- OnDestroy时清理_instance引用
+- 应用退出时Data.Instance返回null
+- 使用IsAlive属性检查后再Unregister

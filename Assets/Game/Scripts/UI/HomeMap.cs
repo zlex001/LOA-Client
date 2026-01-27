@@ -27,10 +27,13 @@ namespace Game
 
         void OnDestroy()
         {
-            Data.Instance.after.Unregister(Data.Type.Area, OnAreaChanged);
-            Data.Instance.after.Unregister(Data.Type.SceneScale, OnSceneScaleChanged);
-            Data.Instance.after.Unregister(Data.Type.WorldMap, OnWorldMapChanged);
-            Data.Instance.after.Unregister(Data.Type.SceneName, OnSceneNameChanged);
+            if (Data.IsAlive)
+            {
+                Data.Instance.after.Unregister(Data.Type.Area, OnAreaChanged);
+                Data.Instance.after.Unregister(Data.Type.SceneScale, OnSceneScaleChanged);
+                Data.Instance.after.Unregister(Data.Type.WorldMap, OnWorldMapChanged);
+                Data.Instance.after.Unregister(Data.Type.SceneName, OnSceneNameChanged);
+            }
         }
 
         private void EnsureComponentsCached()
