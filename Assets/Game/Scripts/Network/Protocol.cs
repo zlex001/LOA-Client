@@ -166,6 +166,7 @@ namespace Game.Protocol
             public string name;
             public double progress;
             public int hash;
+            public int configId;  // Configuration ID for tutorial targeting
         }
         
         public List<CharacterData> content;

@@ -1,4 +1,7 @@
-[修复] HomeMap.OnDestroy使用Data.IsAlive检查防止空引用
+[Feature] Implement Tutorial protocol for Creature/Item guidance
 
-- 应用退出时Data.Instance返回null
-- 使用IsAlive属性检查后再Unregister
+- Extended CharacterData with configId field for targetId matching
+- Implemented HighlightCreature() and HighlightItem() to locate characters in list by configId
+- Added targetPath parsing for multi-step guidance (characters/goto, actions/interact, etc.)
+- Added Option button highlighting with pattern matching for goto/interact/attack/give/pickup
+- Registered Option change listener for seamless character-to-button transition

@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using SuperScrollView;
 
 namespace Game
 {
@@ -233,51 +234,328 @@ namespace Game
         }
         #endregion
 
-        #region Creature Highlighting
+        #region Creature/Item Highlighting
         private IEnumerator HighlightCreature()
         {
-            var homeMap = FindObjectOfType<HomeMap>();
-            if (homeMap == null)
-            {
-                Utils.Debug.LogWarning("Tutorial", "HomeMap not found for creature highlighting");
-                yield break;
-            }
-
-            // TODO: Implement creature highlighting by config ID
-            // homeMap.HighlightCreature(currentStep.targetId, currentStep.hint);
-
-            Utils.Debug.Log("Tutorial", $"Creature highlight requested for ID: {currentStep.targetId}");
-
-            if (!string.IsNullOrEmpty(currentStep.hint))
-            {
-                Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
-            }
-
-            yield break;
+            Utils.Debug.Log("Tutorial", $"HighlightCreature: targetId={currentStep.targetId}, targetPath={currentStep.targetPath}");
+            yield return HighlightCharacterByConfigId();
         }
-        #endregion
 
-        #region Item Highlighting
         private IEnumerator HighlightItem()
         {
-            var homeMap = FindObjectOfType<HomeMap>();
-            if (homeMap == null)
+            Utils.Debug.Log("Tutorial", $"HighlightItem: targetId={currentStep.targetId}, targetPath={currentStep.targetPath}");
+            yield return HighlightCharacterByConfigId();
+        }
+
+        /// <summary>
+        /// Highlights a character/item in the character list by configId,
+        /// and optionally waits for Option menu to highlight a specific button.
+        /// </summary>
+        private IEnumerator HighlightCharacterByConfigId()
+        {
+            // Parse targetPath to determine the guidance flow
+            // Format: "characters/goto" or "actions/interact"
+            string[] pathParts = currentStep.targetPath?.Split('/') ?? new string[0];
+            string targetArea = pathParts.Length > 0 ? pathParts[0] : "";
+            string targetButton = pathParts.Length > 1 ? pathParts[1] : "";
+
+            Utils.Debug.Log("Tutorial", $"Parsed targetPath: area={targetArea}, button={targetButton}");
+
+            if (targetArea == "characters")
             {
-                Utils.Debug.LogWarning("Tutorial", "HomeMap not found for item highlighting");
+                yield return HighlightCharacterListItem(targetButton);
+            }
+            else if (targetArea == "actions")
+            {
+                // Direct Option button highlighting
+                yield return HighlightOptionButton(targetButton);
+            }
+            else
+            {
+                Utils.Debug.LogWarning("Tutorial", $"Unknown target area: {targetArea}");
+                if (!string.IsNullOrEmpty(currentStep.hint))
+                {
+                    Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Highlights a character list item by configId and optionally monitors for Option button.
+        /// </summary>
+        private IEnumerator HighlightCharacterListItem(string optionButtonName)
+        {
+            // Find the Home UI
+            var homeUI = FindObjectOfType<Home>();
+            if (homeUI == null)
+            {
+                Utils.Debug.LogWarning("Tutorial", "Home UI not found for character highlighting");
                 yield break;
             }
 
-            // TODO: Implement item highlighting by config ID
-            // homeMap.HighlightItem(currentStep.targetId, currentStep.hint);
-
-            Utils.Debug.Log("Tutorial", $"Item highlight requested for ID: {currentStep.targetId}");
-
-            if (!string.IsNullOrEmpty(currentStep.hint))
+            // Find character index by configId in Data.Instance.Characters
+            var characters = Data.Instance.Characters ?? Data.Instance.Home?.characters?.content;
+            if (characters == null)
             {
-                Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
+                Utils.Debug.LogWarning("Tutorial", "Characters list is null");
+                yield break;
             }
 
-            yield break;
+            int targetIndex = -1;
+            for (int i = 0; i < characters.Count; i++)
+            {
+                // Match by configId first, fallback to hash if configId is 0
+                if (characters[i].configId == currentStep.targetId || 
+                    (characters[i].configId == 0 && characters[i].hash == currentStep.targetId))
+                {
+                    targetIndex = i;
+                    Utils.Debug.Log("Tutorial", $"Found target character at index {i}: name={characters[i].name}, configId={characters[i].configId}, hash={characters[i].hash}");
+                    break;
+                }
+            }
+
+            if (targetIndex < 0)
+            {
+                Utils.Debug.LogWarning("Tutorial", $"Character with targetId {currentStep.targetId} not found in list");
+                if (!string.IsNullOrEmpty(currentStep.hint))
+                {
+                    Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
+                }
+                yield break;
+            }
+
+            // Get the LoopListView2 and scroll to the target item
+            var areaTransform = homeUI.transform.Find("Area");
+            if (areaTransform == null)
+            {
+                Utils.Debug.LogWarning("Tutorial", "Area not found in Home UI");
+                yield break;
+            }
+
+            var listView = areaTransform.GetComponent<SuperScrollView.LoopListView2>();
+            if (listView == null)
+            {
+                Utils.Debug.LogWarning("Tutorial", "LoopListView2 not found on Area");
+                yield break;
+            }
+
+            // Scroll to make the target item visible
+            listView.MovePanelToItemIndex(targetIndex, 0);
+            yield return new WaitForSeconds(0.1f);
+
+            // Find the visible item
+            Transform targetItem = null;
+            for (int i = 0; i < listView.ShownItemCount; i++)
+            {
+                var item = listView.GetShownItemByIndex(i);
+                if (item != null && item.ItemIndex == targetIndex)
+                {
+                    targetItem = item.transform;
+                    Utils.Debug.Log("Tutorial", $"Found visible item at ShownIndex {i}, ItemIndex {item.ItemIndex}");
+                    break;
+                }
+            }
+
+            if (targetItem == null)
+            {
+                Utils.Debug.LogWarning("Tutorial", $"Target item at index {targetIndex} is not visible");
+                yield break;
+            }
+
+            highlightedTarget = targetItem;
+
+            // Add click handler
+            var button = targetItem.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(OnCharacterClicked);
+                Utils.Debug.Log("Tutorial", "Click handler added to character item");
+            }
+
+            // Show ripple effect
+            RectTransform tutorialRect = GetComponent<RectTransform>();
+            Vector2 localPos = Utils.Pos.LocalPos(tutorialRect, targetItem);
+            Utils.Debug.Log("Tutorial", $"Showing ripple effect at character localPos: {localPos}");
+            Utils.Ring.Loop(gameObject, localPos, this);
+
+            // Show hint text
+            if (!string.IsNullOrEmpty(currentStep.hint))
+            {
+                Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetItem.position);
+                Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint}");
+                Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+            }
+
+            // If there's a button name to wait for in Option menu, register listener
+            if (!string.IsNullOrEmpty(optionButtonName))
+            {
+                pendingOptionButton = optionButtonName;
+                Data.Instance.after.Register(Data.Type.Option, OnOptionChanged);
+                Utils.Debug.Log("Tutorial", $"Registered Option listener for button: {optionButtonName}");
+            }
+        }
+
+        private string pendingOptionButton = null;
+
+        private void OnCharacterClicked()
+        {
+            Utils.Debug.Log("Tutorial", "Character clicked, waiting for Option menu");
+            // Don't close yet if we're waiting for Option button
+            if (string.IsNullOrEmpty(pendingOptionButton))
+            {
+                StopHighlight();
+                Data.Instance.TutorialStep = null;
+                Close();
+            }
+            else
+            {
+                // Stop the current highlight but keep Tutorial open
+                StopHighlight();
+            }
+        }
+
+        private void OnOptionChanged(params object[] args)
+        {
+            if (string.IsNullOrEmpty(pendingOptionButton))
+            {
+                return;
+            }
+
+            var option = Data.Instance.Option;
+            if (option == null || option.Empty)
+            {
+                return;
+            }
+
+            Utils.Debug.Log("Tutorial", $"Option changed, looking for button: {pendingOptionButton}");
+            StartCoroutine(HighlightOptionButtonDelayed(pendingOptionButton));
+        }
+
+        private IEnumerator HighlightOptionButtonDelayed(string buttonName)
+        {
+            yield return new WaitForSeconds(0.2f);
+            yield return HighlightOptionButton(buttonName);
+        }
+
+        /// <summary>
+        /// Highlights a button in the Option menu by matching button text or key.
+        /// </summary>
+        private IEnumerator HighlightOptionButton(string buttonName)
+        {
+            var optionUI = UI.Instance.Get(Config.UI.Option) as Option;
+            if (optionUI == null)
+            {
+                Utils.Debug.LogWarning("Tutorial", "Option UI not found");
+                yield break;
+            }
+
+            // Map button name to expected text patterns
+            string[] searchPatterns = GetButtonSearchPatterns(buttonName);
+            Utils.Debug.Log("Tutorial", $"Searching for Option button with patterns: {string.Join(", ", searchPatterns)}");
+
+            // Search in both Left and Right panels
+            Transform targetButton = null;
+            foreach (string panel in new[] { "Left/Viewport/Content", "Right/Viewport/Content" })
+            {
+                var content = optionUI.transform.Find(panel);
+                if (content == null) continue;
+
+                foreach (Transform child in content)
+                {
+                    // Check OptionTitleButton components
+                    var titleBtn = child.GetComponent<OptionTitleButton>();
+                    if (titleBtn != null)
+                    {
+                        var btnText = child.Find("Button/Text")?.GetComponent<Text>();
+                        if (btnText != null && MatchesPattern(btnText.text, searchPatterns))
+                        {
+                            targetButton = child.Find("Button");
+                            Utils.Debug.Log("Tutorial", $"Found matching TitleButton: {btnText.text}");
+                            break;
+                        }
+                    }
+
+                    // Check OptionButton components
+                    var optionBtn = child.GetComponent<OptionButton>();
+                    if (optionBtn != null)
+                    {
+                        var btnText = child.Find("Text")?.GetComponent<Text>();
+                        if (btnText != null && MatchesPattern(btnText.text, searchPatterns))
+                        {
+                            targetButton = child;
+                            Utils.Debug.Log("Tutorial", $"Found matching Button: {btnText.text}");
+                            break;
+                        }
+                    }
+                }
+
+                if (targetButton != null) break;
+            }
+
+            if (targetButton == null)
+            {
+                Utils.Debug.LogWarning("Tutorial", $"Option button not found for: {buttonName}");
+                yield break;
+            }
+
+            // Unregister Option listener
+            Data.Instance.after.Unregister(Data.Type.Option, OnOptionChanged);
+            pendingOptionButton = null;
+
+            highlightedTarget = targetButton;
+
+            // Add click handler
+            var button = targetButton.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(OnTargetClicked);
+                Utils.Debug.Log("Tutorial", "Click handler added to Option button");
+            }
+
+            // Show ripple effect
+            RectTransform tutorialRect = GetComponent<RectTransform>();
+            Vector2 localPos = Utils.Pos.LocalPos(tutorialRect, targetButton);
+            Utils.Debug.Log("Tutorial", $"Showing ripple effect at Option button localPos: {localPos}");
+            Utils.Ring.Loop(gameObject, localPos, this);
+
+            // Update hint position
+            if (!string.IsNullOrEmpty(currentStep.hint))
+            {
+                Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetButton.position);
+                Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+            }
+        }
+
+        /// <summary>
+        /// Gets search patterns for a button name based on targetPath convention.
+        /// </summary>
+        private string[] GetButtonSearchPatterns(string buttonName)
+        {
+            // Map targetPath button names to possible button text patterns
+            // These patterns should match the server-sent button text
+            return buttonName switch
+            {
+                "goto" => new[] { "goto", "go to", "move", "walk" },
+                "interact" => new[] { "interact", "use", "talk" },
+                "attack" => new[] { "attack", "fight", "battle" },
+                "give" => new[] { "give", "gift", "hand over" },
+                "pickup" => new[] { "pickup", "pick up", "take", "collect" },
+                _ => new[] { buttonName }
+            };
+        }
+
+        private bool MatchesPattern(string text, string[] patterns)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            string lowerText = text.ToLower();
+            foreach (var pattern in patterns)
+            {
+                if (lowerText.Contains(pattern.ToLower()))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         #endregion
 
@@ -293,12 +571,20 @@ namespace Game
         #region Cleanup
         private void StopHighlight()
         {
+            // Unregister Option listener if still registered
+            if (!string.IsNullOrEmpty(pendingOptionButton))
+            {
+                Data.Instance.after.Unregister(Data.Type.Option, OnOptionChanged);
+                pendingOptionButton = null;
+            }
+
             if (highlightedTarget != null)
             {
                 var button = highlightedTarget.GetComponent<Button>();
                 if (button != null)
                 {
                     button.onClick.RemoveListener(OnTargetClicked);
+                    button.onClick.RemoveListener(OnCharacterClicked);
                 }
                 highlightedTarget = null;
             }
