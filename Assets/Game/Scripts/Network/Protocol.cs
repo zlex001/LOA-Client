@@ -530,18 +530,34 @@ namespace Game.Protocol
             Item = 4
         }
 
-        public int step;           // Step ID
+        public int step;           // Step ID: 0=clear, 1-99=normal guidance
         public int targetType;     // 1=UI, 2=Map, 3=Creature, 4=Item
         public int targetId;       // Config ID (for Creature/Item)
         public string targetPath;  // UI element path (for targetType=UI)
         public int[] targetPos;    // Map coordinates [x,y,z] (for targetType=Map)
         public string hint;        // Hint text (optional)
 
+        /// <summary>
+        /// Checks if this is a clear/hide command (step=0)
+        /// </summary>
+        public bool IsClear => step == 0;
+
         public override void Processed()
         {
             string posStr = targetPos != null ? $"[{string.Join(",", targetPos)}]" : "null";
             Utils.Debug.Log("Tutorial", $"Protocol received: step={step}, targetType={targetType}, targetId={targetId}, targetPath={targetPath}, targetPos={posStr}, hint={hint}");
-            Game.Data.Instance.TutorialStep = this;
+            
+            if (IsClear)
+            {
+                // step=0 means clear/hide current guidance
+                Utils.Debug.Log("Tutorial", "Received clear command (step=0), clearing TutorialStep");
+                Game.Data.Instance.TutorialStep = null;
+            }
+            else
+            {
+                // Normal guidance step
+                Game.Data.Instance.TutorialStep = this;
+            }
         }
     }
 

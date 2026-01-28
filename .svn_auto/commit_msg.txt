@@ -1,7 +1,5 @@
-[Feature] Implement Tutorial protocol for Creature/Item guidance
+[Feature] Add Tutorial clear mechanism for step=0
 
-- Extended CharacterData with configId field for targetId matching
-- Implemented HighlightCreature() and HighlightItem() to locate characters in list by configId
-- Added targetPath parsing for multi-step guidance (characters/goto, actions/interact, etc.)
-- Added Option button highlighting with pattern matching for goto/interact/attack/give/pickup
-- Registered Option change listener for seamless character-to-button transition
+- Added IsClear property to Protocol.Tutorial for step=0 detection
+- When step=0 is received, TutorialStep is set to null to trigger UI close
+- Existing UI listener already handles null to close Tutorial UI
