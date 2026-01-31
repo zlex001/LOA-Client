@@ -1,5 +1,1 @@
-[Feature] Add Tutorial clear mechanism for step=0
-
-- Added IsClear property to Protocol.Tutorial for step=0 detection
-- When step=0 is received, TutorialStep is set to null to trigger UI close
-- Existing UI listener already handles null to close Tutorial UI
+[修复] Tutorial协议处理：修复空Option面板导致游戏卡死，增强调试日志，删除不完整的Cutscene模块

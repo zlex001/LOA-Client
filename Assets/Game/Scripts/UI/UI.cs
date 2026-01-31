@@ -575,7 +575,7 @@ namespace Game
         private void OnAfterOptionChanged(params object[] args)
         {
             Protocol.Option option = (Protocol.Option)args[0];
-            if (option != null)
+            if (option != null && !option.Empty)
             {
                 Open(Config.UI.Option);
             }

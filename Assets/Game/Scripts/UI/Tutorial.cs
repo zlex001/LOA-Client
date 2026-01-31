@@ -297,8 +297,17 @@ namespace Game
             var characters = Data.Instance.Characters ?? Data.Instance.Home?.characters?.content;
             if (characters == null)
             {
-                Utils.Debug.LogWarning("Tutorial", "Characters list is null");
+                Utils.Debug.LogWarning("Tutorial", "Characters list is null. Data.Instance.Characters=" + 
+                    (Data.Instance.Characters == null ? "null" : "exists") + 
+                    ", Data.Instance.Home=" + (Data.Instance.Home == null ? "null" : "exists"));
                 yield break;
+            }
+
+            // Debug: log all characters for troubleshooting
+            Utils.Debug.Log("Tutorial", $"Searching for targetId={currentStep.targetId} in {characters.Count} characters:");
+            for (int i = 0; i < characters.Count; i++)
+            {
+                Utils.Debug.Log("Tutorial", $"  [{i}] name={characters[i].name}, configId={characters[i].configId}, hash={characters[i].hash}");
             }
 
             int targetIndex = -1;
