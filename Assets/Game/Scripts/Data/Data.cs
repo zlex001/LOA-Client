@@ -129,6 +129,7 @@ namespace Game
 
             Dark,
             FontSize,
+            UILock,
         }
         #endregion
 
@@ -245,6 +246,7 @@ namespace Game
         }
         public Protocol.Option Option { get => Get<Protocol.Option>(Type.Option); set => Change(Type.Option, value); }
         public Protocol.WorldMap WorldMap { get => Get<Protocol.WorldMap>(Type.WorldMap); set => Change(Type.WorldMap, value); }
+        public Protocol.UILock UILock { get => Get<Protocol.UILock>(Type.UILock); set => Change(Type.UILock, value); }
 
         public List<Protocol.Story.Dialogue> StoryDialogues { get => Get<List<Protocol.Story.Dialogue>>(Type.StoryDialogues); set => Change(Type.StoryDialogues, value); }
         public Dictionary<string, bool> HomeChannelToggle { get; set; } = new Dictionary<string, bool>();

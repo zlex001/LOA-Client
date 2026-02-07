@@ -1,1 +1,1 @@
-[修复] Tutorial协议处理：修复空Option面板导致游戏卡死，增强调试日志，删除不完整的Cutscene模块
+[功能] 实现UILock和QuickStart功能，支持UI渐进式显示和游客快速登录

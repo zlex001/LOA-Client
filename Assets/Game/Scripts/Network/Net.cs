@@ -493,10 +493,32 @@ namespace Game
         private void OnAfterLoginAccountChanged(params object[] args)
         {
             Utils.Debug.Log("Net", $"LoginAccount changed. Online: {Data.Instance.Online}");
+            
+            if (Data.Instance.LoginAccount == null)
+            {
+                Utils.Debug.LogWarning("Net", "LoginAccount is null, skipping login");
+                return;
+            }
+            
             if (Data.Instance.Online)
             {
-                Utils.Debug.Log("Net", "Already online, sending Login protocol");
-                Send(new Login(Data.Instance.SelectedAccount));
+                // Check if this is a QuickStart login
+                if (Data.Instance.LoginAccount.Id == "__QuickStart__")
+                {
+                    Utils.Debug.Log("Net", "QuickStart mode detected, sending QuickStartRequest");
+                    Send(new QuickStartRequest
+                    {
+                        device = Data.Instance.Device,
+                        version = Data.Instance.AppVersion,
+                        platform = Application.platform.ToString(),
+                        language = Data.Instance.Language.ToString()
+                    });
+                }
+                else
+                {
+                    Utils.Debug.Log("Net", "Traditional login, sending Login protocol");
+                    Send(new Login(Data.Instance.SelectedAccount));
+                }
             }
             else
             {
@@ -516,7 +538,23 @@ namespace Game
                 
                 if (!wasReconnecting && Data.Instance.LoginAccount != null)
                 {
-                    Send(new Login(Data.Instance.SelectedAccount));
+                    // Check if this is a QuickStart login
+                    if (Data.Instance.LoginAccount.Id == "__QuickStart__")
+                    {
+                        Utils.Debug.Log("Net", "Connected, sending QuickStartRequest");
+                        Send(new QuickStartRequest
+                        {
+                            device = Data.Instance.Device,
+                            version = Data.Instance.AppVersion,
+                            platform = Application.platform.ToString(),
+                            language = Data.Instance.Language.ToString()
+                        });
+                    }
+                    else
+                    {
+                        Utils.Debug.Log("Net", "Connected, sending Login protocol");
+                        Send(new Login(Data.Instance.SelectedAccount));
+                    }
                 }
             }
             else

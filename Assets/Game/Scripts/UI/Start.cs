@@ -77,6 +77,15 @@ namespace Game
             transform.Find("Accounts/Add").GetComponent<Button>().onClick.AddListener(OnAccountsAddClick);
 
             transform.Find("Login").GetComponent<Button>().onClick.AddListener(OnLoginClick);
+            
+            // Setup QuickStart button if exists
+            var quickStartButton = transform.Find("QuickStart")?.GetComponent<Button>();
+            if (quickStartButton != null)
+            {
+                quickStartButton.onClick.AddListener(OnQuickStartClick);
+                Utils.Debug.Log("Start", "QuickStart button listener registered");
+            }
+            
             // Setup UI Listeners
             Data.Instance.after.Register(Data.Type.LoginResponse, OnAfterLoginResponseChanged);
             Utils.Debug.Log("Start", "LoginResponse event listener registered");
@@ -155,9 +164,37 @@ namespace Game
                 serversWheel.Select(serversWheel.SelectedItem);
             }
 
+            // Handle Login and QuickStart button layout
             var loginRect = transform.Find("Login")?.GetComponent<RectTransform>();
-            if (loginRect != null)
+            var quickStartRect = transform.Find("QuickStart")?.GetComponent<RectTransform>();
+            
+            if (quickStartRect != null && loginRect != null)
             {
+                // Both buttons exist: vertical stack layout
+                float buttonHeight = UnitHeight;
+                float spacing = UnitHeight * 0.2f;
+                float totalButtonHeight = buttonHeight * 2 + spacing;
+                float buttonCenterY = accountsBottomY * GoldenRatio;
+                float topButtonY = buttonCenterY + totalButtonHeight / 2 - buttonHeight / 2;
+                float bottomButtonY = buttonCenterY - totalButtonHeight / 2 + buttonHeight / 2;
+                
+                // QuickStart on top (primary action)
+                quickStartRect.anchorMin = Vector2.zero;
+                quickStartRect.anchorMax = Vector2.zero;
+                quickStartRect.pivot = new Vector2(0.5f, 0.5f);
+                quickStartRect.sizeDelta = new Vector2(listWidth, buttonHeight);
+                quickStartRect.anchoredPosition = new Vector2(screenWidth / 2, topButtonY);
+                
+                // Login on bottom (secondary action)
+                loginRect.anchorMin = Vector2.zero;
+                loginRect.anchorMax = Vector2.zero;
+                loginRect.pivot = new Vector2(0.5f, 0.5f);
+                loginRect.sizeDelta = new Vector2(listWidth, buttonHeight);
+                loginRect.anchoredPosition = new Vector2(screenWidth / 2, bottomButtonY);
+            }
+            else if (loginRect != null)
+            {
+                // Only Login button: centered
                 loginRect.anchorMin = Vector2.zero;
                 loginRect.anchorMax = Vector2.zero;
                 loginRect.pivot = new Vector2(0.5f, 0.5f);
@@ -278,6 +315,23 @@ namespace Game
             Utils.Debug.Log("Start", $"Selected account: {Data.Instance.SelectedAccount.Id}");
             Data.Instance.LoginAccount = Data.Instance.SelectedAccount;
         }
+
+        private void OnQuickStartClick()
+        {
+            Utils.Debug.Log("Start", "QuickStart button clicked");
+            Utils.Debug.Log("Start", $"Selected server: {Data.Instance.SelectedServer.Name} ({Data.Instance.SelectedServer.Ip}:{Data.Instance.SelectedServer.Port})");
+            
+            // Show loading screen
+            UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
+            
+            // Set QuickStart login mode (special identifier to differentiate from traditional login)
+            Data.Instance.LoginAccount = new User.Account 
+            { 
+                Id = "__QuickStart__",
+                Password = ""
+            };
+        }
+
         private void OnAfterLoginResponseChanged(params object[] args)
         {
             Utils.Debug.Log("Start", $"OnAfterLoginResponseChanged triggered, args count: {args.Length}");

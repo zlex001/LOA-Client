@@ -185,6 +185,10 @@ namespace Game
             Data.Instance.after.Register(Data.Type.SceneScale, OnAfterSceneScaleChanged);
             Data.Instance.after.Register(Data.Type.Home, OnAfterHomeChanged);
             Data.Instance.after.Register(Data.Type.WorldMap, OnAfterWorldMapChanged);
+            Data.Instance.after.Register(Data.Type.UILock, OnAfterUILockChanged);
+
+            // Apply UILock state on creation
+            ApplyUILock();
         }
 
         public override void OnClose()
@@ -201,6 +205,7 @@ namespace Game
             Data.Instance.after.Unregister(Data.Type.Informations, OnAfterInformationsChanged);
             Data.Instance.after.Unregister(Data.Type.Home, OnAfterHomeChanged);
             Data.Instance.after.Unregister(Data.Type.WorldMap, OnAfterWorldMapChanged);
+            Data.Instance.after.Unregister(Data.Type.UILock, OnAfterUILockChanged);
         }
 
         public override void OnScreenAdaptationChanged()
@@ -601,6 +606,76 @@ namespace Game
             }
 
             UpdateSceneInfo();
+        }
+
+        private void ApplyUILock()
+        {
+            var uiLock = Data.Instance.UILock;
+            
+            // If no UILock or empty list, show all panels (compatible with old players)
+            if (uiLock == null || uiLock.unlockedPanels == null || uiLock.unlockedPanels.Count == 0)
+            {
+                SetAllPanelsVisible(true);
+                ApplyAbsoluteLayout();
+                return;
+            }
+            
+            // Check which panels are unlocked
+            bool sceneUnlocked = uiLock.unlockedPanels.Contains("Home.Scene");
+            bool areaUnlocked = uiLock.unlockedPanels.Contains("Home.Area");
+            bool infoUnlocked = uiLock.unlockedPanels.Contains("Home.Information");
+            bool resourceUnlocked = uiLock.unlockedPanels.Contains("Home.Resource");
+            bool chatUnlocked = uiLock.unlockedPanels.Contains("Home.Chat");
+            
+            // Set panel visibility
+            transform.Find("Scene").gameObject.SetActive(sceneUnlocked);
+            transform.Find("Area").gameObject.SetActive(areaUnlocked);
+            transform.Find("Information").gameObject.SetActive(infoUnlocked);
+            transform.Find("Resource").gameObject.SetActive(resourceUnlocked);
+            transform.Find("Chat").gameObject.SetActive(chatUnlocked);
+            
+            // Adjust layout based on unlocked state
+            if (sceneUnlocked && !areaUnlocked && !infoUnlocked && !resourceUnlocked && !chatUnlocked)
+            {
+                // Only Scene: fullscreen layout
+                ApplyFullScreenSceneLayout();
+            }
+            else
+            {
+                // Other cases: standard layout
+                ApplyAbsoluteLayout();
+            }
+        }
+
+        private void SetAllPanelsVisible(bool visible)
+        {
+            transform.Find("Scene").gameObject.SetActive(visible);
+            transform.Find("Area").gameObject.SetActive(visible);
+            transform.Find("Information").gameObject.SetActive(visible);
+            transform.Find("Resource").gameObject.SetActive(visible);
+            transform.Find("Chat").gameObject.SetActive(visible);
+        }
+
+        private void ApplyFullScreenSceneLayout()
+        {
+            float screenWidth = GetComponent<RectTransform>().rect.width;
+            float screenHeight = GetComponent<RectTransform>().rect.height;
+            
+            // Scene fullscreen
+            SetRect("Scene", 0, screenHeight, screenWidth, 0);
+            
+            // Update Scene GridView
+            var sceneGridView = transform.Find("Scene").GetComponent<LoopGridView>();
+            if (sceneGridView != null)
+            {
+                sceneGridView.ItemSize = CalculateFillLayout();
+                sceneGridView.RefreshAllShownItem();
+            }
+        }
+
+        private void OnAfterUILockChanged(params object[] args)
+        {
+            ApplyUILock();
         }
     }
 }
