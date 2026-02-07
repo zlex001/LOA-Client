@@ -1,1 +1,1 @@
-[功能] 实现UILock和QuickStart功能，支持UI渐进式显示和游客快速登录
+[修复] 修正Start.cs中Account类型引用错误

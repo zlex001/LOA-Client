@@ -325,7 +325,7 @@ namespace Game
             UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
             
             // Set QuickStart login mode (special identifier to differentiate from traditional login)
-            Data.Instance.LoginAccount = new User.Account 
+            Data.Instance.LoginAccount = new Account 
             { 
                 Id = "__QuickStart__",
                 Password = ""
