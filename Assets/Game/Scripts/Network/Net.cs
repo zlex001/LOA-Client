@@ -502,23 +502,9 @@ namespace Game
             
             if (Data.Instance.Online)
             {
-                // Check if this is a QuickStart login
-                if (Data.Instance.LoginAccount.Id == "__QuickStart__")
-                {
-                    Utils.Debug.Log("Net", "QuickStart mode detected, sending QuickStartRequest");
-                    Send(new QuickStartRequest
-                    {
-                        device = Data.Instance.Device,
-                        version = Data.Instance.AppVersion,
-                        platform = Application.platform.ToString(),
-                        language = Data.Instance.Language.ToString()
-                    });
-                }
-                else
-                {
-                    Utils.Debug.Log("Net", "Traditional login, sending Login protocol");
-                    Send(new Login(Data.Instance.SelectedAccount));
-                }
+                // Send Login protocol (works for both guest and regular accounts)
+                Utils.Debug.Log("Net", "Sending Login protocol");
+                Send(new Login(Data.Instance.LoginAccount));
             }
             else
             {

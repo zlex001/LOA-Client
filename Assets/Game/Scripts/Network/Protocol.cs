@@ -70,9 +70,49 @@ namespace Game.Protocol
         }
         public int code;
         public string message;
+        public string accountId;    // For QuickStart: guest account ID
+        public string password;     // For QuickStart: guest account password
+        public bool isGuest;        // Is this a guest account
+        public bool isNewAccount;   // Is this a newly created account
+        
         public override void Processed()
         {
             Utils.Debug.Log("Protocol", $"LoginResponse.Processed() called: code={code}, message={message}");
+            
+            // For QuickStart: Save guest account to local if provided
+            if (!string.IsNullOrEmpty(accountId) && !string.IsNullOrEmpty(password))
+            {
+                var account = new Account
+                {
+                    Id = accountId,
+                    Password = password,
+                    Note = isGuest ? "Guest Account" : "Bound Account"
+                };
+                
+                // Check if account already exists
+                bool accountExists = false;
+                foreach (var existingAccount in Data.Instance.User.Accounts)
+                {
+                    if (existingAccount.Id == accountId)
+                    {
+                        accountExists = true;
+                        break;
+                    }
+                }
+                
+                if (!accountExists)
+                {
+                    Data.Instance.User.Accounts.Add(account);
+                    Data.Instance.User.SelectedAccountIndex = Data.Instance.User.Accounts.Count - 1;
+                    Local.Instance.Save(Data.Instance.User);
+                    Utils.Debug.Log("Protocol", $"Saved guest account: {accountId}, isNewAccount: {isNewAccount}");
+                }
+                else
+                {
+                    Utils.Debug.Log("Protocol", $"Guest account already exists: {accountId}");
+                }
+            }
+            
             Game.Data.Instance.LoginResponseMessage = message;
             Game.Data.Instance.LoginResponse = code;
             Utils.Debug.Log("Protocol", $"LoginResponse data set complete");
