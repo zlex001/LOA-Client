@@ -110,11 +110,24 @@ Data.Instance.after.Register(Data.Type.X, callback);
 ```csharp
 public static void Entrance(string gateway)
 {
+    // 0. 设置网关地址
+    Data.Instance.Gateway = gateway;
+    
+    // 0.1 恢复语言设置
+    string languageStr = PlayerPrefs.GetString("LANGUAGE", "ChineseSimplified");
+    if (Enum.TryParse(languageStr, out Data.Languages language))
+    {
+        Data.Instance.Language = language;
+    }
+    
+    // 1-4. 初始化管理器（按依赖顺序）
     Data.Instance.Init();      // 1. 数据管理器
     UI.Instance.Init(9f, 16f); // 2. UI管理器
     Audio.Instance.Init();     // 3. 音频管理器
     Net.Instance.Init();       // 4. 网络管理器
-    StartupFlowManager.Start();// 5. 启动流程
+    
+    // 5. 启动流程状态机
+    StartupFlowManager.Start();
 }
 ```
 
