@@ -34,7 +34,7 @@ namespace Game
         
         // Change this to test different animations!
         private const AnimationType TITLE_ANIMATION = AnimationType.SlideFade;
-        private const float ANIMATION_TIME = 0.618f;  // Golden Ratio seconds
+        private const float ANIMATION_TIME = 1.618f;  // Golden Ratio reciprocal (φ) seconds
         #endregion
 
         #region Fields
