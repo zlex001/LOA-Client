@@ -77,15 +77,15 @@ namespace Game
             // Hide Block initially for title animation
             transform.Find("Block").gameObject.SetActive(false);
             
+            // Settings button - create first so ApplyAbsoluteLayout can position it
+            InitializeSettingsButton();
+            
             ApplyAbsoluteLayout();
 
             // Initialize server selector
             transform.Find("Servers").GetComponent<InfiniWheel>().Init(Data.Instance.Servers.Select(s => s.Name).ToArray());
             transform.Find("Servers").GetComponent<InfiniWheel>().Select(Data.Instance.User.SelectedServerIndex);
             transform.Find("Servers").GetComponent<InfiniWheel>().ValueChange += OnServersValueChange;
-
-            // Settings button (conditional display based on account count)
-            InitializeSettingsButton();
 
             // Block animation
             transform.Find("Block/Text").GetComponent<Text>().DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo);

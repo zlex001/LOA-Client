@@ -1,18 +1,13 @@
-[优化] 设置按钮改为总是显示策略
+[修复] 调整Settings按钮创建顺序修正位置问题
 
-调整理由：
-StartSettings面板功能不仅限于账号切换，还包含语言、音效、画质等设置功能，应总是可访问
+问题：Settings按钮出现在左下角(0,0)位置，而非右上角
+原因：ApplyAbsoluteLayout()在InitializeSettingsButton()之前调用，导致Settings创建时位置未设置
 
-主要更改：
-1. Start.cs：InitializeSettingsButton()移除条件判断，总是显示按钮
-2. Start.cs：移除所有调试日志代码（agent log regions）
-3. 登录与启动系统.md：更新"条件显示策略"为"显示策略"（总是显示）
+解决方案：
+- OnCreate()调整顺序：先InitializeSettingsButton()，后ApplyAbsoluteLayout()
+- 确保Settings按钮创建后，布局方法能正确找到并设置位置
 
-设计理念变化：
-- 旧：单账号时隐藏按钮保持极简
-- 新：总是显示齿轮按钮，提供多功能设置入口
-
-技术实现：
-- 移除 Accounts.Count 条件判断
-- 保持右上角黄金比例布局
-- 保持小尺寸图标不影响极简体验
+技术细节：
+- 原顺序：ApplyAbsoluteLayout() → InitializeSettingsButton()
+- 新顺序：InitializeSettingsButton() → ApplyAbsoluteLayout()
+- 布局方法中的 transform.Find("Settings") 现在能找到对象并设置位置
