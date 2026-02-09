@@ -71,14 +71,6 @@ namespace Game
             // Block animation
             transform.Find("Block/Text").GetComponent<Text>().DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo);
             transform.Find("Block").GetComponent<Button>().onClick.AddListener(OnBlockClick);
-
-            // QuickStart button
-            var quickStartButton = transform.Find("QuickStart")?.GetComponent<Button>();
-            if (quickStartButton != null)
-            {
-                quickStartButton.onClick.AddListener(OnQuickStartClick);
-                Utils.Debug.Log("Start", "QuickStart button registered");
-            }
             
             // Setup UI Listeners
             Data.Instance.after.Register(Data.Type.LoginResponse, OnAfterLoginResponseChanged);
@@ -185,8 +177,30 @@ namespace Game
         #region Animation
         private void OnBlockClick()
         {
-            // Simplified: Just hide the block overlay
-            transform.Find("Block")?.gameObject.SetActive(false);
+            Utils.Debug.Log("Start", "Screen clicked, initiating login process");
+            
+            // Show connecting UI
+            UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
+            
+            // Check if local accounts exist
+            if (Data.Instance.User.Accounts.Count > 0)
+            {
+                // Has accounts: use local account to login
+                Utils.Debug.Log("Start", $"Using local account: {Data.Instance.SelectedAccount.Id}");
+                Data.Instance.LoginAccount = Data.Instance.SelectedAccount;
+            }
+            else
+            {
+                // No accounts: send QuickStart request
+                Utils.Debug.Log("Start", "No local accounts, sending QuickStartRequest");
+                Net.Instance.Send(new QuickStartRequest
+                {
+                    device = Data.Instance.Device,
+                    version = Data.Instance.AppVersion,
+                    platform = Application.platform.ToString(),
+                    language = Data.Instance.Language.ToString()
+                });
+            }
         }
 
         private System.Collections.IEnumerator Animate()
@@ -224,23 +238,6 @@ namespace Game
 
         #region Login
 
-        private void OnQuickStartClick()
-        {
-            Utils.Debug.Log("Start", "QuickStart button clicked");
-            Utils.Debug.Log("Start", $"Selected server: {Data.Instance.SelectedServer.Name} ({Data.Instance.SelectedServer.Ip}:{Data.Instance.SelectedServer.Port})");
-            
-            // Show loading screen
-            UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
-            
-            // Send QuickStartRequest directly
-            Net.Instance.Send(new QuickStartRequest
-            {
-                device = Data.Instance.Device,
-                version = Data.Instance.AppVersion,
-                platform = Application.platform.ToString(),
-                language = Data.Instance.Language.ToString()
-            });
-        }
 
         private void OnAfterLoginResponseChanged(params object[] args)
         {

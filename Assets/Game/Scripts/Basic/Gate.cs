@@ -98,32 +98,12 @@ namespace Game
                     Data.Instance.Servers = updatedServers;
                 }
 
-                // Check if local accounts exist
-                if (Data.Instance.User.Accounts.Count > 0)
+                // Always show Start UI, let user click to proceed
+                if (gatewayResponse.UI != null)
                 {
-                    // Has accounts, auto-login
-                    Utils.Debug.Log("Gate", $"Found {Data.Instance.User.Accounts.Count} local accounts, auto-login");
-                    
-                    UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
-                    Data.Instance.LoginAccount = Data.Instance.SelectedAccount;
-                }
-                else
-                {
-                    // No accounts, show Start UI for first-time launch
-                    Utils.Debug.Log("Gate", "No local accounts, showing Start UI");
-                    
-                    if (gatewayResponse.UI != null)
-                    {
-                        UI.Instance.Close(Config.UI.Dark);
-                        var uiConfig = typeof(Config.UI).GetField(gatewayResponse.UI.Name).GetValue(null);
-                        UI.Instance.Open(((string, string, int, bool))uiConfig, gatewayResponse.UI.Data);
-                    }
-                    else
-                    {
-                        // If server didn't push UI config, use default Start UI
-                        UI.Instance.Close(Config.UI.Dark);
-                        UI.Instance.Open(Config.UI.Start);
-                    }
+                    UI.Instance.Close(Config.UI.Dark);
+                    var uiConfig = typeof(Config.UI).GetField(gatewayResponse.UI.Name).GetValue(null);
+                    UI.Instance.Open(((string, string, int, bool))uiConfig, gatewayResponse.UI.Data);
                 }
             }
             catch (Exception ex)
