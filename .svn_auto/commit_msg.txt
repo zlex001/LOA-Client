@@ -1,25 +1,10 @@
-[功能] 实现5种标题动画效果可切换系统
+[优化] 启用SlideFade动画并设置黄金比例时长
 
-新增功能：
-- 添加AnimationType枚举，定义5种动画类型
-- 通过修改TITLE_ANIMATION常量即可切换动画效果
-- 通过修改ANIMATION_TIME常量调整动画时长
+动画配置：
+- 动画类型从SimpleFade改为SlideFade
+- 动画时长从1.5秒改为0.618秒（黄金比例）
 
-5种动画效果：
-1. SimpleFade - 纯透明度淡入（最简单直接）
-2. GoldGlow - 从金色渐变到白色（光芒效果）
-3. ScaleFade - 缩放+淡入（从小放大，有冲击力）
-4. SlideFade - 从上滑入+淡入（平滑下落）
-5. OverbrightGlow - 过亮白光淡入（当前效果）
-
-使用方法：
-在Start.cs第36行修改：
-private const AnimationType TITLE_ANIMATION = AnimationType.SimpleFade;
-
-在Start.cs第37行修改时长：
-private const float ANIMATION_TIME = 1.5f;
-
-代码优化：
-- 简化Animate()方法，使用switch语句处理不同动画
-- 移除冗余的调试日志
-- 统一动画时长配置
+SlideFade效果：
+- 标题从上方200px滑入并淡入
+- 快速流畅，符合黄金比例美学
+- 时长0.618秒，简洁不拖沓

@@ -33,8 +33,8 @@ namespace Game
         }
         
         // Change this to test different animations!
-        private const AnimationType TITLE_ANIMATION = AnimationType.SimpleFade;
-        private const float ANIMATION_TIME = 1.5f;
+        private const AnimationType TITLE_ANIMATION = AnimationType.SlideFade;
+        private const float ANIMATION_TIME = 0.618f;  // Golden Ratio seconds
         #endregion
 
         #region Fields
@@ -270,7 +270,7 @@ namespace Game
                     Utils.Debug.Log("Start", "Animation: Slide from top + Fade");
                     titleText.color = new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 0f);
                     titleRect.anchoredPosition = originalPos + new Vector3(0, 200, 0);
-                    titleText.DOFade(1, ANIMATION_TIME).SetEase(Ease.OutQuad);
+                    titleText.DOFade(1, ANIMATION_TIME).SetEase(Ease.InOutQuad);
                     titleRect.DOAnchorPos(originalPos, ANIMATION_TIME).SetEase(Ease.OutCubic);
                     break;
                     
