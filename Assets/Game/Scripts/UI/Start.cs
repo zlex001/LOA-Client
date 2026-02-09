@@ -193,20 +193,24 @@ namespace Game
                 quickStartRect.anchoredPosition = Vector2.zero;
             }
             
-            // Settings button (top-right corner, fixed small padding)
+            // Settings button (bottom-right corner, aligned with Footer)
             var settingsRect = transform.Find("Settings")?.GetComponent<RectTransform>();
             if (settingsRect != null)
             {
                 float buttonSize = UnitHeight;  // 83px (1 unit height, square)
                 float padding = UnitHeight * 0.25f;  // 21px (small fixed padding, industry standard)
                 
+                // Align vertically with Footer center (footerHeight / 2)
+                float buttonCenterY = footerHeight / 2;
+                float buttonY = buttonCenterY + buttonSize / 2;  // Convert center to top edge (pivot is top-right)
+                
                 settingsRect.anchorMin = Vector2.zero;
                 settingsRect.anchorMax = Vector2.zero;
                 settingsRect.pivot = new Vector2(1f, 1f);  // Top-right pivot
                 settingsRect.sizeDelta = new Vector2(buttonSize, buttonSize);
-                settingsRect.anchoredPosition = new Vector2(screenWidth - padding, screenHeight - padding);
+                settingsRect.anchoredPosition = new Vector2(screenWidth - padding, buttonY);
                 
-                Utils.Debug.Log("Start", $"Settings button layout: size={buttonSize}, padding={padding}, pos=({screenWidth - padding}, {screenHeight - padding})");
+                Utils.Debug.Log("Start", $"Settings button layout: size={buttonSize}, padding={padding}, footerHeight={footerHeight}, buttonY={buttonY}");
             }
         }
         #endregion
