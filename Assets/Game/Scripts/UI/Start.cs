@@ -146,12 +146,11 @@ namespace Game
                 titleRect.anchoredPosition = new Vector2(screenWidth / 2, titleCenterY);
             }
             
-            // Adjust title font size (+10%)
+            // Set title font size to 76 (38 × 2)
             var titleText = transform.Find("Title")?.GetComponent<Text>();
             if (titleText != null)
             {
-                float originalFontSize = titleText.fontSize;
-                titleText.fontSize = Mathf.RoundToInt(originalFontSize * 1.1f);
+                titleText.fontSize = 76;
             }
             
             // Author (if exists, positioned relative to title)
@@ -208,20 +207,67 @@ namespace Game
 
         private System.Collections.IEnumerator Animate()
         {
-            float fadeTime = 1.0f;
+            float animationTime = 1.5f;
             
             var authorImage = transform.Find("Author").GetComponent<Image>();
             var titleText = transform.Find("Title").GetComponent<Text>();
             
-            // Set initial alpha to 0
+            // Set initial state
             authorImage.color = new Color(authorImage.color.r, authorImage.color.g, authorImage.color.b, 0);
-            titleText.color = new Color(titleText.color.r, titleText.color.g, titleText.color.b, 0);
             
-            // Simple fade in animation
-            authorImage.DOFade(1, fadeTime * 0.7f).SetEase(Ease.InOutQuad);
-            titleText.DOFade(1, fadeTime).SetEase(Ease.InOutQuad);
+            // Store original title color
+            Color originalTitleColor = titleText.color;
             
-            yield return new WaitForSeconds(fadeTime);
+            // Start with overbright white (glow effect) and alpha 0
+            Color glowColor = new Color(2f, 2f, 2f, 0f);
+            titleText.color = glowColor;
+            
+            // Check for outline component
+            var outline = titleText.GetComponent<Outline>();
+            if (outline != null)
+            {
+                outline.effectColor = new Color(1f, 1f, 1f, 0f);
+                outline.effectDistance = new Vector2(8f, 8f);
+            }
+            
+            // Animate author fade in
+            authorImage.DOFade(1, animationTime * 0.6f).SetEase(Ease.OutQuad);
+            
+            // Animate title: overbright white (alpha 0) -> normal color (alpha 1)
+            DOTween.To(
+                () => titleText.color,
+                x => titleText.color = x,
+                new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 1f),
+                animationTime
+            ).SetEase(Ease.OutQuad);
+            
+            // Animate outline glow if exists
+            if (outline != null)
+            {
+                DOTween.To(
+                    () => outline.effectColor.a,
+                    x => outline.effectColor = new Color(1f, 1f, 1f, x),
+                    0.5f,
+                    animationTime * 0.5f
+                ).SetEase(Ease.OutQuad).OnComplete(() => {
+                    // Fade out outline
+                    DOTween.To(
+                        () => outline.effectColor.a,
+                        x => outline.effectColor = new Color(1f, 1f, 1f, x),
+                        0f,
+                        animationTime * 0.5f
+                    ).SetEase(Ease.InQuad);
+                    
+                    DOTween.To(
+                        () => outline.effectDistance,
+                        x => outline.effectDistance = x,
+                        new Vector2(2f, 2f),
+                        animationTime * 0.5f
+                    ).SetEase(Ease.InQuad);
+                });
+            }
+            
+            yield return new WaitForSeconds(animationTime);
             transform.Find("Block").gameObject.SetActive(true);
         }
         #endregion
