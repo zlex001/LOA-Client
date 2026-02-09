@@ -210,20 +210,26 @@ namespace Game
 
         private System.Collections.IEnumerator Animate()
         {
-            float animationTime = 1.5f;
+            float animationTime = 4.0f;  // Slowed down for debugging
+            
+            Utils.Debug.Log("Start", "=== Title Animation Started ===");
+            Utils.Debug.Log("Start", $"Animation Time: {animationTime} seconds");
             
             var authorImage = transform.Find("Author").GetComponent<Image>();
             var titleText = transform.Find("Title").GetComponent<Text>();
             
             // Set initial state
             authorImage.color = new Color(authorImage.color.r, authorImage.color.g, authorImage.color.b, 0);
+            Utils.Debug.Log("Start", "Author initial alpha set to 0");
             
             // Store original title color
             Color originalTitleColor = titleText.color;
+            Utils.Debug.Log("Start", $"Original title color: {originalTitleColor}");
             
             // Start with overbright white (glow effect) and alpha 0
             Color glowColor = new Color(2f, 2f, 2f, 0f);
             titleText.color = glowColor;
+            Utils.Debug.Log("Start", $"Title initial glow color set: {glowColor}");
             
             // Check for outline component
             var outline = titleText.GetComponent<Outline>();
@@ -231,28 +237,43 @@ namespace Game
             {
                 outline.effectColor = new Color(1f, 1f, 1f, 0f);
                 outline.effectDistance = new Vector2(8f, 8f);
+                Utils.Debug.Log("Start", "Outline component found and initialized");
+            }
+            else
+            {
+                Utils.Debug.LogWarning("Start", "Outline component NOT found on Title");
             }
             
             // Animate author fade in
+            Utils.Debug.Log("Start", $"Starting author fade in ({animationTime * 0.6f}s)");
             authorImage.DOFade(1, animationTime * 0.6f).SetEase(Ease.OutQuad);
             
             // Animate title: overbright white (alpha 0) -> normal color (alpha 1)
+            Utils.Debug.Log("Start", $"Starting title color transition ({animationTime}s)");
             DOTween.To(
                 () => titleText.color,
                 x => titleText.color = x,
                 new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 1f),
                 animationTime
-            ).SetEase(Ease.OutQuad);
+            ).SetEase(Ease.OutQuad).OnUpdate(() => {
+                // Log progress every 0.5 seconds (approximately)
+                if (Time.frameCount % 30 == 0)
+                {
+                    Utils.Debug.Log("Start", $"Title color: {titleText.color}");
+                }
+            });
             
             // Animate outline glow if exists
             if (outline != null)
             {
+                Utils.Debug.Log("Start", $"Starting outline glow animation ({animationTime * 0.5f}s)");
                 DOTween.To(
                     () => outline.effectColor.a,
                     x => outline.effectColor = new Color(1f, 1f, 1f, x),
                     0.5f,
                     animationTime * 0.5f
                 ).SetEase(Ease.OutQuad).OnComplete(() => {
+                    Utils.Debug.Log("Start", "Outline glow peak reached, starting fade out");
                     // Fade out outline
                     DOTween.To(
                         () => outline.effectColor.a,
@@ -270,8 +291,12 @@ namespace Game
                 });
             }
             
+            Utils.Debug.Log("Start", $"Waiting {animationTime} seconds for animation to complete...");
             yield return new WaitForSeconds(animationTime);
+            
+            Utils.Debug.Log("Start", "Animation complete, showing Block");
             transform.Find("Block").gameObject.SetActive(true);
+            Utils.Debug.Log("Start", "=== Title Animation Finished ===");
         }
         #endregion
 
