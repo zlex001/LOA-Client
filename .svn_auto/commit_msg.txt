@@ -1,22 +1,18 @@
-[功能] Start界面动态创建Settings按钮
+[优化] 设置按钮改为总是显示策略
 
-问题：Start预制体中缺少Settings UI对象导致设置按钮不显示
-原因：之前实现假设Settings对象已存在于预制体中
+调整理由：
+StartSettings面板功能不仅限于账号切换，还包含语言、音效、画质等设置功能，应总是可访问
 
-解决方案：
-- InitializeSettingsButton()改为自动检测并动态创建
-- CreateSettingsButton()新增方法创建Settings按钮GameObject
-- 使用AssetManager.LoadSprite()加载Settings.png图标
-- 正确配置RectTransform、Image、Button组件
-- 提供fallback颜色方案（图标加载失败时）
+主要更改：
+1. Start.cs：InitializeSettingsButton()移除条件判断，总是显示按钮
+2. Start.cs：移除所有调试日志代码（agent log regions）
+3. 登录与启动系统.md：更新"条件显示策略"为"显示策略"（总是显示）
+
+设计理念变化：
+- 旧：单账号时隐藏按钮保持极简
+- 新：总是显示齿轮按钮，提供多功能设置入口
 
 技术实现：
-- 动态创建完整UI层级结构
-- 使用项目标准资源加载方式（AssetManager）
-- 异常安全处理（try-catch）
-- 保持原有条件显示逻辑（多账号时显示）
-
-优点：
-- 无需手动编辑Unity预制体
-- 自动适配现有Start场景
-- 向后兼容（有Settings对象则直接使用）
+- 移除 Accounts.Count 条件判断
+- 保持右上角黄金比例布局
+- 保持小尺寸图标不影响极简体验

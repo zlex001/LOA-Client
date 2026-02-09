@@ -362,24 +362,16 @@ namespace Game
                 return;
             }
 
-            // Only show settings button if there are multiple accounts
-            if (Data.Instance.User.Accounts.Count > 1)
+            // Always show settings button (for language, audio, and account management)
+            settingsButton.gameObject.SetActive(true);
+            var button = settingsButton.GetComponent<Button>();
+            if (button == null)
             {
-                settingsButton.gameObject.SetActive(true);
-                var button = settingsButton.GetComponent<Button>();
-                if (button == null)
-                {
-                    button = settingsButton.gameObject.AddComponent<Button>();
-                }
-                button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(OnSettingsClick);
-                Utils.Debug.Log("Start", $"Settings button enabled ({Data.Instance.User.Accounts.Count} accounts)");
+                button = settingsButton.gameObject.AddComponent<Button>();
             }
-            else
-            {
-                settingsButton.gameObject.SetActive(false);
-                Utils.Debug.Log("Start", $"Settings button hidden ({Data.Instance.User.Accounts.Count} accounts)");
-            }
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(OnSettingsClick);
+            Utils.Debug.Log("Start", "Settings button enabled (always visible)");
         }
 
         private Transform CreateSettingsButton()
