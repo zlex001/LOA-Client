@@ -476,6 +476,7 @@
 "Assets/Game/Scripts/UI/OptionToggle.cs"
 "Assets/Game/Scripts/UI/Start.cs"
 "Assets/Game/Scripts/UI/StartAccount.cs"
+"Assets/Game/Scripts/UI/StartSettings.cs"
 "Assets/Game/Scripts/UI/Story.cs"
 "Assets/Game/Scripts/UI/Tutorial.cs"
 "Assets/Game/Scripts/UI/UI.cs"

@@ -124,15 +124,19 @@ namespace Game
             float titleBottomY = titleCenterY - titleHeight / 2;
             float titleTopY = titleCenterY + titleHeight / 2;
             
-            // Footer (bottom)
+            // Footer (bottom, shortened to avoid Settings button)
             var footerRect = transform.Find("Footer")?.GetComponent<RectTransform>();
             if (footerRect != null)
             {
+                float padding = UnitHeight * 0.25f;
+                float buttonSize = UnitHeight;
+                float footerWidth = screenWidth - (padding + buttonSize + padding * 2);  // Leave space for Settings button
+                
                 footerRect.anchorMin = Vector2.zero;
                 footerRect.anchorMax = Vector2.zero;
-                footerRect.pivot = new Vector2(0.5f, 0f);
-                footerRect.sizeDelta = new Vector2(screenWidth, footerHeight);
-                footerRect.anchoredPosition = new Vector2(screenWidth / 2, 0);
+                footerRect.pivot = new Vector2(0f, 0f);  // Left-bottom aligned
+                footerRect.sizeDelta = new Vector2(footerWidth, footerHeight);
+                footerRect.anchoredPosition = new Vector2(padding, 0);
             }
             
             // Servers selector (below title, with spacing)
