@@ -22,6 +22,19 @@ namespace Game
         {
             ServerSelect,
         }
+        
+        public enum AnimationType
+        {
+            SimpleFade,        // 1. Pure fade in
+            GoldGlow,          // 2. Gold to white transition
+            ScaleFade,         // 3. Scale + fade
+            SlideFade,         // 4. Slide from top + fade
+            OverbrightGlow     // 5. Overbright white glow (current)
+        }
+        
+        // Change this to test different animations!
+        private const AnimationType TITLE_ANIMATION = AnimationType.SimpleFade;
+        private const float ANIMATION_TIME = 1.5f;
         #endregion
 
         #region Fields
@@ -210,91 +223,96 @@ namespace Game
 
         private System.Collections.IEnumerator Animate()
         {
-            float animationTime = 4.0f;  // Slowed down for debugging
-            
-            Utils.Debug.Log("Start", "=== Title Animation Started ===");
-            Utils.Debug.Log("Start", $"Animation Time: {animationTime} seconds");
+            Utils.Debug.Log("Start", $"=== Title Animation Started: {TITLE_ANIMATION} ===");
+            Utils.Debug.Log("Start", $"Animation Time: {ANIMATION_TIME} seconds");
             
             var authorImage = transform.Find("Author").GetComponent<Image>();
             var titleText = transform.Find("Title").GetComponent<Text>();
+            var titleRect = transform.Find("Title").GetComponent<RectTransform>();
             
-            // Set initial state
+            // Set author initial state
             authorImage.color = new Color(authorImage.color.r, authorImage.color.g, authorImage.color.b, 0);
-            Utils.Debug.Log("Start", "Author initial alpha set to 0");
+            authorImage.DOFade(1, ANIMATION_TIME * 0.6f).SetEase(Ease.OutQuad);
             
-            // Store original title color
+            // Store original values
             Color originalTitleColor = titleText.color;
-            Utils.Debug.Log("Start", $"Original title color: {originalTitleColor}");
+            Vector3 originalPos = titleRect.anchoredPosition;
+            Vector3 originalScale = titleRect.localScale;
             
-            // Start with overbright white (glow effect) and alpha 0
-            Color glowColor = new Color(2f, 2f, 2f, 0f);
-            titleText.color = glowColor;
-            Utils.Debug.Log("Start", $"Title initial glow color set: {glowColor}");
-            
-            // Check for outline component
-            var outline = titleText.GetComponent<Outline>();
-            if (outline != null)
+            switch (TITLE_ANIMATION)
             {
-                outline.effectColor = new Color(1f, 1f, 1f, 0f);
-                outline.effectDistance = new Vector2(8f, 8f);
-                Utils.Debug.Log("Start", "Outline component found and initialized");
-            }
-            else
-            {
-                Utils.Debug.LogWarning("Start", "Outline component NOT found on Title");
-            }
-            
-            // Animate author fade in
-            Utils.Debug.Log("Start", $"Starting author fade in ({animationTime * 0.6f}s)");
-            authorImage.DOFade(1, animationTime * 0.6f).SetEase(Ease.OutQuad);
-            
-            // Animate title: overbright white (alpha 0) -> normal color (alpha 1)
-            Utils.Debug.Log("Start", $"Starting title color transition ({animationTime}s)");
-            DOTween.To(
-                () => titleText.color,
-                x => titleText.color = x,
-                new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 1f),
-                animationTime
-            ).SetEase(Ease.OutQuad).OnUpdate(() => {
-                // Log progress every 0.5 seconds (approximately)
-                if (Time.frameCount % 30 == 0)
-                {
-                    Utils.Debug.Log("Start", $"Title color: {titleText.color}");
-                }
-            });
-            
-            // Animate outline glow if exists
-            if (outline != null)
-            {
-                Utils.Debug.Log("Start", $"Starting outline glow animation ({animationTime * 0.5f}s)");
-                DOTween.To(
-                    () => outline.effectColor.a,
-                    x => outline.effectColor = new Color(1f, 1f, 1f, x),
-                    0.5f,
-                    animationTime * 0.5f
-                ).SetEase(Ease.OutQuad).OnComplete(() => {
-                    Utils.Debug.Log("Start", "Outline glow peak reached, starting fade out");
-                    // Fade out outline
-                    DOTween.To(
-                        () => outline.effectColor.a,
-                        x => outline.effectColor = new Color(1f, 1f, 1f, x),
-                        0f,
-                        animationTime * 0.5f
-                    ).SetEase(Ease.InQuad);
+                case AnimationType.SimpleFade:
+                    Utils.Debug.Log("Start", "Animation: Simple Fade");
+                    titleText.color = new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 0f);
+                    titleText.DOFade(1, ANIMATION_TIME).SetEase(Ease.InOutQuad);
+                    break;
                     
+                case AnimationType.GoldGlow:
+                    Utils.Debug.Log("Start", "Animation: Gold Glow");
+                    titleText.color = new Color(1f, 0.84f, 0f, 0f);  // Gold color, alpha 0
                     DOTween.To(
-                        () => outline.effectDistance,
-                        x => outline.effectDistance = x,
-                        new Vector2(2f, 2f),
-                        animationTime * 0.5f
-                    ).SetEase(Ease.InQuad);
-                });
+                        () => titleText.color,
+                        x => titleText.color = x,
+                        new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 1f),
+                        ANIMATION_TIME
+                    ).SetEase(Ease.OutQuad);
+                    break;
+                    
+                case AnimationType.ScaleFade:
+                    Utils.Debug.Log("Start", "Animation: Scale + Fade");
+                    titleText.color = new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 0f);
+                    titleRect.localScale = originalScale * 0.5f;
+                    titleText.DOFade(1, ANIMATION_TIME).SetEase(Ease.OutQuad);
+                    titleRect.DOScale(originalScale, ANIMATION_TIME).SetEase(Ease.OutBack);
+                    break;
+                    
+                case AnimationType.SlideFade:
+                    Utils.Debug.Log("Start", "Animation: Slide from top + Fade");
+                    titleText.color = new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 0f);
+                    titleRect.anchoredPosition = originalPos + new Vector3(0, 200, 0);
+                    titleText.DOFade(1, ANIMATION_TIME).SetEase(Ease.OutQuad);
+                    titleRect.DOAnchorPos(originalPos, ANIMATION_TIME).SetEase(Ease.OutCubic);
+                    break;
+                    
+                case AnimationType.OverbrightGlow:
+                    Utils.Debug.Log("Start", "Animation: Overbright Glow");
+                    titleText.color = new Color(2f, 2f, 2f, 0f);
+                    DOTween.To(
+                        () => titleText.color,
+                        x => titleText.color = x,
+                        new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 1f),
+                        ANIMATION_TIME
+                    ).SetEase(Ease.OutQuad);
+                    
+                    var outline = titleText.GetComponent<Outline>();
+                    if (outline != null)
+                    {
+                        outline.effectColor = new Color(1f, 1f, 1f, 0f);
+                        outline.effectDistance = new Vector2(8f, 8f);
+                        DOTween.To(
+                            () => outline.effectColor.a,
+                            x => outline.effectColor = new Color(1f, 1f, 1f, x),
+                            0.5f,
+                            ANIMATION_TIME * 0.5f
+                        ).SetEase(Ease.OutQuad).OnComplete(() => {
+                            DOTween.To(
+                                () => outline.effectColor.a,
+                                x => outline.effectColor = new Color(1f, 1f, 1f, x),
+                                0f,
+                                ANIMATION_TIME * 0.5f
+                            ).SetEase(Ease.InQuad);
+                            DOTween.To(
+                                () => outline.effectDistance,
+                                x => outline.effectDistance = x,
+                                new Vector2(2f, 2f),
+                                ANIMATION_TIME * 0.5f
+                            ).SetEase(Ease.InQuad);
+                        });
+                    }
+                    break;
             }
             
-            Utils.Debug.Log("Start", $"Waiting {animationTime} seconds for animation to complete...");
-            yield return new WaitForSeconds(animationTime);
-            
-            Utils.Debug.Log("Start", "Animation complete, showing Block");
+            yield return new WaitForSeconds(ANIMATION_TIME);
             transform.Find("Block").gameObject.SetActive(true);
             Utils.Debug.Log("Start", "=== Title Animation Finished ===");
         }
