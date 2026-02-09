@@ -96,7 +96,7 @@ namespace Game
             float screenHeight = GetComponent<RectTransform>().rect.height;
             
             // Calculate heights
-            float titleHeight = UnitHeight * 3;
+            float titleHeight = UnitHeight * 5;
             float serverHeight = UnitHeight * 3;
             float buttonHeight = UnitHeight * 1.5f;
             float footerHeight = UnitHeight;
@@ -205,7 +205,7 @@ namespace Game
 
         private System.Collections.IEnumerator Animate()
         {
-            float titleTime = 1.2f;
+            float titleTime = 1.5f;
             
             var authorImage = transform.Find("Author").GetComponent<Image>();
             var titleText = transform.Find("Title").GetComponent<Text>();
@@ -215,11 +215,15 @@ namespace Game
             titleText.color = new Color(titleText.color.r, titleText.color.g, titleText.color.b, 0);
             
             Vector3 originalPos = titleTransform.anchoredPosition;
-            titleTransform.anchoredPosition = originalPos + new Vector3(0, 100, 0);
+            Vector3 originalScale = titleTransform.localScale;
             
-            authorImage.DOFade(1, titleTime).SetEase(Ease.OutQuad);
-            titleText.DOFade(1, titleTime).SetEase(Ease.OutQuad);
-            titleTransform.DOAnchorPos(originalPos, titleTime).SetEase(Ease.OutCubic);
+            titleTransform.anchoredPosition = originalPos + new Vector3(0, 200, 0);
+            titleTransform.localScale = originalScale * 0.7f;
+            
+            authorImage.DOFade(1, titleTime * 0.6f).SetEase(Ease.OutQuad);
+            titleText.DOFade(1, titleTime * 0.8f).SetEase(Ease.OutQuad);
+            titleTransform.DOAnchorPos(originalPos, titleTime).SetEase(Ease.OutBack);
+            titleTransform.DOScale(originalScale, titleTime).SetEase(Ease.OutBack);
             
             yield return new WaitForSeconds(titleTime);
             transform.Find("Block").gameObject.SetActive(true);
