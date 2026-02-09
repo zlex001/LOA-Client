@@ -98,15 +98,12 @@ namespace Game
             // Calculate heights
             float titleHeight = UnitHeight * 6;
             float serverHeight = UnitHeight * 3;
-            float buttonHeight = UnitHeight * 1.5f;
             float footerHeight = UnitHeight;
             
-            float totalFixedHeight = titleHeight + serverHeight + buttonHeight + footerHeight;
-            float remainingHeight = screenHeight - totalFixedHeight;
-            float topPadding = remainingHeight * (1 - GoldenRatio);
-            float bottomPadding = remainingHeight * GoldenRatio;
-            
-            float currentY = 0;
+            // Visual center: title center at 61.8% from bottom (golden ratio)
+            float titleCenterY = screenHeight * GoldenRatio;
+            float titleBottomY = titleCenterY - titleHeight / 2;
+            float titleTopY = titleCenterY + titleHeight / 2;
             
             // Footer (bottom)
             var footerRect = transform.Find("Footer")?.GetComponent<RectTransform>();
@@ -116,23 +113,12 @@ namespace Game
                 footerRect.anchorMax = Vector2.zero;
                 footerRect.pivot = new Vector2(0.5f, 0f);
                 footerRect.sizeDelta = new Vector2(screenWidth, footerHeight);
-                footerRect.anchoredPosition = new Vector2(screenWidth / 2, currentY);
+                footerRect.anchoredPosition = new Vector2(screenWidth / 2, 0);
             }
-            currentY += footerHeight + bottomPadding;
             
-            // QuickStart button (centered, 80% width)
-            var quickStartRect = transform.Find("QuickStart")?.GetComponent<RectTransform>();
-            if (quickStartRect != null)
-            {
-                quickStartRect.anchorMin = Vector2.zero;
-                quickStartRect.anchorMax = Vector2.zero;
-                quickStartRect.pivot = new Vector2(0.5f, 0f);
-                quickStartRect.sizeDelta = new Vector2(screenWidth * 0.8f, buttonHeight);
-                quickStartRect.anchoredPosition = new Vector2(screenWidth / 2, currentY);
-            }
-            currentY += buttonHeight + UnitHeight;
-            
-            // Servers selector (centered, 60% width)
+            // Servers selector (below title, with spacing)
+            float serversSpacing = UnitHeight * 0.5f;
+            float serversY = titleBottomY - serversSpacing - serverHeight / 2;
             var serversRect = transform.Find("Servers")?.GetComponent<RectTransform>();
             if (serversRect != null)
             {
@@ -140,7 +126,7 @@ namespace Game
                 serversRect.anchorMax = Vector2.zero;
                 serversRect.pivot = new Vector2(0.5f, 0.5f);
                 serversRect.sizeDelta = new Vector2(screenWidth * 0.6f, serverHeight);
-                serversRect.anchoredPosition = new Vector2(screenWidth / 2, currentY + serverHeight / 2);
+                serversRect.anchoredPosition = new Vector2(screenWidth / 2, serversY);
             }
             
             var serversWheel = transform.Find("Servers")?.GetComponent<InfiniWheel>();
@@ -148,17 +134,16 @@ namespace Game
             {
                 serversWheel.Select(serversWheel.SelectedItem);
             }
-            currentY += serverHeight + topPadding;
             
-            // Title (top)
+            // Title (visual center)
             var titleRect = transform.Find("Title")?.GetComponent<RectTransform>();
             if (titleRect != null)
             {
                 titleRect.anchorMin = Vector2.zero;
                 titleRect.anchorMax = Vector2.zero;
-                titleRect.pivot = new Vector2(0.5f, 0f);
+                titleRect.pivot = new Vector2(0.5f, 0.5f);
                 titleRect.sizeDelta = new Vector2(screenWidth, titleHeight);
-                titleRect.anchoredPosition = new Vector2(screenWidth / 2, currentY);
+                titleRect.anchoredPosition = new Vector2(screenWidth / 2, titleCenterY);
             }
             
             // Adjust title font size (+10%)
@@ -169,7 +154,7 @@ namespace Game
                 titleText.fontSize = Mathf.RoundToInt(originalFontSize * 1.1f);
             }
             
-            // Author (if exists)
+            // Author (if exists, positioned relative to title)
             var authorRect = transform.Find("Author")?.GetComponent<RectTransform>();
             if (authorRect != null)
             {
@@ -177,7 +162,17 @@ namespace Game
                 authorRect.anchorMax = Vector2.zero;
                 authorRect.pivot = new Vector2(0.5f, 0.5f);
                 authorRect.sizeDelta = new Vector2(UnitHeight * 0.5f, UnitHeight);
-                authorRect.anchoredPosition = new Vector2(screenWidth * GoldenRatio, currentY + titleHeight / 2);
+                authorRect.anchoredPosition = new Vector2(screenWidth * GoldenRatio, titleCenterY);
+            }
+            
+            // QuickStart/Block (fullscreen, for click detection)
+            var quickStartRect = transform.Find("QuickStart")?.GetComponent<RectTransform>();
+            if (quickStartRect != null)
+            {
+                quickStartRect.anchorMin = Vector2.zero;
+                quickStartRect.anchorMax = Vector2.one;
+                quickStartRect.sizeDelta = Vector2.zero;
+                quickStartRect.anchoredPosition = Vector2.zero;
             }
         }
         #endregion
