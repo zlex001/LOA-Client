@@ -193,12 +193,12 @@ namespace Game
                 quickStartRect.anchoredPosition = Vector2.zero;
             }
             
-            // Settings button (top-right corner, golden ratio padding)
+            // Settings button (top-right corner, fixed small padding)
             var settingsRect = transform.Find("Settings")?.GetComponent<RectTransform>();
             if (settingsRect != null)
             {
-                float buttonSize = UnitHeight * GoldenRatio;  // 83 * 0.618 ≈ 51px
-                float padding = screenWidth * (1 - GoldenRatio) / 2;  // Golden ratio padding from edge
+                float buttonSize = UnitHeight;  // 83px (1 unit height, square)
+                float padding = UnitHeight * 0.25f;  // 21px (small fixed padding, industry standard)
                 
                 settingsRect.anchorMin = Vector2.zero;
                 settingsRect.anchorMax = Vector2.zero;
