@@ -61,6 +61,9 @@ namespace Game
 
         public override void OnCreate(params object[] args)
         {
+            // Hide Block initially for title animation
+            transform.Find("Block").gameObject.SetActive(false);
+            
             ApplyAbsoluteLayout();
 
             // Initialize server selector
