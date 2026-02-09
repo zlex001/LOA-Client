@@ -30,7 +30,25 @@
   "reconnecting_countdown": "{1}秒后重连（第{0}次）...",
   "reconnecting_attempt": "正在重连（第{0}次）...",
   "reconnect_success": "重连成功",
-  "reconnect_cancel": "已取消重连"
+  "reconnect_cancel": "已取消重连",
+  "start_settings_tab_account": "账号",
+  "start_settings_tab_settings": "设置",
+  "start_settings_add_account": "添加账号",
+  "start_settings_account_id": "账号ID",
+  "start_settings_password": "密码",
+  "start_settings_note_optional": "备注（可选）",
+  "start_settings_edit_note": "编辑备注",
+  "start_settings_delete_confirm_title": "删除账号",
+  "start_settings_delete_confirm_message": "账号：{0}\n备注：{1}\n\n此操作无法撤销。",
+  "start_settings_cannot_delete_current": "无法删除当前使用的账号",
+  "start_settings_id_password_required": "账号ID和密码为必填项",
+  "start_settings_language": "语言",
+  "start_settings_ui_sound": "界面音效",
+  "start_settings_sound_on": "开启",
+  "start_settings_sound_off": "关闭",
+  "start_settings_confirm": "确认",
+  "start_settings_cancel": "取消",
+  "start_settings_error": "错误"
 }
 
 

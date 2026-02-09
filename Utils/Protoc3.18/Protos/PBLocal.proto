@@ -1,4 +1,4 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
 message Account {
     string id=1;
@@ -15,4 +15,5 @@ message UserData {
     repeated string IAPReceipts = 6;
     string Language = 7;
     int32 FontSize = 8;
+    bool UISoundEnabled = 9;
 }

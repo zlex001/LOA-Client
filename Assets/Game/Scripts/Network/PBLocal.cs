@@ -448,6 +448,18 @@ public sealed partial class UserData : pb::IMessage<UserData>
     }
   }
 
+  /// <summary>Field number for the "UISoundEnabled" field.</summary>
+  public const int UISoundEnabledFieldNumber = 9;
+  private bool uISoundEnabled_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool UISoundEnabled {
+    get { return uISoundEnabled_; }
+    set {
+      uISoundEnabled_ = value;
+    }
+  }
+
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override bool Equals(object other) {
@@ -471,6 +483,7 @@ public sealed partial class UserData : pb::IMessage<UserData>
     if(!iAPReceipts_.Equals(other.iAPReceipts_)) return false;
     if (Language != other.Language) return false;
     if (FontSize != other.FontSize) return false;
+    if (UISoundEnabled != other.UISoundEnabled) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -486,6 +499,7 @@ public sealed partial class UserData : pb::IMessage<UserData>
     hash ^= iAPReceipts_.GetHashCode();
     if (Language.Length != 0) hash ^= Language.GetHashCode();
     if (FontSize != 0) hash ^= FontSize.GetHashCode();
+    if (UISoundEnabled != false) hash ^= UISoundEnabled.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -530,6 +544,10 @@ public sealed partial class UserData : pb::IMessage<UserData>
       output.WriteRawTag(64);
       output.WriteInt32(FontSize);
     }
+    if (UISoundEnabled != false) {
+      output.WriteRawTag(72);
+      output.WriteBool(UISoundEnabled);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -566,6 +584,10 @@ public sealed partial class UserData : pb::IMessage<UserData>
       output.WriteRawTag(64);
       output.WriteInt32(FontSize);
     }
+    if (UISoundEnabled != false) {
+      output.WriteRawTag(72);
+      output.WriteBool(UISoundEnabled);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -595,6 +617,9 @@ public sealed partial class UserData : pb::IMessage<UserData>
     }
     if (FontSize != 0) {
       size += 1 + pb::CodedOutputStream.ComputeInt32Size(FontSize);
+    }
+    if (UISoundEnabled != false) {
+      size += 1 + 1;
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -627,6 +652,9 @@ public sealed partial class UserData : pb::IMessage<UserData>
     }
     if (other.FontSize != 0) {
       FontSize = other.FontSize;
+    }
+    if (other.UISoundEnabled != false) {
+      UISoundEnabled = other.UISoundEnabled;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -675,6 +703,10 @@ public sealed partial class UserData : pb::IMessage<UserData>
           FontSize = input.ReadInt32();
           break;
         }
+        case 72: {
+          UISoundEnabled = input.ReadBool();
+          break;
+        }
       }
     }
   #endif
@@ -720,6 +752,10 @@ public sealed partial class UserData : pb::IMessage<UserData>
         }
         case 64: {
           FontSize = input.ReadInt32();
+          break;
+        }
+        case 72: {
+          UISoundEnabled = input.ReadBool();
           break;
         }
       }

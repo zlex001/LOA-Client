@@ -30,6 +30,24 @@
   "reconnecting_countdown": "Kobler til igjen om {1}s (Forsøk {0})...",
   "reconnecting_attempt": "Kobler til igjen (Forsøk {0})...",
   "reconnect_success": "Tilkoblet igjen",
-  "reconnect_cancel": "Tilkobling avbrutt"
+  "reconnect_cancel": "Tilkobling avbrutt",
+  "start_settings_tab_account": "Account",
+  "start_settings_tab_settings": "Settings",
+  "start_settings_add_account": "Add Account",
+  "start_settings_account_id": "Account ID",
+  "start_settings_password": "Password",
+  "start_settings_note_optional": "Note (Optional)",
+  "start_settings_edit_note": "Edit Note",
+  "start_settings_delete_confirm_title": "Delete Account",
+  "start_settings_delete_confirm_message": "Account: {0}\nNote: {1}\n\nThis cannot be undone.",
+  "start_settings_cannot_delete_current": "Cannot delete current account",
+  "start_settings_id_password_required": "Account ID and Password are required",
+  "start_settings_language": "Language",
+  "start_settings_ui_sound": "UI Sound Effect",
+  "start_settings_sound_on": "ON",
+  "start_settings_sound_off": "OFF",
+  "start_settings_confirm": "Confirm",
+  "start_settings_cancel": "Cancel",
+  "start_settings_error": "Error"
 }
 

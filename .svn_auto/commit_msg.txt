@@ -1,1 +1,1 @@
-[修复] StartSettings面板Text组件创建问题 - 将Text组件从父对象移至子对象
+[功能] 完善StartSettings面板：添加本地化支持、实现语言切换和音效开关功能

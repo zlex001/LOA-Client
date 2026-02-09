@@ -179,10 +179,10 @@ namespace Game
             }
             
             // Create Account Tab Button
-            _accountTabButton = CreateTabButton(tabBar, "AccountTab", "Account", 0, TabType.Account);
+            _accountTabButton = CreateTabButton(tabBar, "AccountTab", Localization.Instance.Get("start_settings_tab_account"), 0, TabType.Account);
             
             // Create Settings Tab Button
-            _settingsTabButton = CreateTabButton(tabBar, "SettingsTab", "Settings", 1, TabType.Settings);
+            _settingsTabButton = CreateTabButton(tabBar, "SettingsTab", Localization.Instance.Get("start_settings_tab_settings"), 1, TabType.Settings);
             
             UpdateTabVisuals();
         }
@@ -392,7 +392,7 @@ namespace Game
             textRect.anchoredPosition = Vector2.zero;
             
             var text = textObj.AddComponent<Text>();
-            text.text = "Add Account";
+            text.text = Localization.Instance.Get("start_settings_add_account");
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 28;
             text.color = Color.white;
@@ -407,9 +407,7 @@ namespace Game
 
         private void BuildAccountList()
         {
-            Utils.Debug.Log("StartSettings", $"BuildAccountList called (temporarily simplified - UI Text issue), account count: {_accounts.Count}");
-            // TODO: Account list UI creation temporarily disabled due to Unity AddComponent<Text> issue
-            // Will need to create account list using prefabs or a different approach
+            Utils.Debug.Log("StartSettings", $"BuildAccountList called, account count: {_accounts.Count}");
         }
 
         private void CreateAccountItem(Transform parent, Account account, int index)
@@ -608,7 +606,7 @@ namespace Game
         {
             Utils.Debug.Log("StartSettings", $"Edit account note clicked for index {index}");
             var account = _accounts[index];
-            ShowInputDialog("Edit Note", account.Note, (newNote) =>
+            ShowInputDialog(Localization.Instance.Get("start_settings_edit_note"), account.Note, (newNote) =>
             {
                 account.Note = newNote;
                 Data.Instance.User.Accounts[index] = account;
@@ -621,14 +619,14 @@ namespace Game
         {
             if (index == _selectedIndex)
             {
-                ShowErrorDialog("Cannot delete current account");
+                ShowErrorDialog(Localization.Instance.Get("start_settings_cannot_delete_current"));
                 return;
             }
             
             var account = _accounts[index];
             ShowConfirmDialog(
-                "Delete Account?",
-                $"Account: {account.Id}\nNote: {account.Note}\n\nThis cannot be undone.",
+                Localization.Instance.Get("start_settings_delete_confirm_title"),
+                Localization.Instance.Get("start_settings_delete_confirm_message", account.Id, account.Note),
                 () =>
                 {
                     Data.Instance.User.Accounts.RemoveAt(index);
@@ -719,7 +717,7 @@ namespace Game
             var titleText = titleObj.AddComponent<Text>();
             
             
-            titleText.text = "Language";
+            titleText.text = Localization.Instance.Get("start_settings_language");
             
             
             titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
@@ -732,36 +730,71 @@ namespace Game
             titleText.alignment = TextAnchor.MiddleCenter;
             
             
-            // Value (placeholder for dropdown)
-            var valueObj = new GameObject("Value");
-            valueObj.transform.SetParent(settingObj.transform, false);
-            var valueRect = valueObj.AddComponent<RectTransform>();
-            valueRect.anchorMin = new Vector2(0.2f, 0.1f);
-            valueRect.anchorMax = new Vector2(0.8f, 0.5f);
-            valueRect.sizeDelta = Vector2.zero;
-            valueRect.anchoredPosition = Vector2.zero;
+            // Dropdown
+            var dropdownObj = new GameObject("Dropdown");
+            dropdownObj.transform.SetParent(settingObj.transform, false);
+            var dropdownRect = dropdownObj.AddComponent<RectTransform>();
+            dropdownRect.anchorMin = new Vector2(0.2f, 0.1f);
+            dropdownRect.anchorMax = new Vector2(0.8f, 0.5f);
+            dropdownRect.sizeDelta = Vector2.zero;
+            dropdownRect.anchoredPosition = Vector2.zero;
             
-            var valueBg = valueObj.AddComponent<Image>();
-            valueBg.color = new Color(0.15f, 0.15f, 0.15f, 0.8f);
+            var dropdownBg = dropdownObj.AddComponent<Image>();
+            dropdownBg.color = new Color(0.15f, 0.15f, 0.15f, 0.8f);
             
-            // Text (as child GameObject - correct pattern)
-            var valueTextObj = new GameObject("Text");
-            valueTextObj.transform.SetParent(valueObj.transform, false);
-            var valueTextRect = valueTextObj.AddComponent<RectTransform>();
-            valueTextRect.anchorMin = Vector2.zero;
-            valueTextRect.anchorMax = Vector2.one;
-            valueTextRect.sizeDelta = Vector2.zero;
-            valueTextRect.anchoredPosition = Vector2.zero;
+            var dropdown = dropdownObj.AddComponent<Dropdown>();
             
-            var valueText = valueTextObj.AddComponent<Text>();
-            valueText.text = "Language";
-            valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            valueText.fontSize = 26;
-            valueText.color = Color.white;
-            valueText.alignment = TextAnchor.MiddleCenter;
+            // Label (displays current selection)
+            var labelObj = new GameObject("Label");
+            labelObj.transform.SetParent(dropdownObj.transform, false);
+            var labelRect = labelObj.AddComponent<RectTransform>();
+            labelRect.anchorMin = new Vector2(0.1f, 0);
+            labelRect.anchorMax = new Vector2(0.9f, 1);
+            labelRect.sizeDelta = Vector2.zero;
+            labelRect.anchoredPosition = Vector2.zero;
             
+            var labelText = labelObj.AddComponent<Text>();
+            labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            labelText.fontSize = 24;
+            labelText.color = Color.white;
+            labelText.alignment = TextAnchor.MiddleLeft;
             
-            // TODO: Add Dropdown component when implementing language switching
+            dropdown.captionText = labelText;
+            
+            // Populate dropdown options from Data.Languages enum
+            dropdown.ClearOptions();
+            var languageOptions = new List<Dropdown.OptionData>();
+            var languageNames = System.Enum.GetNames(typeof(Data.Languages));
+            foreach (var langName in languageNames)
+            {
+                languageOptions.Add(new Dropdown.OptionData(langName));
+            }
+            dropdown.AddOptions(languageOptions);
+            
+            // Set current language as selected
+            string currentLanguage = Data.Instance.User.Language;
+            int selectedIndex = System.Array.IndexOf(languageNames, currentLanguage);
+            if (selectedIndex >= 0)
+            {
+                dropdown.value = selectedIndex;
+            }
+            
+            // Bind event: when language changes
+            dropdown.onValueChanged.AddListener((int index) =>
+            {
+                string newLanguage = languageNames[index];
+                Data.Instance.User.Language = newLanguage;
+                Localization.Instance.Init(newLanguage);
+                PlayerPrefs.SetString("LANGUAGE", newLanguage);
+                PlayerPrefs.Save();
+                Local.Instance.Save(Data.Instance.User);
+                
+                Utils.Debug.Log("StartSettings", $"Language changed to: {newLanguage}");
+                
+                // Refresh UI text (close and reopen panel)
+                Close();
+                UI.Instance.Open(Config.UI.StartSettings);
+            });
             
             yOffset -= UnitHeight * 1.7f;
             
@@ -793,13 +826,13 @@ namespace Game
             titleRect.anchoredPosition = Vector2.zero;
             
             var titleText = titleObj.AddComponent<Text>();
-            titleText.text = "UI Sound Effect";
+            titleText.text = Localization.Instance.Get("start_settings_ui_sound");
             titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             titleText.fontSize = 24;
             titleText.color = new Color(0.8f, 0.8f, 0.8f, 1f);
             titleText.alignment = TextAnchor.MiddleCenter;
             
-            // Toggle (placeholder)
+            // Toggle
             var toggleObj = new GameObject("Toggle");
             toggleObj.transform.SetParent(settingObj.transform, false);
             var toggleRect = toggleObj.AddComponent<RectTransform>();
@@ -808,26 +841,69 @@ namespace Game
             toggleRect.sizeDelta = Vector2.zero;
             toggleRect.anchoredPosition = Vector2.zero;
             
-            var toggleBg = toggleObj.AddComponent<Image>();
-            toggleBg.color = new Color(0.2f, 0.5f, 0.2f, 0.8f);
+            var toggle = toggleObj.AddComponent<Toggle>();
             
-            // Text (as child GameObject - correct pattern)
-            var toggleTextObj = new GameObject("Text");
-            toggleTextObj.transform.SetParent(toggleObj.transform, false);
-            var toggleTextRect = toggleTextObj.AddComponent<RectTransform>();
-            toggleTextRect.anchorMin = Vector2.zero;
-            toggleTextRect.anchorMax = Vector2.one;
-            toggleTextRect.sizeDelta = Vector2.zero;
-            toggleTextRect.anchoredPosition = Vector2.zero;
+            // Background
+            var bgObj = new GameObject("Background");
+            bgObj.transform.SetParent(toggleObj.transform, false);
+            var bgRect = bgObj.AddComponent<RectTransform>();
+            bgRect.anchorMin = new Vector2(0, 0.5f);
+            bgRect.anchorMax = new Vector2(0, 0.5f);
+            bgRect.pivot = new Vector2(0, 0.5f);
+            bgRect.sizeDelta = new Vector2(50, 50);
+            bgRect.anchoredPosition = new Vector2(10, 0);
             
-            var toggleText = toggleTextObj.AddComponent<Text>();
-            toggleText.text = "ON";
-            toggleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            toggleText.fontSize = 28;
-            toggleText.color = Color.white;
-            toggleText.alignment = TextAnchor.MiddleCenter;
+            var bgImage = bgObj.AddComponent<Image>();
+            bgImage.color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
             
-            // TODO: Add Toggle component when implementing sound switching
+            // Checkmark
+            var checkmarkObj = new GameObject("Checkmark");
+            checkmarkObj.transform.SetParent(bgObj.transform, false);
+            var checkmarkRect = checkmarkObj.AddComponent<RectTransform>();
+            checkmarkRect.anchorMin = Vector2.zero;
+            checkmarkRect.anchorMax = Vector2.one;
+            checkmarkRect.sizeDelta = new Vector2(-10, -10);
+            checkmarkRect.anchoredPosition = Vector2.zero;
+            
+            var checkmarkImage = checkmarkObj.AddComponent<Image>();
+            checkmarkImage.color = new Color(0.2f, 0.8f, 0.2f, 1f);
+            
+            toggle.graphic = checkmarkImage;
+            toggle.targetGraphic = bgImage;
+            
+            // Label
+            var labelObj = new GameObject("Label");
+            labelObj.transform.SetParent(toggleObj.transform, false);
+            var labelRect = labelObj.AddComponent<RectTransform>();
+            labelRect.anchorMin = new Vector2(0, 0);
+            labelRect.anchorMax = new Vector2(1, 1);
+            labelRect.sizeDelta = Vector2.zero;
+            labelRect.anchoredPosition = new Vector2(30, 0);
+            
+            var labelText = labelObj.AddComponent<Text>();
+            labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            labelText.fontSize = 24;
+            labelText.color = Color.white;
+            labelText.alignment = TextAnchor.MiddleLeft;
+            
+            // Set initial state
+            bool currentSoundEnabled = Data.Instance.User.UISoundEnabled;
+            toggle.isOn = currentSoundEnabled;
+            labelText.text = currentSoundEnabled ? 
+                Localization.Instance.Get("start_settings_sound_on") : 
+                Localization.Instance.Get("start_settings_sound_off");
+            
+            // Bind event: when toggle changes
+            toggle.onValueChanged.AddListener((bool isOn) =>
+            {
+                Data.Instance.User.UISoundEnabled = isOn;
+                Local.Instance.Save(Data.Instance.User);
+                labelText.text = isOn ? 
+                    Localization.Instance.Get("start_settings_sound_on") : 
+                    Localization.Instance.Get("start_settings_sound_off");
+                
+                Utils.Debug.Log("StartSettings", $"UI Sound toggled: {isOn}");
+            });
             
             yOffset -= UnitHeight * 1.7f;
         }
@@ -899,14 +975,14 @@ namespace Game
             messageText.alignment = TextAnchor.UpperLeft;
             
             // Confirm button
-            CreateDialogButton(panelObj, "Confirm", 0.55f, 0.85f, () =>
+            CreateDialogButton(panelObj, Localization.Instance.Get("start_settings_confirm"), 0.55f, 0.85f, true, () =>
             {
                 onConfirm?.Invoke();
                 Destroy(dialogObj);
             });
             
             // Cancel button
-            CreateDialogButton(panelObj, "Cancel", 0.15f, 0.45f, () =>
+            CreateDialogButton(panelObj, Localization.Instance.Get("start_settings_cancel"), 0.15f, 0.45f, false, () =>
             {
                 Destroy(dialogObj);
             });
@@ -993,14 +1069,14 @@ namespace Game
             inputField.textComponent = inputText;
             
             // Confirm button
-            CreateDialogButton(panelObj, "Confirm", 0.55f, 0.85f, () =>
+            CreateDialogButton(panelObj, Localization.Instance.Get("start_settings_confirm"), 0.55f, 0.85f, true, () =>
             {
                 onConfirm?.Invoke(inputField.text);
                 Destroy(dialogObj);
             });
             
             // Cancel button
-            CreateDialogButton(panelObj, "Cancel", 0.15f, 0.45f, () =>
+            CreateDialogButton(panelObj, Localization.Instance.Get("start_settings_cancel"), 0.15f, 0.45f, false, () =>
             {
                 Destroy(dialogObj);
             });
@@ -1048,23 +1124,23 @@ namespace Game
             titleRect.anchoredPosition = Vector2.zero;
             
             var titleText = titleObj.AddComponent<Text>();
-            titleText.text = "Add Account";
+            titleText.text = Localization.Instance.Get("start_settings_add_account");
             titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             titleText.fontSize = 28;
             titleText.color = Color.white;
             titleText.alignment = TextAnchor.MiddleCenter;
             
             // Account ID input
-            var idField = CreateInputFieldWithLabel(panelObj, "Account ID", "", 0.65f, 0.8f);
+            var idField = CreateInputFieldWithLabel(panelObj, Localization.Instance.Get("start_settings_account_id"), "", 0.65f, 0.8f);
             
             // Password input
-            var passwordField = CreateInputFieldWithLabel(panelObj, "Password", "", 0.48f, 0.63f);
+            var passwordField = CreateInputFieldWithLabel(panelObj, Localization.Instance.Get("start_settings_password"), "", 0.48f, 0.63f);
             
             // Note input
-            var noteField = CreateInputFieldWithLabel(panelObj, "Note (Optional)", "", 0.31f, 0.46f);
+            var noteField = CreateInputFieldWithLabel(panelObj, Localization.Instance.Get("start_settings_note_optional"), "", 0.31f, 0.46f);
             
             // Confirm button
-            CreateDialogButton(panelObj, "Confirm", 0.55f, 0.85f, () =>
+            CreateDialogButton(panelObj, Localization.Instance.Get("start_settings_confirm"), 0.55f, 0.85f, true, () =>
             {
                 string id = idField.text;
                 string password = passwordField.text;
@@ -1072,7 +1148,7 @@ namespace Game
                 
                 if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
                 {
-                    ShowErrorDialog("Account ID and Password are required");
+                    ShowErrorDialog(Localization.Instance.Get("start_settings_id_password_required"));
                     return;
                 }
                 
@@ -1081,7 +1157,7 @@ namespace Game
             });
             
             // Cancel button
-            CreateDialogButton(panelObj, "Cancel", 0.15f, 0.45f, () =>
+            CreateDialogButton(panelObj, Localization.Instance.Get("start_settings_cancel"), 0.15f, 0.45f, false, () =>
             {
                 Destroy(dialogObj);
             });
@@ -1152,10 +1228,10 @@ namespace Game
         private void ShowErrorDialog(string message)
         {
             Utils.Debug.Log("StartSettings", $"Showing error dialog: {message}");
-            ShowConfirmDialog("Error", message, null);
+            ShowConfirmDialog(Localization.Instance.Get("start_settings_error"), message, null);
         }
 
-        private void CreateDialogButton(GameObject parent, string label, float xMin, float xMax, Action onClick)
+        private void CreateDialogButton(GameObject parent, string label, float xMin, float xMax, bool isConfirm, Action onClick)
         {
             var buttonObj = new GameObject($"{label}Button");
             buttonObj.transform.SetParent(parent.transform, false);
@@ -1167,7 +1243,7 @@ namespace Game
             rect.anchoredPosition = Vector2.zero;
             
             var bg = buttonObj.AddComponent<Image>();
-            bg.color = label == "Confirm" ? 
+            bg.color = isConfirm ? 
                 new Color(0.2f, 0.5f, 0.8f, 0.9f) : 
                 new Color(0.4f, 0.4f, 0.4f, 0.9f);
             

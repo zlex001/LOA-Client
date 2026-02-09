@@ -30,7 +30,25 @@
   "reconnecting_countdown": "{1}秒後重連（第{0}次）...",
   "reconnecting_attempt": "正在重連（第{0}次）...",
   "reconnect_success": "重連成功",
-  "reconnect_cancel": "已取消重連"
+  "reconnect_cancel": "已取消重連",
+  "start_settings_tab_account": "帳號",
+  "start_settings_tab_settings": "設置",
+  "start_settings_add_account": "添加帳號",
+  "start_settings_account_id": "帳號ID",
+  "start_settings_password": "密碼",
+  "start_settings_note_optional": "備註（可選）",
+  "start_settings_edit_note": "編輯備註",
+  "start_settings_delete_confirm_title": "刪除帳號",
+  "start_settings_delete_confirm_message": "帳號：{0}\n備註：{1}\n\n此操作無法撤銷。",
+  "start_settings_cannot_delete_current": "無法刪除當前使用的帳號",
+  "start_settings_id_password_required": "帳號ID和密碼為必填項",
+  "start_settings_language": "語言",
+  "start_settings_ui_sound": "界面音效",
+  "start_settings_sound_on": "開啟",
+  "start_settings_sound_off": "關閉",
+  "start_settings_confirm": "確認",
+  "start_settings_cancel": "取消",
+  "start_settings_error": "錯誤"
 }
 
 
