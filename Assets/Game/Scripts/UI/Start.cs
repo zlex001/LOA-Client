@@ -33,7 +33,7 @@ namespace Game
         }
         
         // Change this to test different animations!
-        private const AnimationType TITLE_ANIMATION = AnimationType.SlideFade;
+        private const AnimationType TITLE_ANIMATION = AnimationType.SimpleFade;
         private const float ANIMATION_TIME = 1.618f;  // Golden Ratio reciprocal (φ) seconds
         #endregion
 
@@ -83,6 +83,9 @@ namespace Game
             transform.Find("Servers").GetComponent<InfiniWheel>().Init(Data.Instance.Servers.Select(s => s.Name).ToArray());
             transform.Find("Servers").GetComponent<InfiniWheel>().Select(Data.Instance.User.SelectedServerIndex);
             transform.Find("Servers").GetComponent<InfiniWheel>().ValueChange += OnServersValueChange;
+
+            // Settings button (conditional display based on account count)
+            InitializeSettingsButton();
 
             // Block animation
             transform.Find("Block/Text").GetComponent<Text>().DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo);
@@ -188,6 +191,22 @@ namespace Game
                 quickStartRect.anchorMax = Vector2.one;
                 quickStartRect.sizeDelta = Vector2.zero;
                 quickStartRect.anchoredPosition = Vector2.zero;
+            }
+            
+            // Settings button (top-right corner, golden ratio padding)
+            var settingsRect = transform.Find("Settings")?.GetComponent<RectTransform>();
+            if (settingsRect != null)
+            {
+                float buttonSize = UnitHeight * GoldenRatio;  // 83 * 0.618 ≈ 51px
+                float padding = screenWidth * (1 - GoldenRatio) / 2;  // Golden ratio padding from edge
+                
+                settingsRect.anchorMin = Vector2.zero;
+                settingsRect.anchorMax = Vector2.zero;
+                settingsRect.pivot = new Vector2(1f, 1f);  // Top-right pivot
+                settingsRect.sizeDelta = new Vector2(buttonSize, buttonSize);
+                settingsRect.anchoredPosition = new Vector2(screenWidth - padding, screenHeight - padding);
+                
+                Utils.Debug.Log("Start", $"Settings button layout: size={buttonSize}, padding={padding}, pos=({screenWidth - padding}, {screenHeight - padding})");
             }
         }
         #endregion
@@ -325,7 +344,35 @@ namespace Game
         }
         #endregion
 
-        #region Accounts
+        #region Settings
+        private void InitializeSettingsButton()
+        {
+            var settingsButton = transform.Find("Settings");
+            if (settingsButton == null)
+            {
+                Utils.Debug.LogWarning("Start", "Settings button not found in hierarchy");
+                return;
+            }
+
+            // Only show settings button if there are multiple accounts
+            if (Data.Instance.User.Accounts.Count > 1)
+            {
+                settingsButton.gameObject.SetActive(true);
+                settingsButton.GetComponent<Button>().onClick.AddListener(OnSettingsClick);
+                Utils.Debug.Log("Start", $"Settings button enabled ({Data.Instance.User.Accounts.Count} accounts)");
+            }
+            else
+            {
+                settingsButton.gameObject.SetActive(false);
+                Utils.Debug.Log("Start", $"Settings button hidden ({Data.Instance.User.Accounts.Count} accounts)");
+            }
+        }
+
+        private void OnSettingsClick()
+        {
+            Utils.Debug.Log("Start", "Settings button clicked");
+            UI.Instance.Open(Config.UI.StartSettings);
+        }
         #endregion
 
         #region Login

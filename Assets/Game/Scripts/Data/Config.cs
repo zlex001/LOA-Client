@@ -10,6 +10,7 @@ namespace Game
         {
             public static (string, string, int, bool) Effect = ("Prefabs/UI", "Effect", 0, false);
             public static (string, string, int, bool) Start = ("Prefabs/UI", "Start", 0, false);
+            public static (string, string, int, bool) StartSettings = ("Prefabs/UI", "StartSettings", 1, true);
             public static (string, string, int, bool) Login = ("Prefabs/UI", "Login", 0, false);
             public static (string, string, int, bool) Account = ("Prefabs/UI", "Account", 1, false);
             public static (string, string, int, bool) Initialize = ("Prefabs/UI", "Initialize", 0, false);
