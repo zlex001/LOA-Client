@@ -1,16 +1,22 @@
-[修复] 添加Net.Disconnect()方法修复编译错误
+[功能] Start界面动态创建Settings按钮
 
-问题：StartSettings.cs调用Net.Instance.Disconnect()导致编译错误
-原因：Net类缺少公开的Disconnect()方法
+问题：Start预制体中缺少Settings UI对象导致设置按钮不显示
+原因：之前实现假设Settings对象已存在于预制体中
 
 解决方案：
-- Net.cs新增public Disconnect()方法
-- 正确关闭Socket（Shutdown + Close）
-- 设置Online = false
-- 取消重连尝试
-- 添加调试日志
+- InitializeSettingsButton()改为自动检测并动态创建
+- CreateSettingsButton()新增方法创建Settings按钮GameObject
+- 使用AssetManager.LoadSprite()加载Settings.png图标
+- 正确配置RectTransform、Image、Button组件
+- 提供fallback颜色方案（图标加载失败时）
 
 技术实现：
-- 遵循现有ConnectCoroutine中的断开连接模式
-- 异常安全处理（try-catch socket shutdown）
-- 完整清理状态（socket + online + reconnect）
+- 动态创建完整UI层级结构
+- 使用项目标准资源加载方式（AssetManager）
+- 异常安全处理（try-catch）
+- 保持原有条件显示逻辑（多账号时显示）
+
+优点：
+- 无需手动编辑Unity预制体
+- 自动适配现有Start场景
+- 向后兼容（有Settings对象则直接使用）

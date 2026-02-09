@@ -348,9 +348,17 @@ namespace Game
         private void InitializeSettingsButton()
         {
             var settingsButton = transform.Find("Settings");
+            
+            // If Settings button doesn't exist, create it dynamically
             if (settingsButton == null)
             {
-                Utils.Debug.LogWarning("Start", "Settings button not found in hierarchy");
+                Utils.Debug.Log("Start", "Settings button not found, creating dynamically");
+                settingsButton = CreateSettingsButton();
+            }
+
+            if (settingsButton == null)
+            {
+                Utils.Debug.LogError("Start", "Failed to create Settings button");
                 return;
             }
 
@@ -358,7 +366,13 @@ namespace Game
             if (Data.Instance.User.Accounts.Count > 1)
             {
                 settingsButton.gameObject.SetActive(true);
-                settingsButton.GetComponent<Button>().onClick.AddListener(OnSettingsClick);
+                var button = settingsButton.GetComponent<Button>();
+                if (button == null)
+                {
+                    button = settingsButton.gameObject.AddComponent<Button>();
+                }
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(OnSettingsClick);
                 Utils.Debug.Log("Start", $"Settings button enabled ({Data.Instance.User.Accounts.Count} accounts)");
             }
             else
@@ -366,6 +380,54 @@ namespace Game
                 settingsButton.gameObject.SetActive(false);
                 Utils.Debug.Log("Start", $"Settings button hidden ({Data.Instance.User.Accounts.Count} accounts)");
             }
+        }
+
+        private Transform CreateSettingsButton()
+        {
+            // Create Settings button GameObject
+            GameObject settingsObj = new GameObject("Settings");
+            settingsObj.transform.SetParent(transform, false);
+
+            // Add RectTransform
+            var rect = settingsObj.AddComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.zero;
+            rect.pivot = new Vector2(1f, 1f);
+
+            // Add Image component for button background
+            var image = settingsObj.AddComponent<Image>();
+            
+            // Load Settings.png using AssetManager (same pattern as other UI assets)
+            try
+            {
+                var settingsSprite = AssetManager.Instance.LoadSprite("RawAssets/Texture", "Settings");
+                if (settingsSprite != null)
+                {
+                    image.sprite = settingsSprite;
+                    image.type = Image.Type.Simple;
+                    image.preserveAspect = true;
+                    image.color = Color.white;
+                    Utils.Debug.Log("Start", "Settings sprite loaded successfully from RawAssets/Texture/Settings");
+                }
+                else
+                {
+                    // Fallback: use a simple colored circle
+                    image.color = new Color(0.8f, 0.8f, 0.8f, 0.8f);
+                    Utils.Debug.LogWarning("Start", "Settings.png not found in RawAssets/Texture/, using fallback color");
+                }
+            }
+            catch (System.Exception e)
+            {
+                Utils.Debug.LogWarning("Start", $"Failed to load Settings sprite: {e.Message}, using fallback color");
+                image.color = new Color(0.8f, 0.8f, 0.8f, 0.8f);
+            }
+
+            // Add Button component
+            var button = settingsObj.AddComponent<Button>();
+            button.targetGraphic = image;
+
+            Utils.Debug.Log("Start", "Settings button created dynamically");
+            return settingsObj.transform;
         }
 
         private void OnSettingsClick()
