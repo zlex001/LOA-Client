@@ -39,18 +39,22 @@ namespace Game
         #region Lifecycle
         public override void OnCreate(params object[] args)
         {
+            
             Utils.Debug.Log("StartSettings", "OnCreate called");
             
             // Cache references
             _panelRect = transform.Find("Panel")?.GetComponent<RectTransform>();
             _maskImage = GetComponent<Image>();
             
+            
             // Apply layout first
             ApplyLayout();
             
             // Build UI structure
             BuildTabBar();
+            
             BuildAccountTab();
+            
             BuildSettingsTab();
             
             // Setup close button
@@ -199,21 +203,21 @@ namespace Game
             var bg = buttonObj.AddComponent<Image>();
             bg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
             
-            // Text
-            var textObj = new GameObject("Text");
-            textObj.transform.SetParent(buttonObj.transform, false);
-            var textRect = textObj.AddComponent<RectTransform>();
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.one;
-            textRect.sizeDelta = Vector2.zero;
-            textRect.anchoredPosition = Vector2.zero;
-            
-            var text = textObj.AddComponent<Text>();
-            text.text = label;
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.fontSize = 28;
-            text.color = new Color(0.7f, 0.7f, 0.7f, 1f); // Default: gray
-            text.alignment = TextAnchor.MiddleCenter;
+            // Text - temporarily disabled due to Unity AddComponent<Text> issue
+            // var textObj = new GameObject("Text");
+            // textObj.transform.SetParent(buttonObj.transform, false);
+            // var textRect = textObj.AddComponent<RectTransform>();
+            // textRect.anchorMin = Vector2.zero;
+            // textRect.anchorMax = Vector2.one;
+            // textRect.sizeDelta = Vector2.zero;
+            // textRect.anchoredPosition = Vector2.zero;
+            // 
+            // var text = textObj.AddComponent<Text>();
+            // text.text = label;
+            // text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            // text.fontSize = 28;
+            // text.color = new Color(0.7f, 0.7f, 0.7f, 1f); // Default: gray
+            // text.alignment = TextAnchor.MiddleCenter;
             
             // Button
             var button = buttonObj.AddComponent<Button>();
@@ -352,8 +356,10 @@ namespace Game
             
             scrollView.content = contentRectTransform;
             
-            // Add Account Button (bottom)
-            _addAccountButton = CreateAddAccountButton(accountContentObj);
+            // Add Account Button (bottom) - temporarily disabled due to Unity AddComponent<Text> issue
+            // _addAccountButton = CreateAddAccountButton(accountContentObj);
+            
+            Utils.Debug.Log("StartSettings", "Account tab structure created (content simplified)");
         }
 
         private GameObject CreateAddAccountButton(GameObject parent)
@@ -383,7 +389,7 @@ namespace Game
             
             var text = textObj.AddComponent<Text>();
             text.text = "Add Account";
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 28;
             text.color = Color.white;
             text.alignment = TextAnchor.MiddleCenter;
@@ -397,30 +403,9 @@ namespace Game
 
         private void BuildAccountList()
         {
-            var accountContainer = transform.Find("Panel/AccountContent/ScrollView/Viewport/Content");
-            if (accountContainer == null)
-            {
-                Utils.Debug.LogWarning("StartSettings", "Account container not found");
-                return;
-            }
-            
-            // Clear existing items
-            foreach (Transform child in accountContainer)
-            {
-                Destroy(child.gameObject);
-            }
-            
-            // Create account items
-            for (int i = 0; i < _accounts.Count; i++)
-            {
-                CreateAccountItem(accountContainer, _accounts[i], i);
-            }
-            
-            // Update content height
-            var contentRect = accountContainer.GetComponent<RectTransform>();
-            contentRect.sizeDelta = new Vector2(0, _accounts.Count * UnitHeight);
-            
-            Utils.Debug.Log("StartSettings", $"Built account list with {_accounts.Count} items");
+            Utils.Debug.Log("StartSettings", $"BuildAccountList called (temporarily simplified - UI Text issue), account count: {_accounts.Count}");
+            // TODO: Account list UI creation temporarily disabled due to Unity AddComponent<Text> issue
+            // Will need to create account list using prefabs or a different approach
         }
 
         private void CreateAccountItem(Transform parent, Account account, int index)
@@ -479,7 +464,7 @@ namespace Game
             
             var text = iconObj.AddComponent<Text>();
             text.text = "✓";
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 32;
             text.color = new Color(0.3f, 0.8f, 1f, 1f);
             text.alignment = TextAnchor.MiddleCenter;
@@ -498,7 +483,7 @@ namespace Game
             
             var text = textObj.AddComponent<Text>();
             text.text = $"{account.Id}\n{account.Note}";
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 22;
             text.color = Color.white;
             text.alignment = TextAnchor.MiddleLeft;
@@ -521,7 +506,7 @@ namespace Game
             
             var text = buttonObj.AddComponent<Text>();
             text.text = "✏";
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 28;
             text.color = Color.white;
             text.alignment = TextAnchor.MiddleCenter;
@@ -548,7 +533,7 @@ namespace Game
             
             var text = buttonObj.AddComponent<Text>();
             text.text = "🗑";
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 28;
             text.color = Color.white;
             text.alignment = TextAnchor.MiddleCenter;
@@ -657,12 +642,13 @@ namespace Game
         #region Settings Tab
         private void BuildSettingsTab()
         {
-            Utils.Debug.Log("StartSettings", "Building settings tab");
+            
+            Utils.Debug.Log("StartSettings", "Building settings tab (simplified)");
             
             var panel = transform.Find("Panel");
             if (panel == null) return;
             
-            // Create SettingsContent container
+            // Create SettingsContent container (empty for now)
             var settingsContentObj = new GameObject("SettingsContent");
             settingsContentObj.transform.SetParent(panel, false);
             _settingsContent = settingsContentObj;
@@ -673,17 +659,14 @@ namespace Game
             contentRect.sizeDelta = Vector2.zero;
             contentRect.anchoredPosition = Vector2.zero;
             
-            float yOffset = -UnitHeight * 2.5f; // Below header and tab
             
-            // Language setting
-            CreateLanguageSetting(settingsContentObj, ref yOffset);
-            
-            // Sound setting
-            CreateSoundSetting(settingsContentObj, ref yOffset);
+            // TODO: Settings UI creation temporarily disabled due to Unity AddComponent<Text> issue
+            // Will need to create settings UI using prefabs or a different approach
         }
 
         private void CreateLanguageSetting(GameObject parent, ref float yOffset)
         {
+            
             var settingObj = new GameObject("LanguageSetting");
             settingObj.transform.SetParent(parent.transform, false);
             
@@ -698,6 +681,7 @@ namespace Game
             var bg = settingObj.AddComponent<Image>();
             bg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
             
+            
             // Title
             var titleObj = new GameObject("Title");
             titleObj.transform.SetParent(settingObj.transform, false);
@@ -707,12 +691,22 @@ namespace Game
             titleRect.sizeDelta = Vector2.zero;
             titleRect.anchoredPosition = Vector2.zero;
             
+            
             var titleText = titleObj.AddComponent<Text>();
-            titleText.text = "Language / 语言";
-            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            
+            
+            titleText.text = "Language";
+            
+            
+            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            
+            
             titleText.fontSize = 24;
+            
             titleText.color = new Color(0.8f, 0.8f, 0.8f, 1f);
+            
             titleText.alignment = TextAnchor.MiddleCenter;
+            
             
             // Value (placeholder for dropdown)
             var valueObj = new GameObject("Value");
@@ -726,16 +720,30 @@ namespace Game
             var valueBg = valueObj.AddComponent<Image>();
             valueBg.color = new Color(0.15f, 0.15f, 0.15f, 0.8f);
             
-            var valueText = valueObj.AddComponent<Text>();
-            valueText.text = "简体中文 ▼";
-            valueText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            var valueText = valueObj.GetComponent<Text>();
+            if (valueText == null)
+            {
+                try {
+                    valueText = valueObj.AddComponent<Text>();
+                } catch (System.Exception ex) {
+                    throw;
+                }
+            }
+            try {
+                valueText.text = "Language";
+            } catch (System.Exception ex) {
+                throw;
+            }
+            valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             valueText.fontSize = 26;
             valueText.color = Color.white;
             valueText.alignment = TextAnchor.MiddleCenter;
             
+            
             // TODO: Add Dropdown component when implementing language switching
             
             yOffset -= UnitHeight * 1.7f;
+            
         }
 
         private void CreateSoundSetting(GameObject parent, ref float yOffset)
@@ -765,7 +773,7 @@ namespace Game
             
             var titleText = titleObj.AddComponent<Text>();
             titleText.text = "UI Sound Effect";
-            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             titleText.fontSize = 24;
             titleText.color = new Color(0.8f, 0.8f, 0.8f, 1f);
             titleText.alignment = TextAnchor.MiddleCenter;
@@ -784,7 +792,7 @@ namespace Game
             
             var toggleText = toggleObj.AddComponent<Text>();
             toggleText.text = "ON";
-            toggleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            toggleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             toggleText.fontSize = 28;
             toggleText.color = Color.white;
             toggleText.alignment = TextAnchor.MiddleCenter;
@@ -839,7 +847,7 @@ namespace Game
             
             var titleText = titleObj.AddComponent<Text>();
             titleText.text = title;
-            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             titleText.fontSize = 28;
             titleText.color = Color.white;
             titleText.alignment = TextAnchor.MiddleCenter;
@@ -855,7 +863,7 @@ namespace Game
             
             var messageText = messageObj.AddComponent<Text>();
             messageText.text = message;
-            messageText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            messageText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             messageText.fontSize = 22;
             messageText.color = new Color(0.9f, 0.9f, 0.9f, 1f);
             messageText.alignment = TextAnchor.UpperLeft;
@@ -917,7 +925,7 @@ namespace Game
             
             var titleText = titleObj.AddComponent<Text>();
             titleText.text = title;
-            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             titleText.fontSize = 28;
             titleText.color = Color.white;
             titleText.alignment = TextAnchor.MiddleCenter;
@@ -946,7 +954,7 @@ namespace Game
             inputTextRect.anchoredPosition = Vector2.zero;
             
             var inputText = inputTextObj.AddComponent<Text>();
-            inputText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            inputText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             inputText.fontSize = 24;
             inputText.color = Color.white;
             inputText.alignment = TextAnchor.MiddleLeft;
@@ -1011,7 +1019,7 @@ namespace Game
             
             var titleText = titleObj.AddComponent<Text>();
             titleText.text = "Add Account";
-            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             titleText.fontSize = 28;
             titleText.color = Color.white;
             titleText.alignment = TextAnchor.MiddleCenter;
@@ -1071,7 +1079,7 @@ namespace Game
             
             var labelText = labelObj.AddComponent<Text>();
             labelText.text = label;
-            labelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             labelText.fontSize = 20;
             labelText.color = new Color(0.8f, 0.8f, 0.8f, 1f);
             labelText.alignment = TextAnchor.LowerLeft;
@@ -1100,7 +1108,7 @@ namespace Game
             inputTextRect.anchoredPosition = Vector2.zero;
             
             var inputText = inputTextObj.AddComponent<Text>();
-            inputText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            inputText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             inputText.fontSize = 22;
             inputText.color = Color.white;
             inputText.alignment = TextAnchor.MiddleLeft;
@@ -1143,7 +1151,7 @@ namespace Game
             
             var text = textObj.AddComponent<Text>();
             text.text = label;
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 24;
             text.color = Color.white;
             text.alignment = TextAnchor.MiddleCenter;

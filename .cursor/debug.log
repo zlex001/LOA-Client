@@ -1,0 +1,198 @@
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"Dark","fullPath":"Prefabs/UI/Dark"},"timestamp":1770649505747,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"Dark"},"timestamp":1770649505821,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"Dark","coreIsNull":false,"objName":"Dark","components":"RectTransform,Dark,Canvas"},"timestamp":1770649505831,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649505836,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649505839,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":false},"timestamp":1770649505842,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649505844,"hypothesisId":"C"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"Start","fullPath":"Prefabs/UI/Start"},"timestamp":1770649505896,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"Start"},"timestamp":1770649505909,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"Start","coreIsNull":false,"objName":"Start","components":"RectTransform,Start,CanvasRenderer,Canvas"},"timestamp":1770649505913,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649505913,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649505913,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":false},"timestamp":1770649505914,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649505914,"hypothesisId":"C"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"StartSettings","fullPath":"Prefabs/UI/StartSettings"},"timestamp":1770649511691,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"StartSettings"},"timestamp":1770649511691,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"StartSettings","coreIsNull":false,"objName":"StartSettings","components":"RectTransform,CanvasRenderer,Image,Button,StartSettings,Canvas"},"timestamp":1770649511692,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649511692,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649511692,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":true},"timestamp":1770649511692,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649511692,"hypothesisId":"C"}
+{"location":"StartSettings.cs:66","message":"OnCreate called","data":{"hasTransform":true,"childCount":1},"timestamp":1770649511696,"hypothesisId":"B"}
+{"location":"StartSettings.cs:75","message":"After caching references","data":{"hasPanelRect":true,"hasMaskImage":true},"timestamp":1770649511706,"hypothesisId":"B"}
+{"location":"StartSettings.cs:57_before","message":"Before ApplyLayout","data":{},"timestamp":1770649511711,"hypothesisId":"D"}
+{"location":"StartSettings.cs:57_after","message":"After ApplyLayout","data":{},"timestamp":1770649511713,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_before","message":"Before BuildTabBar","data":{},"timestamp":1770649511715,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_after","message":"After BuildTabBar","data":{},"timestamp":1770649511722,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_before","message":"Before BuildAccountTab","data":{},"timestamp":1770649511723,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_after","message":"After BuildAccountTab","data":{},"timestamp":1770649511736,"hypothesisId":"D"}
+{"location":"StartSettings.cs:62_before","message":"Before BuildSettingsTab","data":{},"timestamp":1770649511737,"hypothesisId":"D"}
+{"location":"StartSettings.cs:706","message":"BuildSettingsTab start","data":{},"timestamp":1770649511738,"hypothesisId":"E"}
+{"location":"StartSettings.cs:728_after","message":"BuildSettingsTab complete (simplified)","data":{},"timestamp":1770649511739,"hypothesisId":"E"}
+{"location":"StartSettings.cs:62_after","message":"After BuildSettingsTab","data":{},"timestamp":1770649511740,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_before","message":"Before BuildAccountList","data":{"accountCount":1},"timestamp":1770649511742,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_after","message":"After BuildAccountList","data":{},"timestamp":1770649511746,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_before","message":"Before UpdateContent","data":{},"timestamp":1770649511746,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_after","message":"After UpdateContent - OnCreate complete","data":{},"timestamp":1770649511747,"hypothesisId":"D"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"StartSettings","fullPath":"Prefabs/UI/StartSettings"},"timestamp":1770649515891,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"StartSettings"},"timestamp":1770649515891,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"StartSettings","coreIsNull":false,"objName":"StartSettings","components":"RectTransform,CanvasRenderer,Image,Button,StartSettings,Canvas"},"timestamp":1770649515892,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649515892,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649515892,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":true},"timestamp":1770649515892,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649515892,"hypothesisId":"C"}
+{"location":"StartSettings.cs:66","message":"OnCreate called","data":{"hasTransform":true,"childCount":1},"timestamp":1770649515893,"hypothesisId":"B"}
+{"location":"StartSettings.cs:75","message":"After caching references","data":{"hasPanelRect":true,"hasMaskImage":true},"timestamp":1770649515893,"hypothesisId":"B"}
+{"location":"StartSettings.cs:57_before","message":"Before ApplyLayout","data":{},"timestamp":1770649515894,"hypothesisId":"D"}
+{"location":"StartSettings.cs:57_after","message":"After ApplyLayout","data":{},"timestamp":1770649515895,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_before","message":"Before BuildTabBar","data":{},"timestamp":1770649515895,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_after","message":"After BuildTabBar","data":{},"timestamp":1770649515895,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_before","message":"Before BuildAccountTab","data":{},"timestamp":1770649515895,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_after","message":"After BuildAccountTab","data":{},"timestamp":1770649515897,"hypothesisId":"D"}
+{"location":"StartSettings.cs:62_before","message":"Before BuildSettingsTab","data":{},"timestamp":1770649515897,"hypothesisId":"D"}
+{"location":"StartSettings.cs:706","message":"BuildSettingsTab start","data":{},"timestamp":1770649515897,"hypothesisId":"E"}
+{"location":"StartSettings.cs:728_after","message":"BuildSettingsTab complete (simplified)","data":{},"timestamp":1770649515897,"hypothesisId":"E"}
+{"location":"StartSettings.cs:62_after","message":"After BuildSettingsTab","data":{},"timestamp":1770649515897,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_before","message":"Before BuildAccountList","data":{"accountCount":1},"timestamp":1770649515897,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_after","message":"After BuildAccountList","data":{},"timestamp":1770649515898,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_before","message":"Before UpdateContent","data":{},"timestamp":1770649515898,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_after","message":"After UpdateContent - OnCreate complete","data":{},"timestamp":1770649515898,"hypothesisId":"D"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"StartSettings","fullPath":"Prefabs/UI/StartSettings"},"timestamp":1770649518591,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"StartSettings"},"timestamp":1770649518592,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"StartSettings","coreIsNull":false,"objName":"StartSettings","components":"RectTransform,CanvasRenderer,Image,Button,StartSettings,Canvas"},"timestamp":1770649518592,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649518593,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649518593,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":true},"timestamp":1770649518593,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649518593,"hypothesisId":"C"}
+{"location":"StartSettings.cs:66","message":"OnCreate called","data":{"hasTransform":true,"childCount":1},"timestamp":1770649518593,"hypothesisId":"B"}
+{"location":"StartSettings.cs:75","message":"After caching references","data":{"hasPanelRect":true,"hasMaskImage":true},"timestamp":1770649518594,"hypothesisId":"B"}
+{"location":"StartSettings.cs:57_before","message":"Before ApplyLayout","data":{},"timestamp":1770649518594,"hypothesisId":"D"}
+{"location":"StartSettings.cs:57_after","message":"After ApplyLayout","data":{},"timestamp":1770649518594,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_before","message":"Before BuildTabBar","data":{},"timestamp":1770649518594,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_after","message":"After BuildTabBar","data":{},"timestamp":1770649518595,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_before","message":"Before BuildAccountTab","data":{},"timestamp":1770649518595,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_after","message":"After BuildAccountTab","data":{},"timestamp":1770649518596,"hypothesisId":"D"}
+{"location":"StartSettings.cs:62_before","message":"Before BuildSettingsTab","data":{},"timestamp":1770649518596,"hypothesisId":"D"}
+{"location":"StartSettings.cs:706","message":"BuildSettingsTab start","data":{},"timestamp":1770649518596,"hypothesisId":"E"}
+{"location":"StartSettings.cs:728_after","message":"BuildSettingsTab complete (simplified)","data":{},"timestamp":1770649518596,"hypothesisId":"E"}
+{"location":"StartSettings.cs:62_after","message":"After BuildSettingsTab","data":{},"timestamp":1770649518597,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_before","message":"Before BuildAccountList","data":{"accountCount":1},"timestamp":1770649518597,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_after","message":"After BuildAccountList","data":{},"timestamp":1770649518597,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_before","message":"Before UpdateContent","data":{},"timestamp":1770649518597,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_after","message":"After UpdateContent - OnCreate complete","data":{},"timestamp":1770649518597,"hypothesisId":"D"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"StartSettings","fullPath":"Prefabs/UI/StartSettings"},"timestamp":1770649537840,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"StartSettings"},"timestamp":1770649537841,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"StartSettings","coreIsNull":false,"objName":"StartSettings","components":"RectTransform,CanvasRenderer,Image,Button,StartSettings,Canvas"},"timestamp":1770649537841,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649537841,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649537841,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":true},"timestamp":1770649537841,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649537841,"hypothesisId":"C"}
+{"location":"StartSettings.cs:66","message":"OnCreate called","data":{"hasTransform":true,"childCount":1},"timestamp":1770649537842,"hypothesisId":"B"}
+{"location":"StartSettings.cs:75","message":"After caching references","data":{"hasPanelRect":true,"hasMaskImage":true},"timestamp":1770649537842,"hypothesisId":"B"}
+{"location":"StartSettings.cs:57_before","message":"Before ApplyLayout","data":{},"timestamp":1770649537842,"hypothesisId":"D"}
+{"location":"StartSettings.cs:57_after","message":"After ApplyLayout","data":{},"timestamp":1770649537842,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_before","message":"Before BuildTabBar","data":{},"timestamp":1770649537842,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_after","message":"After BuildTabBar","data":{},"timestamp":1770649537843,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_before","message":"Before BuildAccountTab","data":{},"timestamp":1770649537844,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_after","message":"After BuildAccountTab","data":{},"timestamp":1770649537844,"hypothesisId":"D"}
+{"location":"StartSettings.cs:62_before","message":"Before BuildSettingsTab","data":{},"timestamp":1770649537844,"hypothesisId":"D"}
+{"location":"StartSettings.cs:706","message":"BuildSettingsTab start","data":{},"timestamp":1770649537844,"hypothesisId":"E"}
+{"location":"StartSettings.cs:728_after","message":"BuildSettingsTab complete (simplified)","data":{},"timestamp":1770649537845,"hypothesisId":"E"}
+{"location":"StartSettings.cs:62_after","message":"After BuildSettingsTab","data":{},"timestamp":1770649537845,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_before","message":"Before BuildAccountList","data":{"accountCount":1},"timestamp":1770649537845,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_after","message":"After BuildAccountList","data":{},"timestamp":1770649537845,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_before","message":"Before UpdateContent","data":{},"timestamp":1770649537845,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_after","message":"After UpdateContent - OnCreate complete","data":{},"timestamp":1770649537846,"hypothesisId":"D"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"StartSettings","fullPath":"Prefabs/UI/StartSettings"},"timestamp":1770649540957,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"StartSettings"},"timestamp":1770649540958,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"StartSettings","coreIsNull":false,"objName":"StartSettings","components":"RectTransform,CanvasRenderer,Image,Button,StartSettings,Canvas"},"timestamp":1770649540958,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649540958,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649540958,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":true},"timestamp":1770649540959,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649540959,"hypothesisId":"C"}
+{"location":"StartSettings.cs:66","message":"OnCreate called","data":{"hasTransform":true,"childCount":1},"timestamp":1770649540959,"hypothesisId":"B"}
+{"location":"StartSettings.cs:75","message":"After caching references","data":{"hasPanelRect":true,"hasMaskImage":true},"timestamp":1770649540959,"hypothesisId":"B"}
+{"location":"StartSettings.cs:57_before","message":"Before ApplyLayout","data":{},"timestamp":1770649540959,"hypothesisId":"D"}
+{"location":"StartSettings.cs:57_after","message":"After ApplyLayout","data":{},"timestamp":1770649540960,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_before","message":"Before BuildTabBar","data":{},"timestamp":1770649540960,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_after","message":"After BuildTabBar","data":{},"timestamp":1770649540960,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_before","message":"Before BuildAccountTab","data":{},"timestamp":1770649540960,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_after","message":"After BuildAccountTab","data":{},"timestamp":1770649540961,"hypothesisId":"D"}
+{"location":"StartSettings.cs:62_before","message":"Before BuildSettingsTab","data":{},"timestamp":1770649540961,"hypothesisId":"D"}
+{"location":"StartSettings.cs:706","message":"BuildSettingsTab start","data":{},"timestamp":1770649540961,"hypothesisId":"E"}
+{"location":"StartSettings.cs:728_after","message":"BuildSettingsTab complete (simplified)","data":{},"timestamp":1770649540962,"hypothesisId":"E"}
+{"location":"StartSettings.cs:62_after","message":"After BuildSettingsTab","data":{},"timestamp":1770649540962,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_before","message":"Before BuildAccountList","data":{"accountCount":1},"timestamp":1770649540962,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_after","message":"After BuildAccountList","data":{},"timestamp":1770649540962,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_before","message":"Before UpdateContent","data":{},"timestamp":1770649540962,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_after","message":"After UpdateContent - OnCreate complete","data":{},"timestamp":1770649540962,"hypothesisId":"D"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"StartSettings","fullPath":"Prefabs/UI/StartSettings"},"timestamp":1770649543657,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"StartSettings"},"timestamp":1770649543657,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"StartSettings","coreIsNull":false,"objName":"StartSettings","components":"RectTransform,CanvasRenderer,Image,Button,StartSettings,Canvas"},"timestamp":1770649543658,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649543658,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649543658,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":true},"timestamp":1770649543658,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649543658,"hypothesisId":"C"}
+{"location":"StartSettings.cs:66","message":"OnCreate called","data":{"hasTransform":true,"childCount":1},"timestamp":1770649543658,"hypothesisId":"B"}
+{"location":"StartSettings.cs:75","message":"After caching references","data":{"hasPanelRect":true,"hasMaskImage":true},"timestamp":1770649543659,"hypothesisId":"B"}
+{"location":"StartSettings.cs:57_before","message":"Before ApplyLayout","data":{},"timestamp":1770649543659,"hypothesisId":"D"}
+{"location":"StartSettings.cs:57_after","message":"After ApplyLayout","data":{},"timestamp":1770649543659,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_before","message":"Before BuildTabBar","data":{},"timestamp":1770649543659,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_after","message":"After BuildTabBar","data":{},"timestamp":1770649543660,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_before","message":"Before BuildAccountTab","data":{},"timestamp":1770649543660,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_after","message":"After BuildAccountTab","data":{},"timestamp":1770649543661,"hypothesisId":"D"}
+{"location":"StartSettings.cs:62_before","message":"Before BuildSettingsTab","data":{},"timestamp":1770649543661,"hypothesisId":"D"}
+{"location":"StartSettings.cs:706","message":"BuildSettingsTab start","data":{},"timestamp":1770649543661,"hypothesisId":"E"}
+{"location":"StartSettings.cs:728_after","message":"BuildSettingsTab complete (simplified)","data":{},"timestamp":1770649543661,"hypothesisId":"E"}
+{"location":"StartSettings.cs:62_after","message":"After BuildSettingsTab","data":{},"timestamp":1770649543661,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_before","message":"Before BuildAccountList","data":{"accountCount":1},"timestamp":1770649543661,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_after","message":"After BuildAccountList","data":{},"timestamp":1770649543662,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_before","message":"Before UpdateContent","data":{},"timestamp":1770649543662,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_after","message":"After UpdateContent - OnCreate complete","data":{},"timestamp":1770649543662,"hypothesisId":"D"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"StartSettings","fullPath":"Prefabs/UI/StartSettings"},"timestamp":1770649545674,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"StartSettings"},"timestamp":1770649545674,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"StartSettings","coreIsNull":false,"objName":"StartSettings","components":"RectTransform,CanvasRenderer,Image,Button,StartSettings,Canvas"},"timestamp":1770649545675,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649545675,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649545675,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":true},"timestamp":1770649545675,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649545675,"hypothesisId":"C"}
+{"location":"StartSettings.cs:66","message":"OnCreate called","data":{"hasTransform":true,"childCount":1},"timestamp":1770649545676,"hypothesisId":"B"}
+{"location":"StartSettings.cs:75","message":"After caching references","data":{"hasPanelRect":true,"hasMaskImage":true},"timestamp":1770649545676,"hypothesisId":"B"}
+{"location":"StartSettings.cs:57_before","message":"Before ApplyLayout","data":{},"timestamp":1770649545676,"hypothesisId":"D"}
+{"location":"StartSettings.cs:57_after","message":"After ApplyLayout","data":{},"timestamp":1770649545676,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_before","message":"Before BuildTabBar","data":{},"timestamp":1770649545676,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_after","message":"After BuildTabBar","data":{},"timestamp":1770649545677,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_before","message":"Before BuildAccountTab","data":{},"timestamp":1770649545677,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_after","message":"After BuildAccountTab","data":{},"timestamp":1770649545678,"hypothesisId":"D"}
+{"location":"StartSettings.cs:62_before","message":"Before BuildSettingsTab","data":{},"timestamp":1770649545678,"hypothesisId":"D"}
+{"location":"StartSettings.cs:706","message":"BuildSettingsTab start","data":{},"timestamp":1770649545678,"hypothesisId":"E"}
+{"location":"StartSettings.cs:728_after","message":"BuildSettingsTab complete (simplified)","data":{},"timestamp":1770649545678,"hypothesisId":"E"}
+{"location":"StartSettings.cs:62_after","message":"After BuildSettingsTab","data":{},"timestamp":1770649545678,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_before","message":"Before BuildAccountList","data":{"accountCount":1},"timestamp":1770649545679,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_after","message":"After BuildAccountList","data":{},"timestamp":1770649545679,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_before","message":"Before UpdateContent","data":{},"timestamp":1770649545679,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_after","message":"After UpdateContent - OnCreate complete","data":{},"timestamp":1770649545679,"hypothesisId":"D"}
+{"location":"UI.cs:140","message":"Attempting to load prefab","data":{"path":"Prefabs/UI","name":"StartSettings","fullPath":"Prefabs/UI/StartSettings"},"timestamp":1770649621723,"hypothesisId":"A"}
+{"location":"UI.cs:147","message":"Prefab loaded successfully","data":{"prefabName":"StartSettings"},"timestamp":1770649621724,"hypothesisId":"A"}
+{"location":"UI.cs:167","message":"GetComponent<Core> result","data":{"prefabName":"StartSettings","coreIsNull":false,"objName":"StartSettings","components":"RectTransform,CanvasRenderer,Image,Button,StartSettings,Canvas"},"timestamp":1770649621725,"hypothesisId":"A"}
+{"location":"UI.cs:179","message":"Before setting core.Id","data":{"coreIsNull":false,"coreGameObjectIsNull":false},"timestamp":1770649621725,"hypothesisId":"B"}
+{"location":"UI.cs:180","message":"Before AddComponent<GraphicRaycaster>","data":{},"timestamp":1770649621725,"hypothesisId":"B"}
+{"location":"UI.cs:181_before","message":"Before GetOrAdd Image","data":{"hasImageComponent":true},"timestamp":1770649621726,"hypothesisId":"C"}
+{"location":"UI.cs:181_after","message":"After GetOrAdd Image","data":{"imageComponentIsNull":false},"timestamp":1770649621726,"hypothesisId":"C"}
+{"location":"StartSettings.cs:66","message":"OnCreate called","data":{"hasTransform":true,"childCount":1},"timestamp":1770649621726,"hypothesisId":"B"}
+{"location":"StartSettings.cs:75","message":"After caching references","data":{"hasPanelRect":true,"hasMaskImage":true},"timestamp":1770649621726,"hypothesisId":"B"}
+{"location":"StartSettings.cs:57_before","message":"Before ApplyLayout","data":{},"timestamp":1770649621726,"hypothesisId":"D"}
+{"location":"StartSettings.cs:57_after","message":"After ApplyLayout","data":{},"timestamp":1770649621727,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_before","message":"Before BuildTabBar","data":{},"timestamp":1770649621727,"hypothesisId":"D"}
+{"location":"StartSettings.cs:60_after","message":"After BuildTabBar","data":{},"timestamp":1770649621727,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_before","message":"Before BuildAccountTab","data":{},"timestamp":1770649621727,"hypothesisId":"D"}
+{"location":"StartSettings.cs:61_after","message":"After BuildAccountTab","data":{},"timestamp":1770649621728,"hypothesisId":"D"}
+{"location":"StartSettings.cs:62_before","message":"Before BuildSettingsTab","data":{},"timestamp":1770649621728,"hypothesisId":"D"}
+{"location":"StartSettings.cs:706","message":"BuildSettingsTab start","data":{},"timestamp":1770649621728,"hypothesisId":"E"}
+{"location":"StartSettings.cs:728_after","message":"BuildSettingsTab complete (simplified)","data":{},"timestamp":1770649621729,"hypothesisId":"E"}
+{"location":"StartSettings.cs:62_after","message":"After BuildSettingsTab","data":{},"timestamp":1770649621729,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_before","message":"Before BuildAccountList","data":{"accountCount":1},"timestamp":1770649621729,"hypothesisId":"D"}
+{"location":"StartSettings.cs:83_after","message":"After BuildAccountList","data":{},"timestamp":1770649621729,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_before","message":"Before UpdateContent","data":{},"timestamp":1770649621729,"hypothesisId":"D"}
+{"location":"StartSettings.cs:86_after","message":"After UpdateContent - OnCreate complete","data":{},"timestamp":1770649621730,"hypothesisId":"D"}
