@@ -103,8 +103,8 @@ namespace Game
             
             float totalFixedHeight = titleHeight + serverHeight + buttonHeight + footerHeight;
             float remainingHeight = screenHeight - totalFixedHeight;
-            float topPadding = remainingHeight * GoldenRatio;
-            float bottomPadding = remainingHeight * (1 - GoldenRatio);
+            float topPadding = remainingHeight * (1 - GoldenRatio);
+            float bottomPadding = remainingHeight * GoldenRatio;
             
             float currentY = 0;
             
@@ -159,6 +159,14 @@ namespace Game
                 titleRect.pivot = new Vector2(0.5f, 0f);
                 titleRect.sizeDelta = new Vector2(screenWidth, titleHeight);
                 titleRect.anchoredPosition = new Vector2(screenWidth / 2, currentY);
+            }
+            
+            // Adjust title font size (+10%)
+            var titleText = transform.Find("Title")?.GetComponent<Text>();
+            if (titleText != null)
+            {
+                float originalFontSize = titleText.fontSize;
+                titleText.fontSize = Mathf.RoundToInt(originalFontSize * 1.1f);
             }
             
             // Author (if exists)
