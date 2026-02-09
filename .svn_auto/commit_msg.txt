@@ -1,18 +1,16 @@
-[功能] Start界面添加设置按钮和账号快速切换功能
+[修复] 添加Net.Disconnect()方法修复编译错误
 
-实现内容：
-1. Start.cs：添加设置按钮，多账号时条件显示
-2. StartSettings.cs：新建设置面板，实现账号列表和切换逻辑
-3. Config.cs：添加StartSettings UI配置
-4. Start.cs布局：使用黄金比例计算按钮位置（右上角）
-5. 文档更新：登录与启动系统.md新增"Start界面设置功能"章节
+问题：StartSettings.cs调用Net.Instance.Disconnect()导致编译错误
+原因：Net类缺少公开的Disconnect()方法
 
-设计理念：
-- 单账号时隐藏按钮保持极简
-- 多账号时显示齿轮图标提供快速切换
-- 预留语言、音效等设置扩展空间
+解决方案：
+- Net.cs新增public Disconnect()方法
+- 正确关闭Socket（Shutdown + Close）
+- 设置Online = false
+- 取消重连尝试
+- 添加调试日志
 
-技术要点：
-- 条件显示策略（Accounts.Count > 1）
-- 黄金比例布局（按钮尺寸、边距）
-- 账号切换流程（断线、重登、保存）
+技术实现：
+- 遵循现有ConnectCoroutine中的断开连接模式
+- 异常安全处理（try-catch socket shutdown）
+- 完整清理状态（socket + online + reconnect）

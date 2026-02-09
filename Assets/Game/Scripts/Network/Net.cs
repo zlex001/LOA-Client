@@ -94,6 +94,29 @@ namespace Game
             StartCoroutine(ConnectCoroutine(ip, port));
         }
 
+        public void Disconnect()
+        {
+            Utils.Debug.Log("Net", "Disconnect called");
+            
+            if (Socket != null && Socket.Connected)
+            {
+                try
+                {
+                    Socket.Shutdown(SocketShutdown.Both);
+                }
+                catch (Exception e)
+                {
+                    Utils.Debug.LogWarning("Socket", $"Exception during socket shutdown: {e.Message}");
+                }
+                Socket.Close();
+                Utils.Debug.Log("Net", "Socket closed");
+            }
+            
+            Data.Instance.Online = false;
+            CancelReconnect();
+            Utils.Debug.Log("Net", "Disconnected successfully");
+        }
+
         public IEnumerator ConnectCoroutine(string ip, int port)
         {
             if (Socket != null)
