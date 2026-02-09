@@ -203,21 +203,21 @@ namespace Game
             var bg = buttonObj.AddComponent<Image>();
             bg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
             
-            // Text - temporarily disabled due to Unity AddComponent<Text> issue
-            // var textObj = new GameObject("Text");
-            // textObj.transform.SetParent(buttonObj.transform, false);
-            // var textRect = textObj.AddComponent<RectTransform>();
-            // textRect.anchorMin = Vector2.zero;
-            // textRect.anchorMax = Vector2.one;
-            // textRect.sizeDelta = Vector2.zero;
-            // textRect.anchoredPosition = Vector2.zero;
-            // 
-            // var text = textObj.AddComponent<Text>();
-            // text.text = label;
-            // text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            // text.fontSize = 28;
-            // text.color = new Color(0.7f, 0.7f, 0.7f, 1f); // Default: gray
-            // text.alignment = TextAnchor.MiddleCenter;
+            // Text (as child GameObject - correct pattern)
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(buttonObj.transform, false);
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.sizeDelta = Vector2.zero;
+            textRect.anchoredPosition = Vector2.zero;
+            
+            var text = textObj.AddComponent<Text>();
+            text.text = label;
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 28;
+            text.color = new Color(0.7f, 0.7f, 0.7f, 1f);
+            text.alignment = TextAnchor.MiddleCenter;
             
             // Button
             var button = buttonObj.AddComponent<Button>();
@@ -274,6 +274,10 @@ namespace Game
             if (_accountContent != null)
             {
                 _accountContent.SetActive(_currentTab == TabType.Account);
+                if (_currentTab == TabType.Account)
+                {
+                    BuildAccountList();
+                }
             }
             
             if (_settingsContent != null)
@@ -356,10 +360,10 @@ namespace Game
             
             scrollView.content = contentRectTransform;
             
-            // Add Account Button (bottom) - temporarily disabled due to Unity AddComponent<Text> issue
-            // _addAccountButton = CreateAddAccountButton(accountContentObj);
+            // Add Account Button (bottom)
+            _addAccountButton = CreateAddAccountButton(accountContentObj);
             
-            Utils.Debug.Log("StartSettings", "Account tab structure created (content simplified)");
+            Utils.Debug.Log("StartSettings", "Account tab structure created");
         }
 
         private GameObject CreateAddAccountButton(GameObject parent)
@@ -504,7 +508,16 @@ namespace Game
             var bg = buttonObj.AddComponent<Image>();
             bg.color = new Color(0.4f, 0.4f, 0.4f, 0.5f);
             
-            var text = buttonObj.AddComponent<Text>();
+            // Text (as child GameObject - correct pattern)
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(buttonObj.transform, false);
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.sizeDelta = Vector2.zero;
+            textRect.anchoredPosition = Vector2.zero;
+            
+            var text = textObj.AddComponent<Text>();
             text.text = "✏";
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 28;
@@ -531,7 +544,16 @@ namespace Game
             var bg = buttonObj.AddComponent<Image>();
             bg.color = new Color(0.6f, 0.2f, 0.2f, 0.5f);
             
-            var text = buttonObj.AddComponent<Text>();
+            // Text (as child GameObject - correct pattern)
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(buttonObj.transform, false);
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.sizeDelta = Vector2.zero;
+            textRect.anchoredPosition = Vector2.zero;
+            
+            var text = textObj.AddComponent<Text>();
             text.text = "🗑";
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 28;
@@ -642,13 +664,12 @@ namespace Game
         #region Settings Tab
         private void BuildSettingsTab()
         {
-            
-            Utils.Debug.Log("StartSettings", "Building settings tab (simplified)");
+            Utils.Debug.Log("StartSettings", "Building settings tab");
             
             var panel = transform.Find("Panel");
             if (panel == null) return;
             
-            // Create SettingsContent container (empty for now)
+            // Create SettingsContent container
             var settingsContentObj = new GameObject("SettingsContent");
             settingsContentObj.transform.SetParent(panel, false);
             _settingsContent = settingsContentObj;
@@ -659,9 +680,12 @@ namespace Game
             contentRect.sizeDelta = Vector2.zero;
             contentRect.anchoredPosition = Vector2.zero;
             
+            // Create settings items
+            float yOffset = -20;
+            CreateLanguageSetting(settingsContentObj, ref yOffset);
+            CreateSoundSetting(settingsContentObj, ref yOffset);
             
-            // TODO: Settings UI creation temporarily disabled due to Unity AddComponent<Text> issue
-            // Will need to create settings UI using prefabs or a different approach
+            Utils.Debug.Log("StartSettings", "Settings tab created");
         }
 
         private void CreateLanguageSetting(GameObject parent, ref float yOffset)
@@ -720,20 +744,17 @@ namespace Game
             var valueBg = valueObj.AddComponent<Image>();
             valueBg.color = new Color(0.15f, 0.15f, 0.15f, 0.8f);
             
-            var valueText = valueObj.GetComponent<Text>();
-            if (valueText == null)
-            {
-                try {
-                    valueText = valueObj.AddComponent<Text>();
-                } catch (System.Exception ex) {
-                    throw;
-                }
-            }
-            try {
-                valueText.text = "Language";
-            } catch (System.Exception ex) {
-                throw;
-            }
+            // Text (as child GameObject - correct pattern)
+            var valueTextObj = new GameObject("Text");
+            valueTextObj.transform.SetParent(valueObj.transform, false);
+            var valueTextRect = valueTextObj.AddComponent<RectTransform>();
+            valueTextRect.anchorMin = Vector2.zero;
+            valueTextRect.anchorMax = Vector2.one;
+            valueTextRect.sizeDelta = Vector2.zero;
+            valueTextRect.anchoredPosition = Vector2.zero;
+            
+            var valueText = valueTextObj.AddComponent<Text>();
+            valueText.text = "Language";
             valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             valueText.fontSize = 26;
             valueText.color = Color.white;
@@ -790,7 +811,16 @@ namespace Game
             var toggleBg = toggleObj.AddComponent<Image>();
             toggleBg.color = new Color(0.2f, 0.5f, 0.2f, 0.8f);
             
-            var toggleText = toggleObj.AddComponent<Text>();
+            // Text (as child GameObject - correct pattern)
+            var toggleTextObj = new GameObject("Text");
+            toggleTextObj.transform.SetParent(toggleObj.transform, false);
+            var toggleTextRect = toggleTextObj.AddComponent<RectTransform>();
+            toggleTextRect.anchorMin = Vector2.zero;
+            toggleTextRect.anchorMax = Vector2.one;
+            toggleTextRect.sizeDelta = Vector2.zero;
+            toggleTextRect.anchoredPosition = Vector2.zero;
+            
+            var toggleText = toggleTextObj.AddComponent<Text>();
             toggleText.text = "ON";
             toggleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             toggleText.fontSize = 28;
