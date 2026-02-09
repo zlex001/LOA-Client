@@ -3,140 +3,568 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using DG.Tweening;
 
 namespace Game
 {
     public class StartSettings : UI.Core
     {
+        #region Constants
         private const float UnitHeight = 83f;
-        private const float GoldenRatio = 0.618f;
-        private const float PanelHeightUnits = 10f;
+        private const float PanelHeightUnits = 12f;
+        private const float AnimationDuration = 0.3f;
+        #endregion
 
+        #region Tab System
+        private enum TabType { Account, Settings }
+        private TabType _currentTab = TabType.Account;
+        #endregion
+
+        #region Account Data
         private List<Account> _accounts;
         private int _selectedIndex;
+        #endregion
 
-        #region Lifecycle Methods
+        #region UI References
+        private RectTransform _panelRect;
+        private Image _maskImage;
+        private GameObject _accountContent;
+        private GameObject _settingsContent;
+        private GameObject _accountTabButton;
+        private GameObject _settingsTabButton;
+        private GameObject _addAccountButton;
+        #endregion
+
+        #region Lifecycle
         public override void OnCreate(params object[] args)
         {
+            Utils.Debug.Log("StartSettings", "OnCreate called");
+            
+            // Cache references
+            _panelRect = transform.Find("Panel")?.GetComponent<RectTransform>();
+            _maskImage = GetComponent<Image>();
+            
+            // Apply layout first
             ApplyLayout();
             
-            // Close button
-            var closeButton = transform.Find("Panel/Close")?.GetComponent<Button>();
+            // Build UI structure
+            BuildTabBar();
+            BuildAccountTab();
+            BuildSettingsTab();
+            
+            // Setup close button
+            var closeButton = transform.Find("Panel/Header/Close")?.GetComponent<Button>();
             if (closeButton != null)
             {
                 closeButton.onClick.AddListener(OnCloseClick);
             }
-
+            
+            // Setup mask click to close
+            var maskButton = GetComponent<Button>();
+            if (maskButton != null)
+            {
+                maskButton.onClick.AddListener(OnMaskClick);
+            }
+            
             // Load account data
             _accounts = Data.Instance.User.Accounts.ToList();
             _selectedIndex = Data.Instance.User.SelectedAccountIndex;
-
+            
             // Build account list
             BuildAccountList();
-
+            
+            // Show default tab
+            UpdateContent();
+            
             Utils.Debug.Log("StartSettings", $"Loaded {_accounts.Count} accounts, selected index: {_selectedIndex}");
+        }
+
+        public override void OnEnter(params object[] args)
+        {
+            Utils.Debug.Log("StartSettings", "OnEnter called - starting slide-up animation");
+            
+            if (_panelRect == null || _maskImage == null) return;
+            
+            float panelHeight = UnitHeight * PanelHeightUnits;
+            
+            // Initial state: panel below screen, mask transparent
+            _panelRect.anchoredPosition = new Vector2(0, -panelHeight);
+            _maskImage.color = new Color(0, 0, 0, 0);
+            
+            // Animate: slide up from bottom
+            var sequence = DOTween.Sequence();
+            sequence.Append(_maskImage.DOFade(0.7f, 0.25f));
+            sequence.Join(_panelRect.DOAnchorPosY(0, AnimationDuration).SetEase(Ease.OutCubic));
+            
+            Utils.Debug.Log("StartSettings", "Slide-up animation started");
+        }
+
+        public override void OnClose()
+        {
+            Utils.Debug.Log("StartSettings", "OnClose called - starting slide-down animation");
+            
+            if (_panelRect == null || _maskImage == null)
+            {
+                base.OnClose();
+                return;
+            }
+            
+            float panelHeight = UnitHeight * PanelHeightUnits;
+            
+            // Animate: slide down
+            var sequence = DOTween.Sequence();
+            sequence.Append(_panelRect.DOAnchorPosY(-panelHeight, 0.25f).SetEase(Ease.InCubic));
+            sequence.Join(_maskImage.DOFade(0f, 0.25f));
+            sequence.OnComplete(() => base.OnClose());
+            
+            Utils.Debug.Log("StartSettings", "Slide-down animation started");
         }
 
         public override void OnScreenAdaptationChanged()
         {
             ApplyLayout();
         }
+        #endregion
 
+        #region Layout
         private void ApplyLayout()
         {
             float screenWidth = GetComponent<RectTransform>().rect.width;
             float screenHeight = GetComponent<RectTransform>().rect.height;
-            
-            // Panel size and position
-            float panelWidth = screenWidth * GoldenRatio;
             float panelHeight = UnitHeight * PanelHeightUnits;
             
-            var panelRect = transform.Find("Panel")?.GetComponent<RectTransform>();
-            if (panelRect != null)
+            // Bottom drawer layout: anchor to bottom center
+            if (_panelRect != null)
             {
-                panelRect.anchorMin = new Vector2(0.5f, 0.5f);
-                panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-                panelRect.pivot = new Vector2(0.5f, 0.5f);
-                panelRect.sizeDelta = new Vector2(panelWidth, panelHeight);
-                panelRect.anchoredPosition = Vector2.zero;
+                _panelRect.anchorMin = new Vector2(0.5f, 0f);  // Bottom center
+                _panelRect.anchorMax = new Vector2(0.5f, 0f);
+                _panelRect.pivot = new Vector2(0.5f, 0f);       // Pivot at bottom
+                _panelRect.sizeDelta = new Vector2(screenWidth, panelHeight);
+                // Position will be set by animation
             }
-
-            Utils.Debug.Log("StartSettings", $"Panel layout: size=({panelWidth}, {panelHeight})");
+            
+            Utils.Debug.Log("StartSettings", $"Bottom drawer layout applied: size=({screenWidth}, {panelHeight})");
         }
         #endregion
 
-        #region Account List
+        #region Tab System
+        private void BuildTabBar()
+        {
+            Utils.Debug.Log("StartSettings", "Building tab bar");
+            
+            // Find or create TabBar
+            var tabBar = transform.Find("Panel/TabBar");
+            if (tabBar == null)
+            {
+                var tabBarObj = new GameObject("TabBar");
+                tabBarObj.transform.SetParent(transform.Find("Panel"), false);
+                tabBar = tabBarObj.transform;
+                
+                var tabBarRect = tabBarObj.AddComponent<RectTransform>();
+                float screenWidth = GetComponent<RectTransform>().rect.width;
+                tabBarRect.anchorMin = new Vector2(0, 1);
+                tabBarRect.anchorMax = new Vector2(1, 1);
+                tabBarRect.pivot = new Vector2(0.5f, 1);
+                tabBarRect.sizeDelta = new Vector2(0, UnitHeight);
+                tabBarRect.anchoredPosition = new Vector2(0, -UnitHeight); // Below header
+                
+                // Background
+                var tabBarBg = tabBarObj.AddComponent<Image>();
+                tabBarBg.color = new Color(0.15f, 0.15f, 0.15f, 1f);
+            }
+            
+            // Create Account Tab Button
+            _accountTabButton = CreateTabButton(tabBar, "AccountTab", "Account", 0, TabType.Account);
+            
+            // Create Settings Tab Button
+            _settingsTabButton = CreateTabButton(tabBar, "SettingsTab", "Settings", 1, TabType.Settings);
+            
+            UpdateTabVisuals();
+        }
+
+        private GameObject CreateTabButton(Transform parent, string name, string label, int index, TabType tabType)
+        {
+            var buttonObj = new GameObject(name);
+            buttonObj.transform.SetParent(parent, false);
+            
+            var rect = buttonObj.AddComponent<RectTransform>();
+            float halfWidth = 0.5f;
+            rect.anchorMin = new Vector2(index * halfWidth, 0);
+            rect.anchorMax = new Vector2((index + 1) * halfWidth, 1);
+            rect.sizeDelta = Vector2.zero;
+            rect.anchoredPosition = Vector2.zero;
+            
+            // Background
+            var bg = buttonObj.AddComponent<Image>();
+            bg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+            
+            // Text
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(buttonObj.transform, false);
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.sizeDelta = Vector2.zero;
+            textRect.anchoredPosition = Vector2.zero;
+            
+            var text = textObj.AddComponent<Text>();
+            text.text = label;
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.fontSize = 28;
+            text.color = new Color(0.7f, 0.7f, 0.7f, 1f); // Default: gray
+            text.alignment = TextAnchor.MiddleCenter;
+            
+            // Button
+            var button = buttonObj.AddComponent<Button>();
+            button.onClick.AddListener(() => OnTabClick(tabType));
+            
+            return buttonObj;
+        }
+
+        private void OnTabClick(TabType tab)
+        {
+            if (_currentTab == tab) return;
+            
+            Utils.Debug.Log("StartSettings", $"Tab clicked: {tab}");
+            _currentTab = tab;
+            UpdateTabVisuals();
+            UpdateContent();
+        }
+
+        private void UpdateTabVisuals()
+        {
+            // Update Account Tab
+            if (_accountTabButton != null)
+            {
+                var text = _accountTabButton.transform.Find("Text")?.GetComponent<Text>();
+                if (text != null)
+                {
+                    text.color = (_currentTab == TabType.Account) ? Color.white : new Color(0.7f, 0.7f, 0.7f, 1f);
+                }
+                var bg = _accountTabButton.GetComponent<Image>();
+                if (bg != null)
+                {
+                    bg.color = (_currentTab == TabType.Account) ? new Color(0.25f, 0.25f, 0.25f, 1f) : new Color(0.2f, 0.2f, 0.2f, 0.5f);
+                }
+            }
+            
+            // Update Settings Tab
+            if (_settingsTabButton != null)
+            {
+                var text = _settingsTabButton.transform.Find("Text")?.GetComponent<Text>();
+                if (text != null)
+                {
+                    text.color = (_currentTab == TabType.Settings) ? Color.white : new Color(0.7f, 0.7f, 0.7f, 1f);
+                }
+                var bg = _settingsTabButton.GetComponent<Image>();
+                if (bg != null)
+                {
+                    bg.color = (_currentTab == TabType.Settings) ? new Color(0.25f, 0.25f, 0.25f, 1f) : new Color(0.2f, 0.2f, 0.2f, 0.5f);
+                }
+            }
+        }
+
+        private void UpdateContent()
+        {
+            if (_accountContent != null)
+            {
+                _accountContent.SetActive(_currentTab == TabType.Account);
+            }
+            
+            if (_settingsContent != null)
+            {
+                _settingsContent.SetActive(_currentTab == TabType.Settings);
+            }
+            
+            if (_addAccountButton != null)
+            {
+                _addAccountButton.SetActive(_currentTab == TabType.Account);
+            }
+            
+            Utils.Debug.Log("StartSettings", $"Content updated: showing {_currentTab} tab");
+        }
+        #endregion
+
+        #region Account Tab
+        private void BuildAccountTab()
+        {
+            Utils.Debug.Log("StartSettings", "Building account tab");
+            
+            var panel = transform.Find("Panel");
+            if (panel == null) return;
+            
+            float screenWidth = GetComponent<RectTransform>().rect.width;
+            
+            // Create AccountContent container
+            var accountContentObj = new GameObject("AccountContent");
+            accountContentObj.transform.SetParent(panel, false);
+            _accountContent = accountContentObj;
+            
+            var contentRect = accountContentObj.AddComponent<RectTransform>();
+            contentRect.anchorMin = Vector2.zero;
+            contentRect.anchorMax = Vector2.one;
+            contentRect.sizeDelta = Vector2.zero;
+            contentRect.anchoredPosition = Vector2.zero;
+            
+            // Create ScrollView
+            var scrollViewObj = new GameObject("ScrollView");
+            scrollViewObj.transform.SetParent(accountContentObj.transform, false);
+            
+            var scrollRect = scrollViewObj.AddComponent<RectTransform>();
+            scrollRect.anchorMin = new Vector2(0, 0);
+            scrollRect.anchorMax = new Vector2(1, 1);
+            scrollRect.sizeDelta = new Vector2(0, -UnitHeight * 3); // Reserve space for header, tab, and button
+            scrollRect.anchoredPosition = new Vector2(0, -UnitHeight * 2); // Below header and tab
+            
+            // Add ScrollRect component
+            var scrollView = scrollViewObj.AddComponent<ScrollRect>();
+            scrollView.horizontal = false;
+            scrollView.vertical = true;
+            
+            // Viewport
+            var viewportObj = new GameObject("Viewport");
+            viewportObj.transform.SetParent(scrollViewObj.transform, false);
+            
+            var viewportRect = viewportObj.AddComponent<RectTransform>();
+            viewportRect.anchorMin = Vector2.zero;
+            viewportRect.anchorMax = Vector2.one;
+            viewportRect.sizeDelta = Vector2.zero;
+            viewportRect.anchoredPosition = Vector2.zero;
+            
+            var viewportMask = viewportObj.AddComponent<Mask>();
+            viewportMask.showMaskGraphic = false;
+            var viewportImage = viewportObj.AddComponent<Image>();
+            viewportImage.color = new Color(0.1f, 0.1f, 0.1f, 0.5f);
+            
+            scrollView.viewport = viewportRect;
+            
+            // Content
+            var contentObj = new GameObject("Content");
+            contentObj.transform.SetParent(viewportObj.transform, false);
+            
+            var contentRectTransform = contentObj.AddComponent<RectTransform>();
+            contentRectTransform.anchorMin = new Vector2(0, 1);
+            contentRectTransform.anchorMax = new Vector2(1, 1);
+            contentRectTransform.pivot = new Vector2(0.5f, 1);
+            contentRectTransform.sizeDelta = new Vector2(0, 0); // Will be set dynamically
+            contentRectTransform.anchoredPosition = Vector2.zero;
+            
+            scrollView.content = contentRectTransform;
+            
+            // Add Account Button (bottom)
+            _addAccountButton = CreateAddAccountButton(accountContentObj);
+        }
+
+        private GameObject CreateAddAccountButton(GameObject parent)
+        {
+            var buttonObj = new GameObject("AddAccountButton");
+            buttonObj.transform.SetParent(parent.transform, false);
+            
+            var rect = buttonObj.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0, 0);
+            rect.anchorMax = new Vector2(1, 0);
+            rect.pivot = new Vector2(0.5f, 0);
+            rect.sizeDelta = new Vector2(-40, UnitHeight * 0.8f);
+            rect.anchoredPosition = new Vector2(0, 10);
+            
+            // Background
+            var bg = buttonObj.AddComponent<Image>();
+            bg.color = new Color(0.2f, 0.5f, 0.8f, 0.8f);
+            
+            // Text
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(buttonObj.transform, false);
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.sizeDelta = Vector2.zero;
+            textRect.anchoredPosition = Vector2.zero;
+            
+            var text = textObj.AddComponent<Text>();
+            text.text = "Add Account";
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.fontSize = 28;
+            text.color = Color.white;
+            text.alignment = TextAnchor.MiddleCenter;
+            
+            // Button
+            var button = buttonObj.AddComponent<Button>();
+            button.onClick.AddListener(OnAddAccountClick);
+            
+            return buttonObj;
+        }
+
         private void BuildAccountList()
         {
-            var accountContainer = transform.Find("Panel/AccountList/Viewport/Content");
+            var accountContainer = transform.Find("Panel/AccountContent/ScrollView/Viewport/Content");
             if (accountContainer == null)
             {
                 Utils.Debug.LogWarning("StartSettings", "Account container not found");
                 return;
             }
-
+            
             // Clear existing items
             foreach (Transform child in accountContainer)
             {
                 Destroy(child.gameObject);
             }
-
+            
             // Create account items
             for (int i = 0; i < _accounts.Count; i++)
             {
                 CreateAccountItem(accountContainer, _accounts[i], i);
             }
-
+            
+            // Update content height
+            var contentRect = accountContainer.GetComponent<RectTransform>();
+            contentRect.sizeDelta = new Vector2(0, _accounts.Count * UnitHeight);
+            
             Utils.Debug.Log("StartSettings", $"Built account list with {_accounts.Count} items");
         }
 
         private void CreateAccountItem(Transform parent, Account account, int index)
         {
-            // Create item GameObject
-            GameObject itemObj = new GameObject($"Account_{index}");
+            // Main container
+            var itemObj = new GameObject($"Account_{index}");
             itemObj.transform.SetParent(parent, false);
-
-            // Add RectTransform
+            
             var rect = itemObj.AddComponent<RectTransform>();
             rect.anchorMin = new Vector2(0, 1);
             rect.anchorMax = new Vector2(1, 1);
             rect.pivot = new Vector2(0.5f, 1);
             rect.sizeDelta = new Vector2(0, UnitHeight);
             rect.anchoredPosition = new Vector2(0, -index * UnitHeight);
-
-            // Add background Image
+            
+            // Background
             var bg = itemObj.AddComponent<Image>();
-            bg.color = (index == _selectedIndex) ? 
+            bg.color = (index == _selectedIndex) ?
                 new Color(0.3f, 0.6f, 1f, 0.3f) :  // Selected: light blue
-                new Color(0.2f, 0.2f, 0.2f, 0.5f);  // Normal: dark gray
+                new Color(0.2f, 0.2f, 0.2f, 0.5f); // Normal: dark gray
+            
+            // Check icon (left side)
+            if (index == _selectedIndex)
+            {
+                CreateCheckIcon(itemObj, 40, UnitHeight / 2);
+            }
+            
+            // Account text (center)
+            CreateAccountText(itemObj, account);
+            
+            // Edit button (right side)
+            CreateEditButton(itemObj, index);
+            
+            // Delete button (right side, next to edit)
+            CreateDeleteButton(itemObj, index);
+            
+            // Click to switch account
+            var button = itemObj.AddComponent<Button>();
+            int capturedIndex = index;
+            button.onClick.AddListener(() => OnAccountClick(capturedIndex));
+            
+            Utils.Debug.Log("StartSettings", $"Created account item: {account.Id} (index {index})");
+        }
 
-            // Add text for account info
-            GameObject textObj = new GameObject("Text");
-            textObj.transform.SetParent(itemObj.transform, false);
+        private void CreateCheckIcon(GameObject parent, float xOffset, float yOffset)
+        {
+            var iconObj = new GameObject("CheckIcon");
+            iconObj.transform.SetParent(parent.transform, false);
+            
+            var rect = iconObj.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0, 0.5f);
+            rect.anchorMax = new Vector2(0, 0.5f);
+            rect.pivot = new Vector2(0, 0.5f);
+            rect.sizeDelta = new Vector2(30, 30);
+            rect.anchoredPosition = new Vector2(xOffset, 0);
+            
+            var text = iconObj.AddComponent<Text>();
+            text.text = "✓";
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.fontSize = 32;
+            text.color = new Color(0.3f, 0.8f, 1f, 1f);
+            text.alignment = TextAnchor.MiddleCenter;
+        }
+
+        private void CreateAccountText(GameObject parent, Account account)
+        {
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(parent.transform, false);
             
             var textRect = textObj.AddComponent<RectTransform>();
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.one;
+            textRect.anchorMin = new Vector2(0.15f, 0);
+            textRect.anchorMax = new Vector2(0.7f, 1);
             textRect.sizeDelta = Vector2.zero;
             textRect.anchoredPosition = Vector2.zero;
-
+            
             var text = textObj.AddComponent<Text>();
             text.text = $"{account.Id}\n{account.Note}";
             text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.fontSize = 24;
+            text.fontSize = 22;
+            text.color = Color.white;
+            text.alignment = TextAnchor.MiddleLeft;
+        }
+
+        private void CreateEditButton(GameObject parent, int index)
+        {
+            var buttonObj = new GameObject("EditButton");
+            buttonObj.transform.SetParent(parent.transform, false);
+            
+            var rect = buttonObj.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(1, 0.5f);
+            rect.anchorMax = new Vector2(1, 0.5f);
+            rect.pivot = new Vector2(1, 0.5f);
+            rect.sizeDelta = new Vector2(50, 50);
+            rect.anchoredPosition = new Vector2(-60, 0);
+            
+            var bg = buttonObj.AddComponent<Image>();
+            bg.color = new Color(0.4f, 0.4f, 0.4f, 0.5f);
+            
+            var text = buttonObj.AddComponent<Text>();
+            text.text = "✏";
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.fontSize = 28;
             text.color = Color.white;
             text.alignment = TextAnchor.MiddleCenter;
-
-            // Add button for click interaction
-            var button = itemObj.AddComponent<Button>();
-            int capturedIndex = index;  // Capture for lambda
-            button.onClick.AddListener(() => OnAccountClick(capturedIndex));
-
-            Utils.Debug.Log("StartSettings", $"Created account item: {account.Id} (index {index})");
+            
+            var button = buttonObj.AddComponent<Button>();
+            int capturedIndex = index;
+            button.onClick.AddListener(() => OnEditAccountNote(capturedIndex));
         }
-        #endregion
 
-        #region Event Handlers
+        private void CreateDeleteButton(GameObject parent, int index)
+        {
+            var buttonObj = new GameObject("DeleteButton");
+            buttonObj.transform.SetParent(parent.transform, false);
+            
+            var rect = buttonObj.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(1, 0.5f);
+            rect.anchorMax = new Vector2(1, 0.5f);
+            rect.pivot = new Vector2(1, 0.5f);
+            rect.sizeDelta = new Vector2(50, 50);
+            rect.anchoredPosition = new Vector2(-5, 0);
+            
+            var bg = buttonObj.AddComponent<Image>();
+            bg.color = new Color(0.6f, 0.2f, 0.2f, 0.5f);
+            
+            var text = buttonObj.AddComponent<Text>();
+            text.text = "🗑";
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.fontSize = 28;
+            text.color = Color.white;
+            text.alignment = TextAnchor.MiddleCenter;
+            
+            var button = buttonObj.AddComponent<Button>();
+            int capturedIndex = index;
+            button.onClick.AddListener(() => OnDeleteAccount(capturedIndex));
+        }
+
+        private void RefreshAccountList()
+        {
+            _accounts = Data.Instance.User.Accounts.ToList();
+            _selectedIndex = Data.Instance.User.SelectedAccountIndex;
+            BuildAccountList();
+        }
+
         private void OnAccountClick(int index)
         {
             if (index == _selectedIndex)
@@ -144,34 +572,597 @@ namespace Game
                 Utils.Debug.Log("StartSettings", $"Account {index} already selected, ignoring");
                 return;
             }
-
+            
             Utils.Debug.Log("StartSettings", $"Account {index} clicked, switching from {_selectedIndex}");
-
+            
             // Update selected index
             Data.Instance.User.SelectedAccountIndex = index;
             Local.Instance.Save(Data.Instance.User);
-
+            
             // Show connecting UI
             UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
-
+            
             // Disconnect current connection if any
             if (Data.Instance.Online)
             {
                 Utils.Debug.Log("StartSettings", "Disconnecting current connection");
                 Net.Instance.Disconnect();
             }
-
+            
             // Set new login account (this triggers Net to send Login protocol)
             Utils.Debug.Log("StartSettings", $"Setting LoginAccount to: {_accounts[index].Id}");
             Data.Instance.LoginAccount = _accounts[index];
-
+            
             // Close settings panel
             Close();
         }
 
+        private void OnEditAccountNote(int index)
+        {
+            Utils.Debug.Log("StartSettings", $"Edit account note clicked for index {index}");
+            var account = _accounts[index];
+            ShowInputDialog("Edit Note", account.Note, (newNote) =>
+            {
+                account.Note = newNote;
+                Data.Instance.User.Accounts[index] = account;
+                Local.Instance.Save(Data.Instance.User);
+                RefreshAccountList();
+            });
+        }
+
+        private void OnDeleteAccount(int index)
+        {
+            if (index == _selectedIndex)
+            {
+                ShowErrorDialog("Cannot delete current account");
+                return;
+            }
+            
+            var account = _accounts[index];
+            ShowConfirmDialog(
+                "Delete Account?",
+                $"Account: {account.Id}\nNote: {account.Note}\n\nThis cannot be undone.",
+                () =>
+                {
+                    Data.Instance.User.Accounts.RemoveAt(index);
+                    // Adjust selected index if necessary
+                    if (Data.Instance.User.SelectedAccountIndex > index)
+                    {
+                        Data.Instance.User.SelectedAccountIndex--;
+                    }
+                    Local.Instance.Save(Data.Instance.User);
+                    RefreshAccountList();
+                }
+            );
+        }
+
+        private void OnAddAccountClick()
+        {
+            Utils.Debug.Log("StartSettings", "Add account clicked");
+            ShowAddAccountDialog((id, password, note) =>
+            {
+                var newAccount = new Account
+                {
+                    Id = id,
+                    Password = password,
+                    Note = note
+                };
+                Data.Instance.User.Accounts.Add(newAccount);
+                Local.Instance.Save(Data.Instance.User);
+                RefreshAccountList();
+            });
+        }
+        #endregion
+
+        #region Settings Tab
+        private void BuildSettingsTab()
+        {
+            Utils.Debug.Log("StartSettings", "Building settings tab");
+            
+            var panel = transform.Find("Panel");
+            if (panel == null) return;
+            
+            // Create SettingsContent container
+            var settingsContentObj = new GameObject("SettingsContent");
+            settingsContentObj.transform.SetParent(panel, false);
+            _settingsContent = settingsContentObj;
+            
+            var contentRect = settingsContentObj.AddComponent<RectTransform>();
+            contentRect.anchorMin = Vector2.zero;
+            contentRect.anchorMax = Vector2.one;
+            contentRect.sizeDelta = Vector2.zero;
+            contentRect.anchoredPosition = Vector2.zero;
+            
+            float yOffset = -UnitHeight * 2.5f; // Below header and tab
+            
+            // Language setting
+            CreateLanguageSetting(settingsContentObj, ref yOffset);
+            
+            // Sound setting
+            CreateSoundSetting(settingsContentObj, ref yOffset);
+        }
+
+        private void CreateLanguageSetting(GameObject parent, ref float yOffset)
+        {
+            var settingObj = new GameObject("LanguageSetting");
+            settingObj.transform.SetParent(parent.transform, false);
+            
+            var rect = settingObj.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0, 1);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.pivot = new Vector2(0.5f, 1);
+            rect.sizeDelta = new Vector2(-40, UnitHeight * 1.5f);
+            rect.anchoredPosition = new Vector2(0, yOffset);
+            
+            // Background
+            var bg = settingObj.AddComponent<Image>();
+            bg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+            
+            // Title
+            var titleObj = new GameObject("Title");
+            titleObj.transform.SetParent(settingObj.transform, false);
+            var titleRect = titleObj.AddComponent<RectTransform>();
+            titleRect.anchorMin = new Vector2(0, 0.6f);
+            titleRect.anchorMax = new Vector2(1, 1);
+            titleRect.sizeDelta = Vector2.zero;
+            titleRect.anchoredPosition = Vector2.zero;
+            
+            var titleText = titleObj.AddComponent<Text>();
+            titleText.text = "Language / 语言";
+            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.fontSize = 24;
+            titleText.color = new Color(0.8f, 0.8f, 0.8f, 1f);
+            titleText.alignment = TextAnchor.MiddleCenter;
+            
+            // Value (placeholder for dropdown)
+            var valueObj = new GameObject("Value");
+            valueObj.transform.SetParent(settingObj.transform, false);
+            var valueRect = valueObj.AddComponent<RectTransform>();
+            valueRect.anchorMin = new Vector2(0.2f, 0.1f);
+            valueRect.anchorMax = new Vector2(0.8f, 0.5f);
+            valueRect.sizeDelta = Vector2.zero;
+            valueRect.anchoredPosition = Vector2.zero;
+            
+            var valueBg = valueObj.AddComponent<Image>();
+            valueBg.color = new Color(0.15f, 0.15f, 0.15f, 0.8f);
+            
+            var valueText = valueObj.AddComponent<Text>();
+            valueText.text = "简体中文 ▼";
+            valueText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            valueText.fontSize = 26;
+            valueText.color = Color.white;
+            valueText.alignment = TextAnchor.MiddleCenter;
+            
+            // TODO: Add Dropdown component when implementing language switching
+            
+            yOffset -= UnitHeight * 1.7f;
+        }
+
+        private void CreateSoundSetting(GameObject parent, ref float yOffset)
+        {
+            var settingObj = new GameObject("SoundSetting");
+            settingObj.transform.SetParent(parent.transform, false);
+            
+            var rect = settingObj.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0, 1);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.pivot = new Vector2(0.5f, 1);
+            rect.sizeDelta = new Vector2(-40, UnitHeight * 1.5f);
+            rect.anchoredPosition = new Vector2(0, yOffset);
+            
+            // Background
+            var bg = settingObj.AddComponent<Image>();
+            bg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+            
+            // Title
+            var titleObj = new GameObject("Title");
+            titleObj.transform.SetParent(settingObj.transform, false);
+            var titleRect = titleObj.AddComponent<RectTransform>();
+            titleRect.anchorMin = new Vector2(0, 0.6f);
+            titleRect.anchorMax = new Vector2(1, 1);
+            titleRect.sizeDelta = Vector2.zero;
+            titleRect.anchoredPosition = Vector2.zero;
+            
+            var titleText = titleObj.AddComponent<Text>();
+            titleText.text = "UI Sound Effect";
+            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.fontSize = 24;
+            titleText.color = new Color(0.8f, 0.8f, 0.8f, 1f);
+            titleText.alignment = TextAnchor.MiddleCenter;
+            
+            // Toggle (placeholder)
+            var toggleObj = new GameObject("Toggle");
+            toggleObj.transform.SetParent(settingObj.transform, false);
+            var toggleRect = toggleObj.AddComponent<RectTransform>();
+            toggleRect.anchorMin = new Vector2(0.3f, 0.1f);
+            toggleRect.anchorMax = new Vector2(0.7f, 0.5f);
+            toggleRect.sizeDelta = Vector2.zero;
+            toggleRect.anchoredPosition = Vector2.zero;
+            
+            var toggleBg = toggleObj.AddComponent<Image>();
+            toggleBg.color = new Color(0.2f, 0.5f, 0.2f, 0.8f);
+            
+            var toggleText = toggleObj.AddComponent<Text>();
+            toggleText.text = "ON";
+            toggleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            toggleText.fontSize = 28;
+            toggleText.color = Color.white;
+            toggleText.alignment = TextAnchor.MiddleCenter;
+            
+            // TODO: Add Toggle component when implementing sound switching
+            
+            yOffset -= UnitHeight * 1.7f;
+        }
+        #endregion
+
+        #region Dialog System
+        private void ShowConfirmDialog(string title, string message, Action onConfirm)
+        {
+            Utils.Debug.Log("StartSettings", $"Showing confirm dialog: {title}");
+            
+            // Create dialog overlay
+            var dialogObj = new GameObject("ConfirmDialog");
+            dialogObj.transform.SetParent(transform, false);
+            
+            var dialogRect = dialogObj.AddComponent<RectTransform>();
+            dialogRect.anchorMin = Vector2.zero;
+            dialogRect.anchorMax = Vector2.one;
+            dialogRect.sizeDelta = Vector2.zero;
+            dialogRect.anchoredPosition = Vector2.zero;
+            
+            // Overlay background
+            var overlayBg = dialogObj.AddComponent<Image>();
+            overlayBg.color = new Color(0, 0, 0, 0.8f);
+            
+            // Dialog panel
+            var panelObj = new GameObject("Panel");
+            panelObj.transform.SetParent(dialogObj.transform, false);
+            
+            var panelRect = panelObj.AddComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRect.pivot = new Vector2(0.5f, 0.5f);
+            panelRect.sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.7f, UnitHeight * 4);
+            panelRect.anchoredPosition = Vector2.zero;
+            
+            var panelBg = panelObj.AddComponent<Image>();
+            panelBg.color = new Color(0.15f, 0.15f, 0.15f, 1f);
+            
+            // Title
+            var titleObj = new GameObject("Title");
+            titleObj.transform.SetParent(panelObj.transform, false);
+            var titleRect = titleObj.AddComponent<RectTransform>();
+            titleRect.anchorMin = new Vector2(0, 0.75f);
+            titleRect.anchorMax = new Vector2(1, 1);
+            titleRect.sizeDelta = Vector2.zero;
+            titleRect.anchoredPosition = Vector2.zero;
+            
+            var titleText = titleObj.AddComponent<Text>();
+            titleText.text = title;
+            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.fontSize = 28;
+            titleText.color = Color.white;
+            titleText.alignment = TextAnchor.MiddleCenter;
+            
+            // Message
+            var messageObj = new GameObject("Message");
+            messageObj.transform.SetParent(panelObj.transform, false);
+            var messageRect = messageObj.AddComponent<RectTransform>();
+            messageRect.anchorMin = new Vector2(0.1f, 0.35f);
+            messageRect.anchorMax = new Vector2(0.9f, 0.7f);
+            messageRect.sizeDelta = Vector2.zero;
+            messageRect.anchoredPosition = Vector2.zero;
+            
+            var messageText = messageObj.AddComponent<Text>();
+            messageText.text = message;
+            messageText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            messageText.fontSize = 22;
+            messageText.color = new Color(0.9f, 0.9f, 0.9f, 1f);
+            messageText.alignment = TextAnchor.UpperLeft;
+            
+            // Confirm button
+            CreateDialogButton(panelObj, "Confirm", 0.55f, 0.85f, () =>
+            {
+                onConfirm?.Invoke();
+                Destroy(dialogObj);
+            });
+            
+            // Cancel button
+            CreateDialogButton(panelObj, "Cancel", 0.15f, 0.45f, () =>
+            {
+                Destroy(dialogObj);
+            });
+        }
+
+        private void ShowInputDialog(string title, string defaultValue, Action<string> onConfirm)
+        {
+            Utils.Debug.Log("StartSettings", $"Showing input dialog: {title}");
+            
+            // Create dialog overlay
+            var dialogObj = new GameObject("InputDialog");
+            dialogObj.transform.SetParent(transform, false);
+            
+            var dialogRect = dialogObj.AddComponent<RectTransform>();
+            dialogRect.anchorMin = Vector2.zero;
+            dialogRect.anchorMax = Vector2.one;
+            dialogRect.sizeDelta = Vector2.zero;
+            dialogRect.anchoredPosition = Vector2.zero;
+            
+            // Overlay background
+            var overlayBg = dialogObj.AddComponent<Image>();
+            overlayBg.color = new Color(0, 0, 0, 0.8f);
+            
+            // Dialog panel
+            var panelObj = new GameObject("Panel");
+            panelObj.transform.SetParent(dialogObj.transform, false);
+            
+            var panelRect = panelObj.AddComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRect.pivot = new Vector2(0.5f, 0.5f);
+            panelRect.sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.7f, UnitHeight * 3.5f);
+            panelRect.anchoredPosition = Vector2.zero;
+            
+            var panelBg = panelObj.AddComponent<Image>();
+            panelBg.color = new Color(0.15f, 0.15f, 0.15f, 1f);
+            
+            // Title
+            var titleObj = new GameObject("Title");
+            titleObj.transform.SetParent(panelObj.transform, false);
+            var titleRect = titleObj.AddComponent<RectTransform>();
+            titleRect.anchorMin = new Vector2(0, 0.75f);
+            titleRect.anchorMax = new Vector2(1, 1);
+            titleRect.sizeDelta = Vector2.zero;
+            titleRect.anchoredPosition = Vector2.zero;
+            
+            var titleText = titleObj.AddComponent<Text>();
+            titleText.text = title;
+            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.fontSize = 28;
+            titleText.color = Color.white;
+            titleText.alignment = TextAnchor.MiddleCenter;
+            
+            // Input field
+            var inputObj = new GameObject("InputField");
+            inputObj.transform.SetParent(panelObj.transform, false);
+            var inputRect = inputObj.AddComponent<RectTransform>();
+            inputRect.anchorMin = new Vector2(0.1f, 0.45f);
+            inputRect.anchorMax = new Vector2(0.9f, 0.7f);
+            inputRect.sizeDelta = Vector2.zero;
+            inputRect.anchoredPosition = Vector2.zero;
+            
+            var inputBg = inputObj.AddComponent<Image>();
+            inputBg.color = new Color(0.1f, 0.1f, 0.1f, 1f);
+            
+            var inputField = inputObj.AddComponent<InputField>();
+            inputField.text = defaultValue;
+            
+            var inputTextObj = new GameObject("Text");
+            inputTextObj.transform.SetParent(inputObj.transform, false);
+            var inputTextRect = inputTextObj.AddComponent<RectTransform>();
+            inputTextRect.anchorMin = new Vector2(0.05f, 0);
+            inputTextRect.anchorMax = new Vector2(0.95f, 1);
+            inputTextRect.sizeDelta = Vector2.zero;
+            inputTextRect.anchoredPosition = Vector2.zero;
+            
+            var inputText = inputTextObj.AddComponent<Text>();
+            inputText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            inputText.fontSize = 24;
+            inputText.color = Color.white;
+            inputText.alignment = TextAnchor.MiddleLeft;
+            inputText.supportRichText = false;
+            
+            inputField.textComponent = inputText;
+            
+            // Confirm button
+            CreateDialogButton(panelObj, "Confirm", 0.55f, 0.85f, () =>
+            {
+                onConfirm?.Invoke(inputField.text);
+                Destroy(dialogObj);
+            });
+            
+            // Cancel button
+            CreateDialogButton(panelObj, "Cancel", 0.15f, 0.45f, () =>
+            {
+                Destroy(dialogObj);
+            });
+        }
+
+        private void ShowAddAccountDialog(Action<string, string, string> onConfirm)
+        {
+            Utils.Debug.Log("StartSettings", "Showing add account dialog");
+            
+            // Create dialog overlay
+            var dialogObj = new GameObject("AddAccountDialog");
+            dialogObj.transform.SetParent(transform, false);
+            
+            var dialogRect = dialogObj.AddComponent<RectTransform>();
+            dialogRect.anchorMin = Vector2.zero;
+            dialogRect.anchorMax = Vector2.one;
+            dialogRect.sizeDelta = Vector2.zero;
+            dialogRect.anchoredPosition = Vector2.zero;
+            
+            // Overlay background
+            var overlayBg = dialogObj.AddComponent<Image>();
+            overlayBg.color = new Color(0, 0, 0, 0.8f);
+            
+            // Dialog panel
+            var panelObj = new GameObject("Panel");
+            panelObj.transform.SetParent(dialogObj.transform, false);
+            
+            var panelRect = panelObj.AddComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRect.pivot = new Vector2(0.5f, 0.5f);
+            panelRect.sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.7f, UnitHeight * 5.5f);
+            panelRect.anchoredPosition = Vector2.zero;
+            
+            var panelBg = panelObj.AddComponent<Image>();
+            panelBg.color = new Color(0.15f, 0.15f, 0.15f, 1f);
+            
+            // Title
+            var titleObj = new GameObject("Title");
+            titleObj.transform.SetParent(panelObj.transform, false);
+            var titleRect = titleObj.AddComponent<RectTransform>();
+            titleRect.anchorMin = new Vector2(0, 0.85f);
+            titleRect.anchorMax = new Vector2(1, 1);
+            titleRect.sizeDelta = Vector2.zero;
+            titleRect.anchoredPosition = Vector2.zero;
+            
+            var titleText = titleObj.AddComponent<Text>();
+            titleText.text = "Add Account";
+            titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            titleText.fontSize = 28;
+            titleText.color = Color.white;
+            titleText.alignment = TextAnchor.MiddleCenter;
+            
+            // Account ID input
+            var idField = CreateInputFieldWithLabel(panelObj, "Account ID", "", 0.65f, 0.8f);
+            
+            // Password input
+            var passwordField = CreateInputFieldWithLabel(panelObj, "Password", "", 0.48f, 0.63f);
+            
+            // Note input
+            var noteField = CreateInputFieldWithLabel(panelObj, "Note (Optional)", "", 0.31f, 0.46f);
+            
+            // Confirm button
+            CreateDialogButton(panelObj, "Confirm", 0.55f, 0.85f, () =>
+            {
+                string id = idField.text;
+                string password = passwordField.text;
+                string note = noteField.text;
+                
+                if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
+                {
+                    ShowErrorDialog("Account ID and Password are required");
+                    return;
+                }
+                
+                onConfirm?.Invoke(id, password, note);
+                Destroy(dialogObj);
+            });
+            
+            // Cancel button
+            CreateDialogButton(panelObj, "Cancel", 0.15f, 0.45f, () =>
+            {
+                Destroy(dialogObj);
+            });
+        }
+
+        private InputField CreateInputFieldWithLabel(GameObject parent, string label, string defaultValue, float yMin, float yMax)
+        {
+            var containerObj = new GameObject(label.Replace(" ", ""));
+            containerObj.transform.SetParent(parent.transform, false);
+            
+            var containerRect = containerObj.AddComponent<RectTransform>();
+            containerRect.anchorMin = new Vector2(0.1f, yMin);
+            containerRect.anchorMax = new Vector2(0.9f, yMax);
+            containerRect.sizeDelta = Vector2.zero;
+            containerRect.anchoredPosition = Vector2.zero;
+            
+            // Label
+            var labelObj = new GameObject("Label");
+            labelObj.transform.SetParent(containerObj.transform, false);
+            var labelRect = labelObj.AddComponent<RectTransform>();
+            labelRect.anchorMin = new Vector2(0, 0.6f);
+            labelRect.anchorMax = new Vector2(1, 1);
+            labelRect.sizeDelta = Vector2.zero;
+            labelRect.anchoredPosition = Vector2.zero;
+            
+            var labelText = labelObj.AddComponent<Text>();
+            labelText.text = label;
+            labelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            labelText.fontSize = 20;
+            labelText.color = new Color(0.8f, 0.8f, 0.8f, 1f);
+            labelText.alignment = TextAnchor.LowerLeft;
+            
+            // Input field
+            var inputObj = new GameObject("InputField");
+            inputObj.transform.SetParent(containerObj.transform, false);
+            var inputRect = inputObj.AddComponent<RectTransform>();
+            inputRect.anchorMin = new Vector2(0, 0);
+            inputRect.anchorMax = new Vector2(1, 0.5f);
+            inputRect.sizeDelta = Vector2.zero;
+            inputRect.anchoredPosition = Vector2.zero;
+            
+            var inputBg = inputObj.AddComponent<Image>();
+            inputBg.color = new Color(0.1f, 0.1f, 0.1f, 1f);
+            
+            var inputField = inputObj.AddComponent<InputField>();
+            inputField.text = defaultValue;
+            
+            var inputTextObj = new GameObject("Text");
+            inputTextObj.transform.SetParent(inputObj.transform, false);
+            var inputTextRect = inputTextObj.AddComponent<RectTransform>();
+            inputTextRect.anchorMin = new Vector2(0.05f, 0);
+            inputTextRect.anchorMax = new Vector2(0.95f, 1);
+            inputTextRect.sizeDelta = Vector2.zero;
+            inputTextRect.anchoredPosition = Vector2.zero;
+            
+            var inputText = inputTextObj.AddComponent<Text>();
+            inputText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            inputText.fontSize = 22;
+            inputText.color = Color.white;
+            inputText.alignment = TextAnchor.MiddleLeft;
+            inputText.supportRichText = false;
+            
+            inputField.textComponent = inputText;
+            
+            return inputField;
+        }
+
+        private void ShowErrorDialog(string message)
+        {
+            Utils.Debug.Log("StartSettings", $"Showing error dialog: {message}");
+            ShowConfirmDialog("Error", message, null);
+        }
+
+        private void CreateDialogButton(GameObject parent, string label, float xMin, float xMax, Action onClick)
+        {
+            var buttonObj = new GameObject($"{label}Button");
+            buttonObj.transform.SetParent(parent.transform, false);
+            
+            var rect = buttonObj.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(xMin, 0.05f);
+            rect.anchorMax = new Vector2(xMax, 0.25f);
+            rect.sizeDelta = Vector2.zero;
+            rect.anchoredPosition = Vector2.zero;
+            
+            var bg = buttonObj.AddComponent<Image>();
+            bg.color = label == "Confirm" ? 
+                new Color(0.2f, 0.5f, 0.8f, 0.9f) : 
+                new Color(0.4f, 0.4f, 0.4f, 0.9f);
+            
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(buttonObj.transform, false);
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.sizeDelta = Vector2.zero;
+            textRect.anchoredPosition = Vector2.zero;
+            
+            var text = textObj.AddComponent<Text>();
+            text.text = label;
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.fontSize = 24;
+            text.color = Color.white;
+            text.alignment = TextAnchor.MiddleCenter;
+            
+            var button = buttonObj.AddComponent<Button>();
+            button.onClick.AddListener(() => onClick?.Invoke());
+        }
+        #endregion
+
+        #region Event Handlers
         private void OnCloseClick()
         {
             Utils.Debug.Log("StartSettings", "Close button clicked");
+            Close();
+        }
+
+        private void OnMaskClick()
+        {
+            Utils.Debug.Log("StartSettings", "Mask clicked");
             Close();
         }
         #endregion
