@@ -96,7 +96,7 @@ namespace Game
             float screenHeight = GetComponent<RectTransform>().rect.height;
             
             // Calculate heights
-            float titleHeight = UnitHeight * 5;
+            float titleHeight = UnitHeight * 6;
             float serverHeight = UnitHeight * 3;
             float buttonHeight = UnitHeight * 1.5f;
             float footerHeight = UnitHeight;
@@ -205,27 +205,20 @@ namespace Game
 
         private System.Collections.IEnumerator Animate()
         {
-            float titleTime = 1.5f;
+            float fadeTime = 1.0f;
             
             var authorImage = transform.Find("Author").GetComponent<Image>();
             var titleText = transform.Find("Title").GetComponent<Text>();
-            var titleTransform = transform.Find("Title").GetComponent<RectTransform>();
             
+            // Set initial alpha to 0
             authorImage.color = new Color(authorImage.color.r, authorImage.color.g, authorImage.color.b, 0);
             titleText.color = new Color(titleText.color.r, titleText.color.g, titleText.color.b, 0);
             
-            Vector3 originalPos = titleTransform.anchoredPosition;
-            Vector3 originalScale = titleTransform.localScale;
+            // Simple fade in animation
+            authorImage.DOFade(1, fadeTime * 0.7f).SetEase(Ease.InOutQuad);
+            titleText.DOFade(1, fadeTime).SetEase(Ease.InOutQuad);
             
-            titleTransform.anchoredPosition = originalPos + new Vector3(0, 200, 0);
-            titleTransform.localScale = originalScale * 0.7f;
-            
-            authorImage.DOFade(1, titleTime * 0.6f).SetEase(Ease.OutQuad);
-            titleText.DOFade(1, titleTime * 0.8f).SetEase(Ease.OutQuad);
-            titleTransform.DOAnchorPos(originalPos, titleTime).SetEase(Ease.OutBack);
-            titleTransform.DOScale(originalScale, titleTime).SetEase(Ease.OutBack);
-            
-            yield return new WaitForSeconds(titleTime);
+            yield return new WaitForSeconds(fadeTime);
             transform.Find("Block").gameObject.SetActive(true);
         }
         #endregion
