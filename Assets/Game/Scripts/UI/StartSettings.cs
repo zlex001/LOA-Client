@@ -31,30 +31,26 @@ namespace Game
         private Image _maskImage;
         private GameObject _accountContent;
         private GameObject _settingsContent;
-        private GameObject _accountTabButton;
-        private GameObject _settingsTabButton;
+        private StartSettingsTabButton _accountTabButton;
+        private StartSettingsTabButton _settingsTabButton;
         private GameObject _addAccountButton;
         #endregion
 
         #region Lifecycle
         public override void OnCreate(params object[] args)
         {
-            
             Utils.Debug.Log("StartSettings", "OnCreate called");
             
             // Cache references
             _panelRect = transform.Find("Panel")?.GetComponent<RectTransform>();
             _maskImage = GetComponent<Image>();
             
-            
             // Apply layout first
             ApplyLayout();
             
             // Build UI structure
             BuildTabBar();
-            
             BuildAccountTab();
-            
             BuildSettingsTab();
             
             // Setup close button
@@ -100,6 +96,9 @@ namespace Game
             var sequence = DOTween.Sequence();
             sequence.Append(_maskImage.DOFade(0.7f, 0.25f));
             sequence.Join(_panelRect.DOAnchorPosY(0, AnimationDuration).SetEase(Ease.OutCubic));
+            sequence.OnComplete(() => {
+                Utils.Debug.Log("StartSettings", "Panel slide-up animation completed");
+            });
             
             Utils.Debug.Log("StartSettings", "Slide-up animation started");
         }
@@ -155,75 +154,91 @@ namespace Game
         #region Tab System
         private void BuildTabBar()
         {
-            Utils.Debug.Log("StartSettings", "Building tab bar");
+            Utils.Debug.Log("StartSettings", "Building tab bar with Prefabs");
             
-            // Find or create TabBar
-            var tabBar = transform.Find("Panel/TabBar");
-            if (tabBar == null)
+            var panel = transform.Find("Panel");
+            if (panel == null)
             {
-                var tabBarObj = new GameObject("TabBar");
-                tabBarObj.transform.SetParent(transform.Find("Panel"), false);
-                tabBar = tabBarObj.transform;
+                Utils.Debug.LogError("StartSettings", "Panel not found!");
+                return;
+            }
+            
+            // Find or create TabBar container
+            GameObject tabBarGameObj = null;
+            var existingTabBar = panel.Find("TabBar");
+            
+            // Check if TabBar exists and is valid
+            if (existingTabBar != null && existingTabBar.gameObject != null)
+            {
+                try
+                {
+                    // Try to access gameObject to verify it's not destroyed
+                    var testName = existingTabBar.gameObject.name;
+                    tabBarGameObj = existingTabBar.gameObject;
+                    // TabBar exists and is valid, clear old children
+                    tabBarGameObj.ClearChildren();
+                }
+                catch (MissingReferenceException)
+                {
+                    // Reference is invalid, treat as null
+                    tabBarGameObj = null;
+                }
+            }
+            
+            // Create new TabBar if needed
+            if (tabBarGameObj == null)
+            {
+                tabBarGameObj = new GameObject("TabBar");
+                tabBarGameObj.transform.SetParent(panel, false);
                 
-                var tabBarRect = tabBarObj.AddComponent<RectTransform>();
-                float screenWidth = GetComponent<RectTransform>().rect.width;
+                var tabBarRect = tabBarGameObj.AddComponent<RectTransform>();
                 tabBarRect.anchorMin = new Vector2(0, 1);
                 tabBarRect.anchorMax = new Vector2(1, 1);
                 tabBarRect.pivot = new Vector2(0.5f, 1);
                 tabBarRect.sizeDelta = new Vector2(0, UnitHeight);
-                tabBarRect.anchoredPosition = new Vector2(0, -UnitHeight); // Below header
+                tabBarRect.anchoredPosition = new Vector2(0, -UnitHeight);
                 
                 // Background
-                var tabBarBg = tabBarObj.AddComponent<Image>();
+                var tabBarBg = tabBarGameObj.AddComponent<Image>();
                 tabBarBg.color = new Color(0.15f, 0.15f, 0.15f, 1f);
             }
             
-            // Create Account Tab Button
-            _accountTabButton = CreateTabButton(tabBar, "AccountTab", Localization.Instance.Get("start_settings_tab_account"), 0, TabType.Account);
+            // Create Account Tab using Prefab (use cached GameObject reference)
+            var accountTabObj = tabBarGameObj.AddPrefab("Prefabs/UI", "StartSettingsTabButton");
+            accountTabObj.name = "AccountTab";
+            _accountTabButton = accountTabObj.GetComponent<StartSettingsTabButton>();
             
-            // Create Settings Tab Button
-            _settingsTabButton = CreateTabButton(tabBar, "SettingsTab", Localization.Instance.Get("start_settings_tab_settings"), 1, TabType.Settings);
+            // Position account tab (left half)
+            var accountRect = accountTabObj.GetComponent<RectTransform>();
+            accountRect.anchorMin = new Vector2(0, 0);
+            accountRect.anchorMax = new Vector2(0.5f, 1);
+            accountRect.sizeDelta = Vector2.zero;
+            accountRect.anchoredPosition = Vector2.zero;
+            accountRect.pivot = new Vector2(0, 1);
             
-            UpdateTabVisuals();
+            _accountTabButton.Initialize(0, "start_settings_tab_account", OnTabClickByIndex, true);
+            
+            // Create Settings Tab using Prefab (use cached GameObject reference)
+            var settingsTabObj = tabBarGameObj.AddPrefab("Prefabs/UI", "StartSettingsTabButton");
+            settingsTabObj.name = "SettingsTab";
+            _settingsTabButton = settingsTabObj.GetComponent<StartSettingsTabButton>();
+            
+            // Position settings tab (right half)
+            var settingsRect = settingsTabObj.GetComponent<RectTransform>();
+            settingsRect.anchorMin = new Vector2(0.5f, 0);
+            settingsRect.anchorMax = new Vector2(1, 1);
+            settingsRect.sizeDelta = Vector2.zero;
+            settingsRect.anchoredPosition = Vector2.zero;
+            settingsRect.pivot = new Vector2(0, 1);
+            
+            _settingsTabButton.Initialize(1, "start_settings_tab_settings", OnTabClickByIndex, false);
+            
+            Utils.Debug.Log("StartSettings", "TabBar built successfully with Prefabs");
         }
-
-        private GameObject CreateTabButton(Transform parent, string name, string label, int index, TabType tabType)
+        
+        private void OnTabClickByIndex(int tabIndex)
         {
-            var buttonObj = new GameObject(name);
-            buttonObj.transform.SetParent(parent, false);
-            
-            var rect = buttonObj.AddComponent<RectTransform>();
-            float halfWidth = 0.5f;
-            rect.anchorMin = new Vector2(index * halfWidth, 0);
-            rect.anchorMax = new Vector2((index + 1) * halfWidth, 1);
-            rect.sizeDelta = Vector2.zero;
-            rect.anchoredPosition = Vector2.zero;
-            
-            // Background
-            var bg = buttonObj.AddComponent<Image>();
-            bg.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
-            
-            // Text (as child GameObject - correct pattern)
-            var textObj = new GameObject("Text");
-            textObj.transform.SetParent(buttonObj.transform, false);
-            var textRect = textObj.AddComponent<RectTransform>();
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.one;
-            textRect.sizeDelta = Vector2.zero;
-            textRect.anchoredPosition = Vector2.zero;
-            
-            var text = textObj.AddComponent<Text>();
-            text.text = label;
-            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 28;
-            text.color = new Color(0.7f, 0.7f, 0.7f, 1f);
-            text.alignment = TextAnchor.MiddleCenter;
-            
-            // Button
-            var button = buttonObj.AddComponent<Button>();
-            button.onClick.AddListener(() => OnTabClick(tabType));
-            
-            return buttonObj;
+            OnTabClick((TabType)tabIndex);
         }
 
         private void OnTabClick(TabType tab)
@@ -238,35 +253,9 @@ namespace Game
 
         private void UpdateTabVisuals()
         {
-            // Update Account Tab
-            if (_accountTabButton != null)
-            {
-                var text = _accountTabButton.transform.Find("Text")?.GetComponent<Text>();
-                if (text != null)
-                {
-                    text.color = (_currentTab == TabType.Account) ? Color.white : new Color(0.7f, 0.7f, 0.7f, 1f);
-                }
-                var bg = _accountTabButton.GetComponent<Image>();
-                if (bg != null)
-                {
-                    bg.color = (_currentTab == TabType.Account) ? new Color(0.25f, 0.25f, 0.25f, 1f) : new Color(0.2f, 0.2f, 0.2f, 0.5f);
-                }
-            }
-            
-            // Update Settings Tab
-            if (_settingsTabButton != null)
-            {
-                var text = _settingsTabButton.transform.Find("Text")?.GetComponent<Text>();
-                if (text != null)
-                {
-                    text.color = (_currentTab == TabType.Settings) ? Color.white : new Color(0.7f, 0.7f, 0.7f, 1f);
-                }
-                var bg = _settingsTabButton.GetComponent<Image>();
-                if (bg != null)
-                {
-                    bg.color = (_currentTab == TabType.Settings) ? new Color(0.25f, 0.25f, 0.25f, 1f) : new Color(0.2f, 0.2f, 0.2f, 0.5f);
-                }
-            }
+            // Update tab selection states using component methods
+            _accountTabButton?.SetSelected(_currentTab == TabType.Account);
+            _settingsTabButton?.SetSelected(_currentTab == TabType.Settings);
         }
 
         private void UpdateContent()
@@ -362,6 +351,10 @@ namespace Game
             
             // Add Account Button (bottom)
             _addAccountButton = CreateAddAccountButton(accountContentObj);
+            
+            // #region agent log
+            System.IO.File.AppendAllText("/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log", Newtonsoft.Json.JsonConvert.SerializeObject(new {location="StartSettings.cs:BuildAccountTab:exit",message="Account tab created",data=new{accountContentActive=_accountContent.activeSelf,addButtonActive=_addAccountButton?.activeSelf},timestamp=System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),hypothesisId="D"}) + "\n");
+            // #endregion
             
             Utils.Debug.Log("StartSettings", "Account tab structure created");
         }
@@ -680,8 +673,28 @@ namespace Game
             
             // Create settings items
             float yOffset = -20;
+            
+            // #region agent log
+            try {
+                System.IO.File.AppendAllText("/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log", Newtonsoft.Json.JsonConvert.SerializeObject(new {location="StartSettings.cs:BuildSettingsTab:beforeCreateSettings",message="Before creating settings items",timestamp=System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),hypothesisId="D"}) + "\n");
+            } catch {}
+            // #endregion
+            
             CreateLanguageSetting(settingsContentObj, ref yOffset);
+            
+            // #region agent log
+            try {
+                System.IO.File.AppendAllText("/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log", Newtonsoft.Json.JsonConvert.SerializeObject(new {location="StartSettings.cs:BuildSettingsTab:afterLanguage",message="After CreateLanguageSetting",timestamp=System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),hypothesisId="D"}) + "\n");
+            } catch {}
+            // #endregion
+            
             CreateSoundSetting(settingsContentObj, ref yOffset);
+            
+            // #region agent log
+            try {
+                System.IO.File.AppendAllText("/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log", Newtonsoft.Json.JsonConvert.SerializeObject(new {location="StartSettings.cs:BuildSettingsTab:afterSound",message="After CreateSoundSetting",timestamp=System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),hypothesisId="D"}) + "\n");
+            } catch {}
+            // #endregion
             
             Utils.Debug.Log("StartSettings", "Settings tab created");
         }
