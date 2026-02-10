@@ -302,7 +302,6 @@ namespace Game
 
             // Setup UI Listeners
             Game.Event.Instance.Add(UI.Event.Click, OnUIClick);
-            Game.Event.Instance.Add(Start.Event.ServerSelect, OnStartServerSelect);
             Game.Event.Instance.Add(Game.Initialize.Click.Random, OnInitializeRandomClick);
             Game.Event.Instance.Add(Game.Initialize.Click.Confirm, OnInitializeConfirmClick);
             Game.Event.Instance.Add(Game.Home.Event.SceneZoomIn, OnHomeSceneZoomIn);
@@ -372,12 +371,7 @@ namespace Game
         #endregion
 
         #region UI Start
-        private void OnStartServerSelect(params object[] args)
-        {
-            int index = (int)args[0];
-            User.SelectedServerIndex = index;
-            Local.Instance.Save(User);
-        }
+        // Server selection removed - using default server (index 0)
 
 
 
