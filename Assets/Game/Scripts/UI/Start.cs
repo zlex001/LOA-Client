@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System;
 using Game.Flow;
 
+
 namespace Game
 {
     public class Start : UI.Core
@@ -454,6 +455,17 @@ namespace Game
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.zero;
             rect.pivot = new Vector2(1f, 1f);
+            
+            // Set button size and position
+            float buttonSize = UnitHeight;
+            float padding = UnitHeight * 0.25f;
+            float screenWidth = GetComponent<RectTransform>().rect.width;
+            float footerHeight = UnitHeight;
+            float buttonCenterY = footerHeight / 2;
+            float buttonY = buttonCenterY + buttonSize / 2;
+            
+            rect.sizeDelta = new Vector2(buttonSize, buttonSize);
+            rect.anchoredPosition = new Vector2(screenWidth - padding, buttonY);
 
             // Add Image component for button background
             var image = settingsObj.AddComponent<Image>();

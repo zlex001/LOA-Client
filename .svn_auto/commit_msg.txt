@@ -1,20 +1,17 @@
-[重构] Tip组件重命名和位置调整
+[修复] Settings按钮尺寸和位置初始化
 
-详细变更：
-1. 组件重命名：
-   - _clickToStartContainer → _tipContainer
-   - _clickToStartText → _tipText
-   - CreateClickToStartUI() → CreateTipUI()
-   - GameObject名称："ClickToStartContainer" → "Tip"
+问题：
+- Settings按钮在动态创建时没有设置sizeDelta，导致按钮大小为0，不可见
 
-2. 位置调整：
-   - 原位置：UnitHeight × (1 + GoldenRatio) = 134.294px
-   - 新位置：Title底部和Footer顶部之间的中间位置
-   - 计算公式：middleY = (footerTop + titleBottom) / 2
-     - footerTop = 83px (UnitHeight)
-     - titleBottom = screenHeight × 0.618 - 249px
-     - middleY = (83 + screenHeight × 0.618 - 249) / 2
-
-3. 代码优化：
-   - 简化命名，使用单个单词"Tip"（对应localization key）
-   - 提升代码可读性
+修复：
+- 在CreateSettingsButton()中添加按钮尺寸设置：buttonSize × buttonSize (83×83)
+- 同时设置初始位置：右下角，与Footer对齐
+- 计算公式：
+  - buttonCenterY = footerHeight / 2
+  - buttonY = buttonCenterY + buttonSize / 2
+  - X位置：screenWidth - padding
+  
+布局规范：
+- 大小：1个单位高度（83px）正方形
+- 位置：右下角，padding为0.25个单位高度（20.75px）
+- 垂直居中对齐Footer
