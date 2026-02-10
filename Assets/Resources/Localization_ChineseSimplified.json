@@ -50,7 +50,10 @@
   "start_settings_sound_off": "关闭",
   "start_settings_confirm": "确认",
   "start_settings_cancel": "取消",
-  "start_settings_error": "错误"
+  "start_settings_error": "错误",
+  "start_settings_edit": "编辑",
+  "start_settings_delete": "删除",
+  "start_settings_delete_confirm": "确定要删除账号 {0} 吗？"
 }
 
 

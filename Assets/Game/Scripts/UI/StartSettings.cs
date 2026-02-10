@@ -244,22 +244,87 @@ namespace Game
             itemButton.targetGraphic = itemImage;
             itemButton.onClick.AddListener(() => OnAccountSwitch(account));
             
+            // Account text (left aligned)
             var textObj = new GameObject("Text");
             textObj.transform.SetParent(itemObj.transform, false);
             
             var textRect = textObj.AddComponent<RectTransform>();
             textRect.anchorMin = new Vector2(0, 0);
-            textRect.anchorMax = new Vector2(1, 1);
+            textRect.anchorMax = new Vector2(0.6f, 1);
             textRect.sizeDelta = Vector2.zero;
             textRect.anchoredPosition = Vector2.zero;
             
             var text = textObj.AddComponent<Text>();
             text.text = account.Id + (string.IsNullOrEmpty(account.Note) ? "" : $" ({account.Note})");
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 32;
+            text.fontSize = 28;
             text.color = Color.black;
             text.alignment = TextAnchor.MiddleLeft;
             textObj.AddComponent<Framework.FontScaler>();
+            
+            // Edit button (right side)
+            var editButtonObj = new GameObject("EditButton");
+            editButtonObj.transform.SetParent(itemObj.transform, false);
+            
+            var editButtonRect = editButtonObj.AddComponent<RectTransform>();
+            editButtonRect.anchorMin = new Vector2(0.65f, 0.25f);
+            editButtonRect.anchorMax = new Vector2(0.8f, 0.75f);
+            editButtonRect.sizeDelta = Vector2.zero;
+            
+            var editButtonImage = editButtonObj.AddComponent<Image>();
+            editButtonImage.color = new Color(0, 0.5f, 1f, 1f);
+            
+            var editButton = editButtonObj.AddComponent<Button>();
+            editButton.targetGraphic = editButtonImage;
+            editButton.onClick.AddListener(() => OnAccountEdit(account));
+            
+            var editTextObj = new GameObject("Text");
+            editTextObj.transform.SetParent(editButtonObj.transform, false);
+            
+            var editTextRect = editTextObj.AddComponent<RectTransform>();
+            editTextRect.anchorMin = Vector2.zero;
+            editTextRect.anchorMax = Vector2.one;
+            editTextRect.sizeDelta = Vector2.zero;
+            
+            var editText = editTextObj.AddComponent<Text>();
+            editText.text = Localization.Instance.Get("start_settings_edit");
+            editText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            editText.fontSize = 24;
+            editText.color = Color.white;
+            editText.alignment = TextAnchor.MiddleCenter;
+            editTextObj.AddComponent<Framework.FontScaler>();
+            
+            // Delete button (right side)
+            var deleteButtonObj = new GameObject("DeleteButton");
+            deleteButtonObj.transform.SetParent(itemObj.transform, false);
+            
+            var deleteButtonRect = deleteButtonObj.AddComponent<RectTransform>();
+            deleteButtonRect.anchorMin = new Vector2(0.82f, 0.25f);
+            deleteButtonRect.anchorMax = new Vector2(0.97f, 0.75f);
+            deleteButtonRect.sizeDelta = Vector2.zero;
+            
+            var deleteButtonImage = deleteButtonObj.AddComponent<Image>();
+            deleteButtonImage.color = new Color(1f, 0.3f, 0.3f, 1f);
+            
+            var deleteButton = deleteButtonObj.AddComponent<Button>();
+            deleteButton.targetGraphic = deleteButtonImage;
+            deleteButton.onClick.AddListener(() => OnAccountDelete(account));
+            
+            var deleteTextObj = new GameObject("Text");
+            deleteTextObj.transform.SetParent(deleteButtonObj.transform, false);
+            
+            var deleteTextRect = deleteTextObj.AddComponent<RectTransform>();
+            deleteTextRect.anchorMin = Vector2.zero;
+            deleteTextRect.anchorMax = Vector2.one;
+            deleteTextRect.sizeDelta = Vector2.zero;
+            
+            var deleteText = deleteTextObj.AddComponent<Text>();
+            deleteText.text = Localization.Instance.Get("start_settings_delete");
+            deleteText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            deleteText.fontSize = 24;
+            deleteText.color = Color.white;
+            deleteText.alignment = TextAnchor.MiddleCenter;
+            deleteTextObj.AddComponent<Framework.FontScaler>();
             
             var padding = itemObj.AddComponent<LayoutElement>();
             padding.preferredHeight = UnitHeight;
@@ -444,10 +509,89 @@ namespace Game
             Net.Instance.Connect(Data.Instance.SelectedServer.Ip, Data.Instance.SelectedServer.Port);
         }
 
+        private void OnAccountEdit(Account account)
+        {
+            Utils.Debug.Log("StartSettings", $"Editing account: {account.Id}");
+            
+            ShowInputDialog(
+                Localization.Instance.Get("start_settings_edit_note"),
+                account.Note ?? "",
+                (newNote) =>
+                {
+                    account.Note = newNote;
+                    Local.Instance.Save(Data.Instance.User);
+                    BuildUI();
+                }
+            );
+        }
+
+        private void OnAccountDelete(Account account)
+        {
+            Utils.Debug.Log("StartSettings", $"Deleting account: {account.Id}");
+            
+            if (_accounts.Count <= 1)
+            {
+                Utils.Debug.LogWarning("StartSettings", "Cannot delete last account");
+                return;
+            }
+            
+            string message = string.Format(
+                Localization.Instance.Get("start_settings_delete_confirm"),
+                account.Id
+            );
+            
+            ShowConfirmDialog(message, () =>
+            {
+                int index = _accounts.FindIndex(a => a.Id == account.Id);
+                if (index < 0) return;
+                
+                _accounts.RemoveAt(index);
+                Data.Instance.User.Accounts.RemoveAt(index);
+                
+                if (_selectedIndex == index)
+                {
+                    _selectedIndex = 0;
+                    Data.Instance.User.SelectedAccountIndex = 0;
+                }
+                else if (_selectedIndex > index)
+                {
+                    _selectedIndex--;
+                    Data.Instance.User.SelectedAccountIndex = _selectedIndex;
+                }
+                
+                Local.Instance.Save(Data.Instance.User);
+                BuildUI();
+            });
+        }
+
         private void OnAddAccountClick()
         {
-            Utils.Debug.Log("StartSettings", "Add account clicked - feature coming soon");
-            // TODO: Implement add account dialog
+            Utils.Debug.Log("StartSettings", "Add account clicked");
+            
+            ShowInputDialog(
+                Localization.Instance.Get("start_settings_add_account"),
+                "",
+                (note) =>
+                {
+                    if (string.IsNullOrEmpty(note))
+                    {
+                        note = Localization.Instance.Get("start_settings_add_account");
+                    }
+                    
+                    var newAccount = new Account
+                    {
+                        Id = $"Account_{System.DateTime.Now.Ticks}",
+                        Note = note
+                    };
+                    
+                    _accounts.Add(newAccount);
+                    Data.Instance.User.Accounts.Add(newAccount);
+                    Local.Instance.Save(Data.Instance.User);
+                    
+                    Utils.Debug.Log("StartSettings", $"Added new account: {newAccount.Id}");
+                    BuildUI();
+                }
+            );
         }
         #endregion
 
@@ -476,6 +620,222 @@ namespace Game
             
             Data.Instance.User.UISoundEnabled = enabled;
             Local.Instance.Save(Data.Instance.User);
+        }
+        #endregion
+
+        #region Dialog Helpers
+        private void ShowConfirmDialog(string message, Action onConfirm)
+        {
+            Utils.Debug.Log("StartSettings", $"Showing confirm dialog: {message}");
+            
+            // Create dialog overlay
+            var dialogObj = new GameObject("ConfirmDialog");
+            dialogObj.transform.SetParent(transform, false);
+            
+            var dialogRect = dialogObj.AddComponent<RectTransform>();
+            dialogRect.anchorMin = Vector2.zero;
+            dialogRect.anchorMax = Vector2.one;
+            dialogRect.sizeDelta = Vector2.zero;
+            
+            // Semi-transparent mask
+            var mask = dialogObj.AddComponent<Image>();
+            mask.color = new Color(0, 0, 0, 0.8f);
+            
+            // Dialog panel
+            var panelObj = new GameObject("Panel");
+            panelObj.transform.SetParent(dialogObj.transform, false);
+            
+            var panelRect = panelObj.AddComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRect.sizeDelta = new Vector2(600, 300);
+            panelRect.anchoredPosition = Vector2.zero;
+            
+            var panelImage = panelObj.AddComponent<Image>();
+            panelImage.color = Color.white;
+            
+            // Message text
+            var messageObj = new GameObject("Message");
+            messageObj.transform.SetParent(panelObj.transform, false);
+            
+            var messageRect = messageObj.AddComponent<RectTransform>();
+            messageRect.anchorMin = new Vector2(0.1f, 0.4f);
+            messageRect.anchorMax = new Vector2(0.9f, 0.8f);
+            messageRect.sizeDelta = Vector2.zero;
+            
+            var messageText = messageObj.AddComponent<Text>();
+            messageText.text = message;
+            messageText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            messageText.fontSize = 28;
+            messageText.color = Color.black;
+            messageText.alignment = TextAnchor.MiddleCenter;
+            messageObj.AddComponent<Framework.FontScaler>();
+            
+            // Cancel button
+            CreateDialogButton(panelObj.transform, "Cancel", new Vector2(0.15f, 0.15f), new Vector2(0.45f, 0.35f),
+                Localization.Instance.Get("start_settings_cancel"), 
+                () => GameObject.Destroy(dialogObj));
+            
+            // Confirm button
+            CreateDialogButton(panelObj.transform, "Confirm", new Vector2(0.55f, 0.15f), new Vector2(0.85f, 0.35f),
+                Localization.Instance.Get("start_settings_confirm"),
+                () => {
+                    onConfirm?.Invoke();
+                    GameObject.Destroy(dialogObj);
+                });
+        }
+
+        private void ShowInputDialog(string title, string defaultValue, Action<string> onConfirm)
+        {
+            Utils.Debug.Log("StartSettings", $"Showing input dialog: {title}");
+            
+            // Create dialog overlay
+            var dialogObj = new GameObject("InputDialog");
+            dialogObj.transform.SetParent(transform, false);
+            
+            var dialogRect = dialogObj.AddComponent<RectTransform>();
+            dialogRect.anchorMin = Vector2.zero;
+            dialogRect.anchorMax = Vector2.one;
+            dialogRect.sizeDelta = Vector2.zero;
+            
+            // Semi-transparent mask
+            var mask = dialogObj.AddComponent<Image>();
+            mask.color = new Color(0, 0, 0, 0.8f);
+            
+            // Dialog panel
+            var panelObj = new GameObject("Panel");
+            panelObj.transform.SetParent(dialogObj.transform, false);
+            
+            var panelRect = panelObj.AddComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRect.sizeDelta = new Vector2(600, 350);
+            panelRect.anchoredPosition = Vector2.zero;
+            
+            var panelImage = panelObj.AddComponent<Image>();
+            panelImage.color = Color.white;
+            
+            // Title text
+            var titleObj = new GameObject("Title");
+            titleObj.transform.SetParent(panelObj.transform, false);
+            
+            var titleRect = titleObj.AddComponent<RectTransform>();
+            titleRect.anchorMin = new Vector2(0.1f, 0.7f);
+            titleRect.anchorMax = new Vector2(0.9f, 0.9f);
+            titleRect.sizeDelta = Vector2.zero;
+            
+            var titleText = titleObj.AddComponent<Text>();
+            titleText.text = title;
+            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            titleText.fontSize = 32;
+            titleText.color = Color.black;
+            titleText.alignment = TextAnchor.MiddleCenter;
+            titleObj.AddComponent<Framework.FontScaler>();
+            
+            // Input field
+            var inputObj = new GameObject("InputField");
+            inputObj.transform.SetParent(panelObj.transform, false);
+            
+            var inputRect = inputObj.AddComponent<RectTransform>();
+            inputRect.anchorMin = new Vector2(0.1f, 0.45f);
+            inputRect.anchorMax = new Vector2(0.9f, 0.65f);
+            inputRect.sizeDelta = Vector2.zero;
+            
+            var inputImage = inputObj.AddComponent<Image>();
+            inputImage.color = new Color(0.95f, 0.95f, 0.95f, 1f);
+            
+            var inputField = inputObj.AddComponent<InputField>();
+            inputField.text = defaultValue;
+            
+            // Input field text
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(inputObj.transform, false);
+            
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = new Vector2(0.05f, 0);
+            textRect.anchorMax = new Vector2(0.95f, 1);
+            textRect.sizeDelta = Vector2.zero;
+            
+            var text = textObj.AddComponent<Text>();
+            text.text = defaultValue;
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 28;
+            text.color = Color.black;
+            text.alignment = TextAnchor.MiddleLeft;
+            text.supportRichText = false;
+            textObj.AddComponent<Framework.FontScaler>();
+            
+            inputField.textComponent = text;
+            
+            // Placeholder
+            var placeholderObj = new GameObject("Placeholder");
+            placeholderObj.transform.SetParent(inputObj.transform, false);
+            
+            var placeholderRect = placeholderObj.AddComponent<RectTransform>();
+            placeholderRect.anchorMin = new Vector2(0.05f, 0);
+            placeholderRect.anchorMax = new Vector2(0.95f, 1);
+            placeholderRect.sizeDelta = Vector2.zero;
+            
+            var placeholderText = placeholderObj.AddComponent<Text>();
+            placeholderText.text = title;
+            placeholderText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            placeholderText.fontSize = 28;
+            placeholderText.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            placeholderText.alignment = TextAnchor.MiddleLeft;
+            placeholderText.supportRichText = false;
+            placeholderObj.AddComponent<Framework.FontScaler>();
+            
+            inputField.placeholder = placeholderText;
+            
+            // Cancel button
+            CreateDialogButton(panelObj.transform, "Cancel", new Vector2(0.15f, 0.1f), new Vector2(0.45f, 0.3f),
+                Localization.Instance.Get("start_settings_cancel"),
+                () => GameObject.Destroy(dialogObj));
+            
+            // Confirm button
+            CreateDialogButton(panelObj.transform, "Confirm", new Vector2(0.55f, 0.1f), new Vector2(0.85f, 0.3f),
+                Localization.Instance.Get("start_settings_confirm"),
+                () => {
+                    onConfirm?.Invoke(inputField.text);
+                    GameObject.Destroy(dialogObj);
+                });
+        }
+
+        private void CreateDialogButton(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, 
+            string buttonText, Action onClick)
+        {
+            var buttonObj = new GameObject(name);
+            buttonObj.transform.SetParent(parent, false);
+            
+            var buttonRect = buttonObj.AddComponent<RectTransform>();
+            buttonRect.anchorMin = anchorMin;
+            buttonRect.anchorMax = anchorMax;
+            buttonRect.sizeDelta = Vector2.zero;
+            
+            var buttonImage = buttonObj.AddComponent<Image>();
+            buttonImage.color = name == "Confirm" 
+                ? new Color(0, 0.5f, 1f, 1f)  // Blue for confirm
+                : new Color(0.8f, 0.8f, 0.8f, 1f);  // Gray for cancel
+            
+            var button = buttonObj.AddComponent<Button>();
+            button.targetGraphic = buttonImage;
+            button.onClick.AddListener(() => onClick?.Invoke());
+            
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(buttonObj.transform, false);
+            
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.sizeDelta = Vector2.zero;
+            
+            var text = textObj.AddComponent<Text>();
+            text.text = buttonText;
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 32;
+            text.color = name == "Confirm" ? Color.white : Color.black;
+            text.alignment = TextAnchor.MiddleCenter;
+            textObj.AddComponent<Framework.FontScaler>();
         }
         #endregion
 

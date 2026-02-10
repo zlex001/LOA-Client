@@ -1,14 +1,17 @@
-[重构] StartSettings改为iOS/微信风格分组列表（临时简化版本）
+[功能] 实现StartSettings账号管理对话框完整功能
 
-- 架构转型：从Tab系统改为垂直分组列表（代码从1200+行精简到500行）
-- 删除所有Tab相关组件和Prefab（TabButton等）
-- 删除失败的手写Prefab文件（格式问题导致Unity无法加载）
-- 改用动态UI创建：所有UI元素通过new GameObject()构建
-- 修复编译错误：Data.Save改为Local.Instance.Save、Net.Connect添加参数、Accounts只读属性处理
-- 添加本地化keys：start_settings_accounts、start_settings_general（22种语言）
-- 集成FontScaler：所有Text组件响应全局字体设置
-- 修复Toggle控件显示：添加Background和Checkmark子结构
-- 修复面板宽度：从超出屏幕改为完全适配屏幕宽度
+完成账号管理对话框系统：
+- 新增ShowConfirmDialog方法：确认对话框，用于删除确认
+- 新增ShowInputDialog方法：输入对话框，用于添加/编辑账号备注
+- 新增CreateDialogButton辅助方法：统一创建对话框按钮
+- 新增OnAccountEdit方法：编辑账号备注功能
+- 新增OnAccountDelete方法：删除账号功能（防止删除最后一个账号）
+- 更新CreateAccountItem方法：为每个账号项添加编辑和删除按钮
+- 为所有22种语言添加3个新本地化键：start_settings_edit、start_settings_delete、start_settings_delete_confirm
 
-保留功能：账号切换、语言切换、音效开关、滑动动画、多语言支持
-待完善：账号编辑/删除/添加对话框功能
+技术特性：
+- 所有对话框动态创建，无需Prefab
+- 半透明遮罩阻止点击穿透
+- 集成FontScaler支持字体缩放
+- 完整本地化支持（22种语言）
+- 自动保存数据并重建UI

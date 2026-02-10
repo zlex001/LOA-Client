@@ -50,7 +50,10 @@
   "start_settings_sound_off": "關閉",
   "start_settings_confirm": "確認",
   "start_settings_cancel": "取消",
-  "start_settings_error": "錯誤"
+  "start_settings_error": "錯誤",
+  "start_settings_edit": "編輯",
+  "start_settings_delete": "刪除",
+  "start_settings_delete_confirm": "確定要刪除帳號 {0} 嗎？"
 }
 
 
