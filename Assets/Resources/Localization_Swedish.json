@@ -55,4 +55,5 @@
   "start_settings_delete": "Delete",
   "start_settings_delete_confirm": "Delete account {0}?"
 }
-
+  "start_settings_edit_account": "Edit Account"
+}

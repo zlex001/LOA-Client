@@ -1,17 +1,22 @@
-[功能] 实现StartSettings账号管理对话框完整功能
+[修复] 重构账号管理对话框以支持完整的账号信息
 
-完成账号管理对话框系统：
-- 新增ShowConfirmDialog方法：确认对话框，用于删除确认
-- 新增ShowInputDialog方法：输入对话框，用于添加/编辑账号备注
-- 新增CreateDialogButton辅助方法：统一创建对话框按钮
-- 新增OnAccountEdit方法：编辑账号备注功能
-- 新增OnAccountDelete方法：删除账号功能（防止删除最后一个账号）
-- 更新CreateAccountItem方法：为每个账号项添加编辑和删除按钮
-- 为所有22种语言添加3个新本地化键：start_settings_edit、start_settings_delete、start_settings_delete_confirm
+修复问题：
+- 原实现仅支持编辑备注，现在支持完整的账号、密码、备注管理
+
+新增功能：
+- ShowAddAccountDialog：三输入框对话框（账号ID、密码、备注）
+- ShowEditAccountDialog：双输入框对话框（密码、备注）
+- CreateInputField辅助方法：统一创建输入框组件
+- 账号项显示优先显示备注，无备注时显示账号ID
+
+数据说明：
+- Id：账号标识，用于登录验证
+- Password：密码，用于登录验证
+- Note：备注，仅用于本地标识（如"大号"、"小号"等）
 
 技术特性：
-- 所有对话框动态创建，无需Prefab
-- 半透明遮罩阻止点击穿透
-- 集成FontScaler支持字体缩放
-- 完整本地化支持（22种语言）
-- 自动保存数据并重建UI
+- 密码输入框使用Password类型隐藏输入
+- 添加账号时验证账号ID和密码非空
+- 编辑账号时验证密码非空
+- 集成FontScaler和完整本地化支持（22种语言）
+- 新增本地化键：start_settings_edit_account

@@ -53,7 +53,8 @@
   "start_settings_error": "错误",
   "start_settings_edit": "编辑",
   "start_settings_delete": "删除",
-  "start_settings_delete_confirm": "确定要删除账号 {0} 吗？"
+  "start_settings_delete_confirm": "确定要删除账号 {0} 吗？",
+  "start_settings_edit_account": "编辑账号"
 }
 
 
