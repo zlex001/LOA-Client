@@ -1,1 +1,1 @@
-[修复] 修正CreateClickToStartUI中的字体资源从LegacyRuntime.ttf改为Arial.ttf
+[优化] ClickToStart文本应用黄金比例和单位高度系统，Container高度为1个单位高度，位置为Footer+黄金比例间距

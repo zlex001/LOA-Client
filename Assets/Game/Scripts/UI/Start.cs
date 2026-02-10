@@ -184,8 +184,9 @@ namespace Game
             var containerRect = _clickToStartContainer.AddComponent<RectTransform>();
             containerRect.anchorMin = new Vector2(0.5f, 0f);
             containerRect.anchorMax = new Vector2(0.5f, 0f);
-            containerRect.pivot = new Vector2(0.5f, 0f);
-            containerRect.anchoredPosition = new Vector2(0f, UnitHeight * 2); // 2 unit heights from bottom
+            containerRect.pivot = new Vector2(0.5f, 0.5f);  // Center pivot for better positioning
+            containerRect.sizeDelta = new Vector2(0f, UnitHeight);  // 1 unit height
+            containerRect.anchoredPosition = new Vector2(0f, UnitHeight * (1f + GoldenRatio)); // Footer + golden ratio spacing
             
             // Create text
             var textObj = new GameObject("Text");
