@@ -176,9 +176,6 @@ namespace Game
             _titleText.color = new Color(1f, 1f, 1f, 0f); // Start with alpha=0 for animation
             _titleText.raycastTarget = false;
             
-            // Add FontScaler for automatic adjustment
-            titleObj.AddComponent<Framework.FontScaler>();
-            
             Utils.Debug.Log("Start", $"Created Title UI at golden ratio position: {titleCenterY}px ({GoldenRatio * 100}%)");
         }
         
@@ -206,12 +203,9 @@ namespace Game
             _footerText = footerObj.AddComponent<Text>();
             _footerText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             _footerText.fontSize = 38;
-            _footerText.alignment = TextAnchor.MiddleCenter;
+            _footerText.alignment = TextAnchor.MiddleRight;
             _footerText.color = Color.white;
             _footerText.raycastTarget = false;
-            
-            // Add FontScaler
-            footerObj.AddComponent<Framework.FontScaler>();
             
             Utils.Debug.Log("Start", $"Created Footer UI: width={footerWidth}px, height={footerHeight}px");
         }
@@ -245,9 +239,6 @@ namespace Game
             _clickToStartText.alignment = TextAnchor.MiddleCenter;
             _clickToStartText.color = Color.white;
             _clickToStartText.raycastTarget = false; // Text itself doesn't need to receive clicks
-            
-            // Add FontScaler for automatic font size adjustment
-            textObj.AddComponent<Framework.FontScaler>();
             
             // Pulsing animation
             _clickToStartText.DOFade(0.3f, 1f).SetLoops(-1, LoopType.Yoyo);
