@@ -17,11 +17,6 @@ namespace Game
         #region Enums and Constants
         private const float UnitHeight = 83f;
         private const float GoldenRatio = 0.618f;
-
-        public enum Event
-        {
-            ServerSelect,
-        }
         
         public enum AnimationType
         {
@@ -51,11 +46,15 @@ namespace Game
                 _uiTexts = texts;
                 
                 transform.Find("Title").GetComponent<Text>().text = texts["title"];
-                transform.Find("Block/Text").GetComponent<Text>().text = texts["tip"];
                 
-                if (texts.ContainsKey("loginButton"))
+                // Set click-to-start text
+                if (_clickToStartText != null && texts.ContainsKey("tip"))
                 {
-                    transform.Find("Login/Text").GetComponent<Text>().text = texts["loginButton"];
+                    _clickToStartText.text = texts["tip"];
+                    
+                    // Update text rect size to fit content
+                    var textRect = _clickToStartText.GetComponent<RectTransform>();
+                    textRect.sizeDelta = new Vector2(_clickToStartText.preferredWidth, _clickToStartText.preferredHeight);
                 }
                 
                 if (texts.ContainsKey("footer"))
@@ -74,45 +73,16 @@ namespace Game
 
         public override void OnCreate(params object[] args)
         {
-            // Hide Block initially for title animation
-            transform.Find("Block").gameObject.SetActive(false);
+            // Set default server (single server mode)
+            Data.Instance.User.SelectedServerIndex = 0;
             
             // Settings button - create first so ApplyAbsoluteLayout can position it
             InitializeSettingsButton();
             
             ApplyAbsoluteLayout();
 
-            // Initialize server selector
-            transform.Find("Servers").GetComponent<InfiniWheel>().Init(Data.Instance.Servers.Select(s => s.Name).ToArray());
-            transform.Find("Servers").GetComponent<InfiniWheel>().Select(Data.Instance.User.SelectedServerIndex);
-            transform.Find("Servers").GetComponent<InfiniWheel>().ValueChange += OnServersValueChange;
-
-            // Block animation
-            var block = transform.Find("Block");
-            var blockText = transform.Find("Block/Text");
-            blockText.GetComponent<Text>().DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo);
-            
-            // Remove Button from Block (prevent full-screen click)
-            var blockButton = block.GetComponent<Button>();
-            if (blockButton != null)
-            {
-                GameObject.Destroy(blockButton);
-                Utils.Debug.Log("Start", "Removed Button from Block to prevent full-screen click");
-            }
-            
-            // Disable Block's Image raycast to prevent full-screen click
-            var blockImage = block.GetComponent<Image>();
-            if (blockImage != null)
-            {
-                blockImage.raycastTarget = false;
-                Utils.Debug.Log("Start", "Disabled Block Image raycast");
-            }
-            
-            // Add Button to Block/Text only
-            var blockTextButton = blockText.gameObject.AddComponent<Button>();
-            blockTextButton.targetGraphic = blockText.GetComponent<Text>();
-            blockTextButton.onClick.AddListener(OnBlockClick);
-            Utils.Debug.Log("Start", "Added Button to Block/Text for precise click area");
+            // Create new clean click-to-start UI
+            CreateClickToStartUI();
             
             // Setup UI Listeners
             Data.Instance.after.Register(Data.Type.LoginResponse, OnAfterLoginResponseChanged);
@@ -139,7 +109,6 @@ namespace Game
             
             // Calculate heights
             float titleHeight = UnitHeight * 6;
-            float serverHeight = UnitHeight * 3;
             float footerHeight = UnitHeight;
             
             // Visual center: title center at 61.8% from bottom (golden ratio)
@@ -162,25 +131,6 @@ namespace Game
                 footerRect.anchoredPosition = new Vector2(padding, 0);
             }
             
-            // Servers selector (below title, with spacing)
-            float serversSpacing = UnitHeight * 0.5f;
-            float serversY = titleBottomY - serversSpacing - serverHeight / 2;
-            var serversRect = transform.Find("Servers")?.GetComponent<RectTransform>();
-            if (serversRect != null)
-            {
-                serversRect.anchorMin = Vector2.zero;
-                serversRect.anchorMax = Vector2.zero;
-                serversRect.pivot = new Vector2(0.5f, 0.5f);
-                serversRect.sizeDelta = new Vector2(screenWidth * 0.6f, serverHeight);
-                serversRect.anchoredPosition = new Vector2(screenWidth / 2, serversY);
-            }
-            
-            var serversWheel = transform.Find("Servers")?.GetComponent<InfiniWheel>();
-            if (serversWheel != null)
-            {
-                serversWheel.Select(serversWheel.SelectedItem);
-            }
-            
             // Title (visual center)
             var titleRect = transform.Find("Title")?.GetComponent<RectTransform>();
             if (titleRect != null)
@@ -197,27 +147,6 @@ namespace Game
             if (titleText != null)
             {
                 titleText.fontSize = 76;
-            }
-            
-            // Author (if exists, positioned relative to title)
-            var authorRect = transform.Find("Author")?.GetComponent<RectTransform>();
-            if (authorRect != null)
-            {
-                authorRect.anchorMin = Vector2.zero;
-                authorRect.anchorMax = Vector2.zero;
-                authorRect.pivot = new Vector2(0.5f, 0.5f);
-                authorRect.sizeDelta = new Vector2(UnitHeight * 0.5f, UnitHeight);
-                authorRect.anchoredPosition = new Vector2(screenWidth * GoldenRatio, titleCenterY);
-            }
-            
-            // QuickStart/Block (fullscreen, for click detection)
-            var quickStartRect = transform.Find("QuickStart")?.GetComponent<RectTransform>();
-            if (quickStartRect != null)
-            {
-                quickStartRect.anchorMin = Vector2.zero;
-                quickStartRect.anchorMax = Vector2.one;
-                quickStartRect.sizeDelta = Vector2.zero;
-                quickStartRect.anchoredPosition = Vector2.zero;
             }
             
             // Settings button (bottom-right corner, aligned with Footer)
@@ -239,6 +168,72 @@ namespace Game
                 
                 Utils.Debug.Log("Start", $"Settings button layout: size={buttonSize}, padding={padding}, footerHeight={footerHeight}, buttonY={buttonY}");
             }
+        }
+        #endregion
+
+        #region Click To Start UI
+        private GameObject _clickToStartContainer;
+        private Text _clickToStartText;
+        
+        private void CreateClickToStartUI()
+        {
+            // Create container
+            _clickToStartContainer = new GameObject("ClickToStartContainer");
+            _clickToStartContainer.transform.SetParent(transform, false);
+            
+            var containerRect = _clickToStartContainer.AddComponent<RectTransform>();
+            containerRect.anchorMin = new Vector2(0.5f, 0f);
+            containerRect.anchorMax = new Vector2(0.5f, 0f);
+            containerRect.pivot = new Vector2(0.5f, 0f);
+            containerRect.anchoredPosition = new Vector2(0f, UnitHeight * 2); // 2 unit heights from bottom
+            
+            // Create text
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(_clickToStartContainer.transform, false);
+            
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = new Vector2(0.5f, 0.5f);
+            textRect.anchorMax = new Vector2(0.5f, 0.5f);
+            textRect.pivot = new Vector2(0.5f, 0.5f);
+            textRect.anchoredPosition = Vector2.zero;
+            
+            _clickToStartText = textObj.AddComponent<Text>();
+            _clickToStartText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            _clickToStartText.fontSize = 38;
+            _clickToStartText.alignment = TextAnchor.MiddleCenter;
+            _clickToStartText.color = Color.white;
+            _clickToStartText.raycastTarget = false; // Text itself doesn't need to receive clicks
+            
+            // Add FontScaler for automatic font size adjustment
+            textObj.AddComponent<Framework.FontScaler>();
+            
+            // Pulsing animation
+            _clickToStartText.DOFade(0.3f, 1f).SetLoops(-1, LoopType.Yoyo);
+            
+            // Create click area (sized to text content with padding)
+            var clickAreaObj = new GameObject("ClickArea");
+            clickAreaObj.transform.SetParent(textObj.transform, false);
+            
+            var clickAreaRect = clickAreaObj.AddComponent<RectTransform>();
+            clickAreaRect.anchorMin = Vector2.zero;
+            clickAreaRect.anchorMax = Vector2.one;
+            clickAreaRect.offsetMin = new Vector2(-20f, -10f); // Padding
+            clickAreaRect.offsetMax = new Vector2(20f, 10f);   // Padding
+            
+            // Add transparent image for raycast target
+            var clickAreaImage = clickAreaObj.AddComponent<Image>();
+            clickAreaImage.color = new Color(0, 0, 0, 0); // Fully transparent
+            clickAreaImage.raycastTarget = true;
+            
+            // Add button
+            var clickButton = clickAreaObj.AddComponent<Button>();
+            clickButton.targetGraphic = clickAreaImage;
+            clickButton.onClick.AddListener(OnBlockClick);
+            
+            // Hide initially (will show after title animation)
+            _clickToStartContainer.SetActive(false);
+            
+            Utils.Debug.Log("Start", "Created clean ClickToStart UI structure");
         }
         #endregion
 
@@ -276,13 +271,8 @@ namespace Game
             Utils.Debug.Log("Start", $"=== Title Animation Started: {TITLE_ANIMATION} ===");
             Utils.Debug.Log("Start", $"Animation Time: {ANIMATION_TIME} seconds");
             
-            var authorImage = transform.Find("Author").GetComponent<Image>();
             var titleText = transform.Find("Title").GetComponent<Text>();
             var titleRect = transform.Find("Title").GetComponent<RectTransform>();
-            
-            // Set author initial state
-            authorImage.color = new Color(authorImage.color.r, authorImage.color.g, authorImage.color.b, 0);
-            authorImage.DOFade(1, ANIMATION_TIME * 0.6f).SetEase(Ease.OutQuad);
             
             // Store original values
             Color originalTitleColor = titleText.color;
@@ -363,15 +353,14 @@ namespace Game
             }
             
             yield return new WaitForSeconds(ANIMATION_TIME);
-            transform.Find("Block").gameObject.SetActive(true);
+            
+            // Show the new click-to-start UI
+            if (_clickToStartContainer != null)
+            {
+                _clickToStartContainer.SetActive(true);
+            }
+            
             Utils.Debug.Log("Start", "=== Title Animation Finished ===");
-        }
-        #endregion
-
-        #region Server 
-        private void OnServersValueChange(int index, Text text)
-        {
-            Game.Event.Instance.Fire(Event.ServerSelect, index);
         }
         #endregion
 

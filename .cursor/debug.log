@@ -1,8 +1,2 @@
-{"location":"StartSettings.cs:BuildAccountTab:exit","message":"Account tab created","data":{"accountContentActive":true,"addButtonActive":true},"timestamp":1770704526347,"hypothesisId":"D"}
-{"location":"StartSettings.cs:BuildSettingsTab:beforeCreateSettings","message":"Before creating settings items","timestamp":1770704526427,"hypothesisId":"D"}
-{"location":"StartSettings.cs:BuildSettingsTab:afterLanguage","message":"After CreateLanguageSetting","timestamp":1770704526446,"hypothesisId":"D"}
-{"location":"StartSettings.cs:BuildSettingsTab:afterSound","message":"After CreateSoundSetting","timestamp":1770704526461,"hypothesisId":"D"}
-{"location":"StartSettings.cs:BuildAccountTab:exit","message":"Account tab created","data":{"accountContentActive":true,"addButtonActive":true},"timestamp":1770704743518,"hypothesisId":"D"}
-{"location":"StartSettings.cs:BuildSettingsTab:beforeCreateSettings","message":"Before creating settings items","timestamp":1770704743593,"hypothesisId":"D"}
-{"location":"StartSettings.cs:BuildSettingsTab:afterLanguage","message":"After CreateLanguageSetting","timestamp":1770704743613,"hypothesisId":"D"}
-{"location":"StartSettings.cs:BuildSettingsTab:afterSound","message":"After CreateSoundSetting","timestamp":1770704743628,"hypothesisId":"D"}
+{"id":"log_1770721492237","timestamp":1770721492239,"location":"Start.cs","message":"Created new ClickToStart UI","hypothesisId":"UI_CREATE","data":{"containerPosition":"(0.00, 166.00)","textFontSize":30}}
+{"id":"log_1770721507777","timestamp":1770721507779,"location":"Start.cs","message":"Created new ClickToStart UI","hypothesisId":"UI_CREATE","data":{"containerPosition":"(0.00, 166.00)","textFontSize":30}}
