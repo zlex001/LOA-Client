@@ -31,6 +31,8 @@
   "reconnecting_attempt": "재연결 중（{0}번째）...",
   "reconnect_success": "재연결 성공",
   "reconnect_cancel": "재연결이 취소되었습니다",
+  "start_settings_accounts": "Accounts",
+  "start_settings_general": "General Settings",
   "start_settings_tab_account": "Account",
   "start_settings_tab_settings": "Settings",
   "start_settings_add_account": "Add Account",

@@ -31,6 +31,8 @@
   "reconnecting_attempt": "正在重连（第{0}次）...",
   "reconnect_success": "重连成功",
   "reconnect_cancel": "已取消重连",
+  "start_settings_accounts": "账号",
+  "start_settings_general": "通用设置",
   "start_settings_tab_account": "账号",
   "start_settings_tab_settings": "设置",
   "start_settings_add_account": "添加账号",

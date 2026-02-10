@@ -31,6 +31,8 @@
   "reconnecting_attempt": "กำลังเชื่อมต่อใหม่ (ครั้งที่ {0})...",
   "reconnect_success": "เชื่อมต่อใหม่สำเร็จ",
   "reconnect_cancel": "ยกเลิกการเชื่อมต่อใหม่",
+  "start_settings_accounts": "Accounts",
+  "start_settings_general": "General Settings",
   "start_settings_tab_account": "Account",
   "start_settings_tab_settings": "Settings",
   "start_settings_add_account": "Add Account",

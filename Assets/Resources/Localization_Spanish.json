@@ -31,6 +31,8 @@
   "reconnecting_attempt": "Reconectando (Intento {0})...",
   "reconnect_success": "Reconexión exitosa",
   "reconnect_cancel": "Reconexión cancelada",
+  "start_settings_accounts": "Accounts",
+  "start_settings_general": "General Settings",
   "start_settings_tab_account": "Account",
   "start_settings_tab_settings": "Settings",
   "start_settings_add_account": "Add Account",
