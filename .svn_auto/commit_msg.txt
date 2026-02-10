@@ -1,5 +1,20 @@
-[优化] Footer文本添加FontScaler自动适配
+[重构] Tip组件重命名和位置调整
 
-- 为Footer文本添加Framework.FontScaler组件
-- 保持右对齐和固定基础字体大小38
-- 允许字体根据屏幕尺寸自动调整
+详细变更：
+1. 组件重命名：
+   - _clickToStartContainer → _tipContainer
+   - _clickToStartText → _tipText
+   - CreateClickToStartUI() → CreateTipUI()
+   - GameObject名称："ClickToStartContainer" → "Tip"
+
+2. 位置调整：
+   - 原位置：UnitHeight × (1 + GoldenRatio) = 134.294px
+   - 新位置：Title底部和Footer顶部之间的中间位置
+   - 计算公式：middleY = (footerTop + titleBottom) / 2
+     - footerTop = 83px (UnitHeight)
+     - titleBottom = screenHeight × 0.618 - 249px
+     - middleY = (83 + screenHeight × 0.618 - 249) / 2
+
+3. 代码优化：
+   - 简化命名，使用单个单词"Tip"（对应localization key）
+   - 提升代码可读性

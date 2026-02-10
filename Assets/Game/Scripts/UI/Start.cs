@@ -36,8 +36,8 @@ namespace Game
         private Dictionary<string, string> _uiTexts;
         private Text _titleText;
         private Text _footerText;
-        private GameObject _clickToStartContainer;
-        private Text _clickToStartText;
+        private GameObject _tipContainer;
+        private Text _tipText;
         #endregion
 
         #region Lifecycle Methods
@@ -55,14 +55,14 @@ namespace Game
                     _titleText.text = texts["title"];
                 }
                 
-                // Set click-to-start text
-                if (_clickToStartText != null && texts.ContainsKey("tip"))
+                // Set tip text
+                if (_tipText != null && texts.ContainsKey("tip"))
                 {
-                    _clickToStartText.text = texts["tip"];
+                    _tipText.text = texts["tip"];
                     
                     // Update text rect size to fit content
-                    var textRect = _clickToStartText.GetComponent<RectTransform>();
-                    textRect.sizeDelta = new Vector2(_clickToStartText.preferredWidth, _clickToStartText.preferredHeight);
+                    var textRect = _tipText.GetComponent<RectTransform>();
+                    textRect.sizeDelta = new Vector2(_tipText.preferredWidth, _tipText.preferredHeight);
                 }
                 
                 // Set footer text
@@ -89,7 +89,7 @@ namespace Game
             CreateTitleUI();
             CreateFooterUI();
             InitializeSettingsButton();
-            CreateClickToStartUI();
+            CreateTipUI();
             
             // Setup UI Listeners
             Data.Instance.after.Register(Data.Type.LoginResponse, OnAfterLoginResponseChanged);
@@ -213,22 +213,30 @@ namespace Game
             Utils.Debug.Log("Start", $"Created Footer UI: width={footerWidth}px, height={footerHeight}px");
         }
         
-        private void CreateClickToStartUI()
+        private void CreateTipUI()
         {
-            // Create container
-            _clickToStartContainer = new GameObject("ClickToStartContainer");
-            _clickToStartContainer.transform.SetParent(transform, false);
+            float screenHeight = GetComponent<RectTransform>().rect.height;
+            float titleHeight = UnitHeight * 6;
             
-            var containerRect = _clickToStartContainer.AddComponent<RectTransform>();
+            // Calculate position: middle between Footer top and Title bottom
+            float footerTop = UnitHeight;
+            float titleBottom = screenHeight * GoldenRatio - titleHeight / 2;
+            float middleY = (footerTop + titleBottom) / 2;
+            
+            // Create container
+            _tipContainer = new GameObject("Tip");
+            _tipContainer.transform.SetParent(transform, false);
+            
+            var containerRect = _tipContainer.AddComponent<RectTransform>();
             containerRect.anchorMin = new Vector2(0.5f, 0f);
             containerRect.anchorMax = new Vector2(0.5f, 0f);
-            containerRect.pivot = new Vector2(0.5f, 0.5f);  // Center pivot for better positioning
-            containerRect.sizeDelta = new Vector2(0f, UnitHeight);  // 1 unit height
-            containerRect.anchoredPosition = new Vector2(0f, UnitHeight * (1f + GoldenRatio)); // Footer + golden ratio spacing
+            containerRect.pivot = new Vector2(0.5f, 0.5f);
+            containerRect.sizeDelta = new Vector2(0f, UnitHeight);
+            containerRect.anchoredPosition = new Vector2(0f, middleY);
             
             // Create text
             var textObj = new GameObject("Text");
-            textObj.transform.SetParent(_clickToStartContainer.transform, false);
+            textObj.transform.SetParent(_tipContainer.transform, false);
             
             var textRect = textObj.AddComponent<RectTransform>();
             textRect.anchorMin = new Vector2(0.5f, 0.5f);
@@ -236,15 +244,15 @@ namespace Game
             textRect.pivot = new Vector2(0.5f, 0.5f);
             textRect.anchoredPosition = Vector2.zero;
             
-            _clickToStartText = textObj.AddComponent<Text>();
-            _clickToStartText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            _clickToStartText.fontSize = 38;
-            _clickToStartText.alignment = TextAnchor.MiddleCenter;
-            _clickToStartText.color = Color.white;
-            _clickToStartText.raycastTarget = false; // Text itself doesn't need to receive clicks
+            _tipText = textObj.AddComponent<Text>();
+            _tipText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            _tipText.fontSize = 38;
+            _tipText.alignment = TextAnchor.MiddleCenter;
+            _tipText.color = Color.white;
+            _tipText.raycastTarget = false;
             
             // Pulsing animation
-            _clickToStartText.DOFade(0.3f, 1f).SetLoops(-1, LoopType.Yoyo);
+            _tipText.DOFade(0.3f, 1f).SetLoops(-1, LoopType.Yoyo);
             
             // Create click area (sized to text content with padding)
             var clickAreaObj = new GameObject("ClickArea");
@@ -253,12 +261,12 @@ namespace Game
             var clickAreaRect = clickAreaObj.AddComponent<RectTransform>();
             clickAreaRect.anchorMin = Vector2.zero;
             clickAreaRect.anchorMax = Vector2.one;
-            clickAreaRect.offsetMin = new Vector2(-20f, -10f); // Padding
-            clickAreaRect.offsetMax = new Vector2(20f, 10f);   // Padding
+            clickAreaRect.offsetMin = new Vector2(-20f, -10f);
+            clickAreaRect.offsetMax = new Vector2(20f, 10f);
             
             // Add transparent image for raycast target
             var clickAreaImage = clickAreaObj.AddComponent<Image>();
-            clickAreaImage.color = new Color(0, 0, 0, 0); // Fully transparent
+            clickAreaImage.color = new Color(0, 0, 0, 0);
             clickAreaImage.raycastTarget = true;
             
             // Add button
@@ -267,9 +275,9 @@ namespace Game
             clickButton.onClick.AddListener(OnBlockClick);
             
             // Hide initially (will show after title animation)
-            _clickToStartContainer.SetActive(false);
+            _tipContainer.SetActive(false);
             
-            Utils.Debug.Log("Start", "Created clean ClickToStart UI structure");
+            Utils.Debug.Log("Start", $"Created Tip UI at middle position: {middleY}px");
         }
         #endregion
 
@@ -395,10 +403,10 @@ namespace Game
             
             yield return new WaitForSeconds(ANIMATION_TIME);
             
-            // Show the new click-to-start UI
-            if (_clickToStartContainer != null)
+            // Show tip UI
+            if (_tipContainer != null)
             {
-                _clickToStartContainer.SetActive(true);
+                _tipContainer.SetActive(true);
             }
             
             Utils.Debug.Log("Start", "=== Title Animation Finished ===");
