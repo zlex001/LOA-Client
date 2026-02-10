@@ -1,10 +1,5 @@
-[优化] Start界面文本固定字体大小，Footer右对齐
+[优化] Footer文本添加FontScaler自动适配
 
-详细变更：
-1. Title文本：移除FontScaler，固定字体大小76
-2. ClickToStart文本：移除FontScaler，固定字体大小38
-3. Footer文本：移除FontScaler，固定字体大小38，对齐方式改为右对齐（TextAnchor.MiddleRight）
-
-原因：
-- 确保字体大小固定，不随屏幕自动缩放
-- Footer右对齐以更好适配左侧布局
+- 为Footer文本添加Framework.FontScaler组件
+- 保持右对齐和固定基础字体大小38
+- 允许字体根据屏幕尺寸自动调整

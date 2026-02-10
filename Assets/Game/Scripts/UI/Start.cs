@@ -207,6 +207,9 @@ namespace Game
             _footerText.color = Color.white;
             _footerText.raycastTarget = false;
             
+            // Add FontScaler
+            footerObj.AddComponent<Framework.FontScaler>();
+            
             Utils.Debug.Log("Start", $"Created Footer UI: width={footerWidth}px, height={footerHeight}px");
         }
         
