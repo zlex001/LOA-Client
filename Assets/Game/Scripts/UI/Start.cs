@@ -198,7 +198,7 @@ namespace Game
             textRect.anchoredPosition = Vector2.zero;
             
             _clickToStartText = textObj.AddComponent<Text>();
-            _clickToStartText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            _clickToStartText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             _clickToStartText.fontSize = 38;
             _clickToStartText.alignment = TextAnchor.MiddleCenter;
             _clickToStartText.color = Color.white;

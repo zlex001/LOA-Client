@@ -1,1 +1,1 @@
-[修复] 删除Data.cs中对已移除的Start.Event.ServerSelect的引用
+[修复] 修正CreateClickToStartUI中的字体资源从LegacyRuntime.ttf改为Arial.ttf
