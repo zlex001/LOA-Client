@@ -644,6 +644,11 @@ namespace Game
             var mask = dialogObj.AddComponent<Image>();
             mask.color = new Color(0, 0, 0, 0.8f);
             
+            // Add button to mask to intercept clicks and prevent penetration
+            var maskButton = dialogObj.AddComponent<Button>();
+            maskButton.targetGraphic = mask;
+            maskButton.onClick.AddListener(() => GameObject.Destroy(dialogObj));
+            
             // Dialog panel
             var panelObj = new GameObject("Panel");
             panelObj.transform.SetParent(dialogObj.transform, false);
@@ -720,6 +725,11 @@ namespace Game
             // Semi-transparent mask
             var mask = dialogObj.AddComponent<Image>();
             mask.color = new Color(0, 0, 0, 0.8f);
+            
+            // Add button to mask to intercept clicks and prevent penetration
+            var maskButton = dialogObj.AddComponent<Button>();
+            maskButton.targetGraphic = mask;
+            maskButton.onClick.AddListener(() => GameObject.Destroy(dialogObj));
             
             // Dialog panel
             var panelObj = new GameObject("Panel");
@@ -858,6 +868,11 @@ namespace Game
             var mask = dialogObj.AddComponent<Image>();
             mask.color = new Color(0, 0, 0, 0.8f);
             
+            // Add button to mask to intercept clicks and prevent penetration
+            var maskButton = dialogObj.AddComponent<Button>();
+            maskButton.targetGraphic = mask;
+            maskButton.onClick.AddListener(() => GameObject.Destroy(dialogObj));
+            
             // Dialog panel
             var panelObj = new GameObject("Panel");
             panelObj.transform.SetParent(dialogObj.transform, false);
@@ -918,6 +933,11 @@ namespace Game
             // Semi-transparent mask
             var mask = dialogObj.AddComponent<Image>();
             mask.color = new Color(0, 0, 0, 0.8f);
+            
+            // Add button to mask to intercept clicks and prevent penetration
+            var maskButton = dialogObj.AddComponent<Button>();
+            maskButton.targetGraphic = mask;
+            maskButton.onClick.AddListener(() => GameObject.Destroy(dialogObj));
             
             // Dialog panel
             var panelObj = new GameObject("Panel");
