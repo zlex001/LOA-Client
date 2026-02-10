@@ -88,8 +88,13 @@ namespace Game
             transform.Find("Servers").GetComponent<InfiniWheel>().ValueChange += OnServersValueChange;
 
             // Block animation
-            transform.Find("Block/Text").GetComponent<Text>().DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo);
-            transform.Find("Block").GetComponent<Button>().onClick.AddListener(OnBlockClick);
+            var blockText = transform.Find("Block/Text");
+            blockText.GetComponent<Text>().DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo);
+            
+            // Add Button to Block/Text instead of Block to prevent full-screen click
+            var blockTextButton = blockText.gameObject.AddComponent<Button>();
+            blockTextButton.targetGraphic = blockText.GetComponent<Text>();
+            blockTextButton.onClick.AddListener(OnBlockClick);
             
             // Setup UI Listeners
             Data.Instance.after.Register(Data.Type.LoginResponse, OnAfterLoginResponseChanged);

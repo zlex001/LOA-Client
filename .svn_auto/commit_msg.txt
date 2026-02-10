@@ -1,24 +1,29 @@
-[修复] 对话框遮罩点击穿透问题
+[修复] 防止Start和StartSettings界面的误触问题
 
-修复问题：
-- 点击对话框外空白区域时，事件穿透到StartSettings遮罩，导致整个面板关闭
+修复问题1 - Start界面误触登录：
+- 原问题：整个屏幕点击都会触发登录，用户想点设置按钮容易误触登录
+- 修复方案：将点击响应区域从Block（全屏）改为Block/Text（文本区域）
+- 现在只有点击"点击此处开始游戏"文本才会触发登录
+- 配合服务器推送的tip文本，提供明确的点击提示
 
-修复内容：
-- 为所有对话框遮罩添加Button组件，拦截点击事件
-- 绑定点击事件到关闭对话框逻辑，而非穿透到父层
-- 实现点击对话框外空白区域只关闭当前对话框，保留StartSettings面板
-
-涉及的对话框：
-- ShowEditAccountDialog：编辑账号对话框
-- ShowAddAccountDialog：添加账号对话框
-- ShowConfirmDialog：确认删除对话框
-- ShowInputDialog：通用输入对话框
+修复问题2 - StartSettings界面误触关闭：
+- 原问题：点击面板上的空白区域会触发遮罩关闭，用户想点按钮容易误触关闭
+- 修复方案：确保Panel有Image组件且raycastTarget=true，拦截点击事件
+- 现在点击面板内部不会关闭，只有点击面板外的遮罩才关闭
+- 遮罩"垫"在面板下面，实现正确的事件层级
 
 技术实现：
-- 为dialogObj添加Button组件，targetGraphic指向遮罩Image
-- 绑定onClick事件到GameObject.Destroy(dialogObj)
-- 防止事件冒泡到父层的StartSettings遮罩
+Start.cs:
+- 移除Block的Button组件
+- 为Block/Text添加Button组件，targetGraphic指向Text
+- 保持文本闪烁动画不变
+
+StartSettings.cs:
+- 在OnCreate中确保Panel有Image组件
+- 设置panelImage.raycastTarget=true来拦截点击
+- 面板Image组件阻止点击事件穿透到遮罩
 
 用户体验改进：
-- 符合直觉的交互：点击空白关闭当前对话框
-- 避免误操作：不会意外关闭整个设置面板
+- 明确的交互区域，减少误操作
+- 符合用户心理预期的点击行为
+- 提高操作精确性和容错率

@@ -41,6 +41,15 @@ namespace Game
             _panelRect = transform.Find("Panel")?.GetComponent<RectTransform>();
             _maskImage = GetComponent<Image>();
             
+            // Ensure Panel has Image component to block clicks from reaching mask
+            var panelImage = _panelRect?.GetComponent<Image>();
+            if (panelImage == null)
+            {
+                panelImage = _panelRect.gameObject.AddComponent<Image>();
+                panelImage.color = Color.white;
+            }
+            panelImage.raycastTarget = true; // Intercept clicks on panel
+            
             // Find or create Content container
             var contentTransform = transform.Find("Panel/Content");
             if (contentTransform == null)
