@@ -255,8 +255,8 @@ namespace Game
             textRect.anchoredPosition = Vector2.zero;
             
             var text = textObj.AddComponent<Text>();
-            // Display note if available, otherwise display account ID
-            text.text = string.IsNullOrEmpty(account.Note) ? account.Id : account.Note;
+            // Display format: "AccountID (Note)" or just "AccountID" if no note
+            text.text = account.Id + (string.IsNullOrEmpty(account.Note) ? "" : $" ({account.Note})");
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 28;
             text.color = Color.black;
@@ -514,14 +514,15 @@ namespace Game
         {
             Utils.Debug.Log("StartSettings", $"Editing account: {account.Id}");
             
-            ShowEditAccountDialog(account.Password ?? "", account.Note ?? "", (newPassword, newNote) =>
+            ShowEditAccountDialog(account.Id ?? "", account.Password ?? "", account.Note ?? "", (newId, newPassword, newNote) =>
             {
-                if (string.IsNullOrEmpty(newPassword))
+                if (string.IsNullOrEmpty(newId) || string.IsNullOrEmpty(newPassword))
                 {
-                    Utils.Debug.LogWarning("StartSettings", "Password cannot be empty");
+                    Utils.Debug.LogWarning("StartSettings", "Account ID and Password cannot be empty");
                     return;
                 }
                 
+                account.Id = newId;
                 account.Password = newPassword;
                 account.Note = newNote;
                 Local.Instance.Save(Data.Instance.User);
@@ -703,7 +704,7 @@ namespace Game
                 });
         }
 
-        private void ShowEditAccountDialog(string defaultPassword, string defaultNote, Action<string, string> onConfirm)
+        private void ShowEditAccountDialog(string defaultId, string defaultPassword, string defaultNote, Action<string, string, string> onConfirm)
         {
             Utils.Debug.Log("StartSettings", "Showing edit account dialog");
             
@@ -727,7 +728,7 @@ namespace Game
             var panelRect = panelObj.AddComponent<RectTransform>();
             panelRect.anchorMin = new Vector2(0.5f, 0.5f);
             panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            panelRect.sizeDelta = new Vector2(600, 420);
+            panelRect.sizeDelta = new Vector2(600, 500);
             panelRect.anchoredPosition = Vector2.zero;
             
             var panelImage = panelObj.AddComponent<Image>();
@@ -750,27 +751,32 @@ namespace Game
             titleText.alignment = TextAnchor.MiddleCenter;
             titleObj.AddComponent<Framework.FontScaler>();
             
+            // Account ID input
+            var idField = CreateInputField(panelObj.transform, "AccountIdField",
+                new Vector2(0.1f, 0.63f), new Vector2(0.9f, 0.78f),
+                Localization.Instance.Get("start_settings_account_id"), defaultId);
+            
             // Password input
             var passwordField = CreateInputField(panelObj.transform, "PasswordField",
-                new Vector2(0.1f, 0.55f), new Vector2(0.9f, 0.75f),
+                new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.6f),
                 Localization.Instance.Get("start_settings_password"), defaultPassword);
             passwordField.inputType = InputField.InputType.Password;
             
             // Note input
             var noteField = CreateInputField(panelObj.transform, "NoteField",
-                new Vector2(0.1f, 0.35f), new Vector2(0.9f, 0.5f),
+                new Vector2(0.1f, 0.27f), new Vector2(0.9f, 0.42f),
                 Localization.Instance.Get("start_settings_note_optional"), defaultNote);
             
             // Cancel button
-            CreateDialogButton(panelObj.transform, "Cancel", new Vector2(0.15f, 0.1f), new Vector2(0.45f, 0.28f),
+            CreateDialogButton(panelObj.transform, "Cancel", new Vector2(0.15f, 0.1f), new Vector2(0.45f, 0.25f),
                 Localization.Instance.Get("start_settings_cancel"),
                 () => GameObject.Destroy(dialogObj));
             
             // Confirm button
-            CreateDialogButton(panelObj.transform, "Confirm", new Vector2(0.55f, 0.1f), new Vector2(0.85f, 0.28f),
+            CreateDialogButton(panelObj.transform, "Confirm", new Vector2(0.55f, 0.1f), new Vector2(0.85f, 0.25f),
                 Localization.Instance.Get("start_settings_confirm"),
                 () => {
-                    onConfirm?.Invoke(passwordField.text, noteField.text);
+                    onConfirm?.Invoke(idField.text, passwordField.text, noteField.text);
                     GameObject.Destroy(dialogObj);
                 });
         }
