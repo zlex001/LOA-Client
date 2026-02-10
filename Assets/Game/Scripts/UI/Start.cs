@@ -88,13 +88,31 @@ namespace Game
             transform.Find("Servers").GetComponent<InfiniWheel>().ValueChange += OnServersValueChange;
 
             // Block animation
+            var block = transform.Find("Block");
             var blockText = transform.Find("Block/Text");
             blockText.GetComponent<Text>().DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo);
             
-            // Add Button to Block/Text instead of Block to prevent full-screen click
+            // Remove Button from Block (prevent full-screen click)
+            var blockButton = block.GetComponent<Button>();
+            if (blockButton != null)
+            {
+                GameObject.Destroy(blockButton);
+                Utils.Debug.Log("Start", "Removed Button from Block to prevent full-screen click");
+            }
+            
+            // Disable Block's Image raycast to prevent full-screen click
+            var blockImage = block.GetComponent<Image>();
+            if (blockImage != null)
+            {
+                blockImage.raycastTarget = false;
+                Utils.Debug.Log("Start", "Disabled Block Image raycast");
+            }
+            
+            // Add Button to Block/Text only
             var blockTextButton = blockText.gameObject.AddComponent<Button>();
             blockTextButton.targetGraphic = blockText.GetComponent<Text>();
             blockTextButton.onClick.AddListener(OnBlockClick);
+            Utils.Debug.Log("Start", "Added Button to Block/Text for precise click area");
             
             // Setup UI Listeners
             Data.Instance.after.Register(Data.Type.LoginResponse, OnAfterLoginResponseChanged);

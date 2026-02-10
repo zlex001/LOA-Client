@@ -1,29 +1,22 @@
-[修复] 防止Start和StartSettings界面的误触问题
+[修复] 彻底修复Start界面全屏误触登录问题
 
-修复问题1 - Start界面误触登录：
-- 原问题：整个屏幕点击都会触发登录，用户想点设置按钮容易误触登录
-- 修复方案：将点击响应区域从Block（全屏）改为Block/Text（文本区域）
-- 现在只有点击"点击此处开始游戏"文本才会触发登录
-- 配合服务器推送的tip文本，提供明确的点击提示
+问题原因：
+- Start.prefab中Block GameObject本身就有Button组件
+- Block的Image组件raycastTarget=true，响应全屏点击
+- 之前只是没添加onClick监听，但Image仍会拦截点击事件
 
-修复问题2 - StartSettings界面误触关闭：
-- 原问题：点击面板上的空白区域会触发遮罩关闭，用户想点按钮容易误触关闭
-- 修复方案：确保Panel有Image组件且raycastTarget=true，拦截点击事件
-- 现在点击面板内部不会关闭，只有点击面板外的遮罩才关闭
-- 遮罩"垫"在面板下面，实现正确的事件层级
+修复方案：
+- 在OnCreate中主动移除Block的Button组件
+- 禁用Block的Image的raycastTarget
+- 确保只有Block/Text的Button响应点击
 
 技术实现：
-Start.cs:
-- 移除Block的Button组件
-- 为Block/Text添加Button组件，targetGraphic指向Text
-- 保持文本闪烁动画不变
+- GameObject.Destroy(blockButton) 移除Prefab中的Button
+- blockImage.raycastTarget = false 禁用全屏点击拦截
+- 保持Block/Text的Button和onClick监听器
+- 添加Debug日志便于验证
 
-StartSettings.cs:
-- 在OnCreate中确保Panel有Image组件
-- 设置panelImage.raycastTarget=true来拦截点击
-- 面板Image组件阻止点击事件穿透到遮罩
-
-用户体验改进：
-- 明确的交互区域，减少误操作
-- 符合用户心理预期的点击行为
-- 提高操作精确性和容错率
+用户体验：
+- 只有点击"点击此处开始游戏"文本才会触发登录
+- 点击屏幕其他区域（包括设置按钮附近）不会误触登录
+- 明确的交互区域，防止误操作
