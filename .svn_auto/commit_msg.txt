@@ -1,1 +1,1 @@
-[优化] StartSettings设置面板颜色与图片优化：使用RectangleSolid.png圆角背景、Edit.png编辑图标、True.png勾选图标，对齐标准按钮颜色配置
+[文档] UI图片资源使用规范补充Text颜色规范：覆盖深色背景和浅色背景两种场景的文本颜色标准
