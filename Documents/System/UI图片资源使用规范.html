@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>UI图片资源使用规范.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="ui%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83">UI图片资源使用规范</h1>
+<h2 id="%E4%B8%80%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5">一、设计理念</h2>
+<h3 id="%E5%8D%95%E4%BD%8D%E9%AB%98%E5%BA%A6%E7%B3%BB%E7%BB%9F">单位高度系统</h3>
+<p><strong>单位高度（UnitHeight）= 83像素</strong></p>
+<p>来源于iPhone 6/7/8标准屏幕高度（1334px）垂直16等分的设计基准：<code>1334 ÷ 16 = 83.375 ≈ 83px</code></p>
+<p><strong>核心约束：</strong></p>
+<ul>
+<li>所有UI组件的垂直高度必须是单位高度的语义化倍数</li>
+<li>禁止使用任意像素值或百分比作为垂直尺寸</li>
+</ul>
+<p><strong>项目中的实现：</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">float</span> UnitHeight = <span class="hljs-number">83f</span>;  <span class="hljs-comment">// 所有UI类中统一定义</span>
+</div></code></pre>
+<h3 id="%E9%BB%84%E9%87%91%E6%AF%94%E4%BE%8B%E7%BE%8E%E5%AD%A6">黄金比例美学</h3>
+<p><strong>黄金比例（Golden Ratio）≈ 0.618</strong></p>
+<p>UI设计中优先使用黄金比例进行空间分割：</p>
+<ul>
+<li>水平方向的面板宽度分配</li>
+<li>边距的比例分配</li>
+<li>嵌套布局的递归分割</li>
+</ul>
+<p><strong>项目中的实现：</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">float</span> GoldenRatio = <span class="hljs-number">0.618f</span>;       <span class="hljs-comment">// 黄金比例</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">float</span> GoldenRatioSmall = <span class="hljs-number">0.382f</span>;  <span class="hljs-comment">// 黄金比例补数（1 - 0.618）</span>
+</div></code></pre>
+<p><strong>示例应用：</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">float</span> screenWidth = GetComponent&lt;RectTransform&gt;().rect.width;
+<span class="hljs-keyword">float</span> panelWidth = screenWidth * GoldenRatio;  <span class="hljs-comment">// 面板宽度为屏幕宽度的0.618</span>
+</div></code></pre>
+<h3 id="%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5">核心理念</h3>
+<blockquote>
+<p><strong>UI设计是数学证明，而非艺术创作。</strong></p>
+</blockquote>
+<p>通过量子化网格系统（单位高度）和黄金比例，确保垂直布局的数学一致性和视觉和谐性。</p>
+<hr>
+<h2 id="%E4%BA%8Cunity%E5%86%85%E7%BD%AEsprite">二、Unity内置Sprite</h2>
+<p>项目大量使用Unity内置UI Sprite，而非自定义图片，以获得更好的性能和一致性。</p>
+<h3 id="%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AEsprite%E6%B8%85%E5%8D%95">常用内置Sprite清单</h3>
+<table>
+<thead>
+<tr>
+<th>Sprite ID</th>
+<th>名称</th>
+<th>用途</th>
+<th>使用示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>10901</code></td>
+<td>Checkmark（对勾）</td>
+<td>Toggle勾选图标</td>
+<td>OptionToggle, Home, Login</td>
+</tr>
+<tr>
+<td><code>10905</code></td>
+<td>UISprite（白色方块）</td>
+<td>按钮/面板背景</td>
+<td>OptionButton, OptionAmount, Home, Option</td>
+</tr>
+<tr>
+<td><code>10907</code></td>
+<td>Background（背景）</td>
+<td>Slider背景</td>
+<td>OptionSlider</td>
+</tr>
+<tr>
+<td><code>10911</code></td>
+<td>Knob（圆形把手）</td>
+<td>Slider把手、输入框</td>
+<td>OptionSlider, OptionAmount, OptionInput, OptionFilter, Home</td>
+</tr>
+<tr>
+<td><code>10913</code></td>
+<td>Background（背景2）</td>
+<td>进度条背景</td>
+<td>Start, OptionProgress</td>
+</tr>
+<tr>
+<td><code>10917</code></td>
+<td>InputFieldBackground</td>
+<td>遮罩/背景</td>
+<td>Story, Start, Root, Option, Login</td>
+</tr>
+</tbody>
+</table>
+<p><strong>YAML中的实现方式：</strong></p>
+<pre class="hljs"><code><div><span class="hljs-attr">m_Sprite:</span> <span class="hljs-string">{fileID:</span> <span class="hljs-number">10905</span><span class="hljs-string">,</span> <span class="hljs-attr">guid:</span> <span class="hljs-string">0000000000000000f000000000000000,</span> <span class="hljs-attr">type:</span> <span class="hljs-number">0</span><span class="hljs-string">}</span>
+</div></code></pre>
+<p><strong>使用模式：</strong></p>
+<ul>
+<li>通过修改 <code>m_Color</code> 属性改变背景颜色</li>
+<li>无需外部图片文件</li>
+<li>所有UI组件保持一致风格</li>
+</ul>
+<hr>
+<h2 id="%E4%B8%89%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90">三、自定义图片资源</h2>
+<p>存放位置：<code>Assets/Game/HotResources/RawAssets/Texture/</code></p>
+<h3 id="%E5%AE%8C%E6%95%B4%E5%9B%BE%E7%89%87%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5%E4%B8%80%E8%A7%88">完整图片使用情况一览</h3>
+<p>所有PNG图片的详细使用情况：</p>
+<table>
+<thead>
+<tr>
+<th>预览</th>
+<th>图片名称</th>
+<th>代码加载</th>
+<th>Prefab引用</th>
+<th>使用详情</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid.png" width="50"></td>
+<td><strong>RectangleSolid.png</strong></td>
+<td>✅ StartSettings.cs:83</td>
+<td>✅ 14个Prefab</td>
+<td>面板背景（Home, Login, Initialize, Option, OptionTitleButton等）</td>
+<td>✅ 高频使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Settings.png" width="50"></td>
+<td><strong>Settings.png</strong></td>
+<td>✅ Start.cs:484</td>
+<td>❌</td>
+<td>设置按钮图标</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Edit.png" width="50"></td>
+<td><strong>Edit.png</strong></td>
+<td>✅ StartSettings.cs:84</td>
+<td>❌</td>
+<td>编辑按钮图标（缓存复用）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/True.png" width="50"></td>
+<td><strong>True.png</strong></td>
+<td>✅ StartSettings.cs:85</td>
+<td>✅ 2个Prefab</td>
+<td>Checkmark图标（Story, OptionConfirm）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Increase.png" width="50"></td>
+<td><strong>Increase.png</strong></td>
+<td>❌</td>
+<td>✅ 2个Prefab</td>
+<td>增加按钮（Home, OptionAmount）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Decrease.png" width="50"></td>
+<td><strong>Decrease.png</strong></td>
+<td>❌</td>
+<td>✅ 2个Prefab</td>
+<td>减少按钮（Home, OptionAmount）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Sprite.png" width="50"></td>
+<td><strong>Sprite.png</strong></td>
+<td>❌</td>
+<td>✅ 1个Prefab</td>
+<td>进度条填充（OptionProgressWithValue）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png" width="50"></td>
+<td><strong>RadiativeRing.png</strong></td>
+<td>❌</td>
+<td>✅ 3个Prefab</td>
+<td>装饰效果（Initialize, Login）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Radar.png" width="50"></td>
+<td><strong>Radar.png</strong></td>
+<td>❌</td>
+<td>✅ 1个Prefab</td>
+<td>雷达可视化（OptionRadar）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Ring.png" width="50"></td>
+<td><strong>Ring.png</strong></td>
+<td>❌</td>
+<td>✅ 7个Prefab</td>
+<td>点击特效、UI动画（Root, Home, Dark, Account, Accounts, ClickEffect）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/wheelgradient.png" width="50"></td>
+<td><strong>wheelgradient.png</strong></td>
+<td>❌</td>
+<td>✅ 1个Prefab</td>
+<td>点击特效（ClickEffect）</td>
+<td>✅ 使用中</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid - 副本.png" width="50"></td>
+<td><strong>RectangleSolid - 副本.png</strong></td>
+<td>❌</td>
+<td>✅ 1个Prefab</td>
+<td>重复文件（OptionRadar）</td>
+<td>⚠️ 待替换删除</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/False.png" width="50"></td>
+<td><strong>False.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td>❌ 未使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Circle.png" width="50"></td>
+<td><strong>Circle.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td>❌ 未使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/CircleOutline.png" width="50"></td>
+<td><strong>CircleOutline.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td>❌ 未使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Border.png" width="50"></td>
+<td><strong>Border.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td>❌ 未使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Rectangle.png" width="50"></td>
+<td><strong>Rectangle.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td>❌ 未使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Focus.png" width="50"></td>
+<td><strong>Focus.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td>❌ 未使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Pixel.png" width="50"></td>
+<td><strong>Pixel.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td>❌ 未使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/ICON.png" width="50"></td>
+<td><strong>ICON.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>关联材质：ICON.mat</td>
+<td>⚠️ 材质可能使用</td>
+</tr>
+<tr>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/Author.png" width="50"></td>
+<td><strong>Author.png</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td>❌ 未使用</td>
+</tr>
+</tbody>
+</table>
+<p><strong>使用情况统计</strong>：</p>
+<ul>
+<li><strong>总文件数</strong>：21个PNG（已清理2个无效文件：abc.png、hrhr.png）</li>
+<li><strong>✅ 使用中</strong>：11个（52.4%） - RectangleSolid, Settings, Edit, True, Increase, Decrease, Sprite, RadiativeRing, Radar, Ring, wheelgradient</li>
+<li><strong>❌ 未使用</strong>：8个（38.1%） - False, Circle, CircleOutline, Border, Rectangle, Focus, Pixel, Author</li>
+<li><strong>⚠️ 待决策</strong>：2个（9.5%） - ICON.png（材质可能使用）、RectangleSolid副本（待替换删除）</li>
+</ul>
+<h3 id="%E6%A0%B8%E5%BF%83ui%E5%9B%BE%E7%89%87">核心UI图片</h3>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>尺寸</th>
+<th>GUID</th>
+<th>使用频率</th>
+<th>用于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RectangleSolid.png</strong></td>
+<td>80×40</td>
+<td><code>d7ef6b31ab55e354a9a21ff536ad24c4</code></td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>14个Prefab + StartSettings代码加载（面板背景）</td>
+</tr>
+<tr>
+<td><strong>Ring.png</strong></td>
+<td>-</td>
+<td><code>639b7ad6f044b3a4da3752891d598836</code></td>
+<td>⭐⭐⭐⭐</td>
+<td>7个Prefab（Root, Home, Dark, Account, ClickEffect等点击特效/UI动画）</td>
+</tr>
+<tr>
+<td><strong>RadiativeRing.png</strong></td>
+<td>-</td>
+<td><code>7b84f5d88895ffa4ebc526b21542d185</code></td>
+<td>⭐⭐⭐</td>
+<td>3个Prefab（Initialize, Login, Account装饰元素）</td>
+</tr>
+<tr>
+<td><strong>Sprite.png</strong></td>
+<td>-</td>
+<td><code>a65d834b426c0df4985749fa99d1d465</code></td>
+<td>⭐⭐</td>
+<td>OptionProgressWithValue（进度条填充）</td>
+</tr>
+<tr>
+<td><strong>True.png</strong></td>
+<td>-</td>
+<td><code>ae371a810b535f2459c56ff4c380dabc</code></td>
+<td>⭐⭐</td>
+<td>2个Prefab + StartSettings代码加载（确认图标）</td>
+</tr>
+<tr>
+<td><strong>Increase.png</strong></td>
+<td>1024×1024</td>
+<td><code>631ef34dc0593854cba947dce1f9ef4b</code></td>
+<td>⭐⭐</td>
+<td>2个Prefab（OptionAmount, Home增加按钮）</td>
+</tr>
+<tr>
+<td><strong>Decrease.png</strong></td>
+<td>1024×1024</td>
+<td><code>b79803a6321fa034ca1ff355740846c1</code></td>
+<td>⭐⭐</td>
+<td>2个Prefab（OptionAmount, Home减少按钮）</td>
+</tr>
+<tr>
+<td><strong>Radar.png</strong></td>
+<td>-</td>
+<td><code>de9bce3ad415b9a469b54786edaf9ef0</code></td>
+<td>⭐</td>
+<td>OptionRadar（雷达可视化）</td>
+</tr>
+<tr>
+<td><strong>wheelgradient.png</strong></td>
+<td>-</td>
+<td><code>926e960b99b42884692b2bcdb480a5ac</code></td>
+<td>⭐</td>
+<td>ClickEffect.prefab（点击特效渐变）</td>
+</tr>
+<tr>
+<td><strong>RectangleSolid - 副本.png</strong></td>
+<td>-</td>
+<td><code>bf270f8141102b34a896d7d90de11ab0</code></td>
+<td>⭐</td>
+<td>OptionRadar（⚠️ 重复文件，待替换删除）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%E5%8A%9F%E8%83%BD%E5%9B%BE%E6%A0%87">功能图标</h3>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>尺寸</th>
+<th>GUID</th>
+<th>用途</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Settings.png</code></td>
+<td>2048×2048</td>
+<td><code>69c3b353ee9dc4bbab2bf9427a27fa0c</code></td>
+<td>设置按钮（齿轮图标）</td>
+<td>✅ 使用中（Start.cs动态加载）</td>
+</tr>
+<tr>
+<td><code>Edit.png</code></td>
+<td>1024×1024</td>
+<td><code>f26ff36c4f4cb1b49a36c84bef5e14fd</code></td>
+<td>编辑操作图标</td>
+<td>✅ 使用中（StartSettings.cs动态加载）</td>
+</tr>
+<tr>
+<td><code>Ring.png</code></td>
+<td>-</td>
+<td><code>639b7ad6f044b3a4da3752891d598836</code></td>
+<td>点击特效、UI动画</td>
+<td>✅ 使用中（Root, Home, Dark, Account等7个Prefab）</td>
+</tr>
+<tr>
+<td><code>wheelgradient.png</code></td>
+<td>-</td>
+<td><code>926e960b99b42884692b2bcdb480a5ac</code></td>
+<td>点击特效渐变</td>
+<td>✅ 使用中（ClickEffect.prefab）</td>
+</tr>
+<tr>
+<td><code>False.png</code></td>
+<td>-</td>
+<td><code>60eb08970ce85964b8ce4b9cf3d70928</code></td>
+<td>否定/关闭状态图标</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+<tr>
+<td><code>Circle.png</code></td>
+<td>-</td>
+<td><code>854f5a1a78ca36e4eb8e70d0bc0cfd53</code></td>
+<td>圆形基础图形</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+<tr>
+<td><code>CircleOutline.png</code></td>
+<td>-</td>
+<td><code>473ec83ee9e8e9a4da868a1a257d93e7</code></td>
+<td>圆形轮廓</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+<tr>
+<td><code>Border.png</code></td>
+<td>-</td>
+<td><code>be64b6d3c74b88c43959dac5b03334be</code></td>
+<td>边框装饰</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+<tr>
+<td><code>Rectangle.png</code></td>
+<td>-</td>
+<td><code>147aa7121b9e52d498226eaf3cc9d606</code></td>
+<td>矩形基础图形</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+<tr>
+<td><code>Focus.png</code></td>
+<td>-</td>
+<td><code>ca6722533be8f1b449f17a1e0110160f</code></td>
+<td>焦点指示器</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+<tr>
+<td><code>Author.png</code></td>
+<td>-</td>
+<td><code>48127ddb8a302ca44bb8ad7e50c43ae4</code></td>
+<td>特殊图标</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+<tr>
+<td><code>ICON.png</code></td>
+<td>-</td>
+<td><code>2a07a4d1c1f31d94eb19ee67ecf021c0</code></td>
+<td>材质关联（ICON.mat）</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+<tr>
+<td><code>Pixel.png</code></td>
+<td>-</td>
+<td><code>eaf53a854f957da4cb5a2d2c0694aabd</code></td>
+<td>1x1像素工具图</td>
+<td>⚠️ 可用但未使用</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="%E5%9B%9B%E9%A2%9C%E8%89%B2%E8%A7%84%E8%8C%83">四、颜色规范</h2>
+<h3 id="%E6%A0%87%E5%87%86button%E9%A2%9C%E8%89%B2%E9%85%8D%E7%BD%AE">标准Button颜色配置</h3>
+<p>项目中所有按钮（Button）组件使用统一的颜色配置：</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>RGB值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Normal（正常）</strong></td>
+<td><code>rgb(255, 255, 255)</code> / <code>#FFFFFF</code></td>
+<td>纯白色，完全不透明（a=1）</td>
+</tr>
+<tr>
+<td><strong>Highlighted（高亮）</strong></td>
+<td><code>rgb(245, 245, 245)</code> / <code>#F5F5F5</code></td>
+<td>浅灰色，鼠标悬停时</td>
+</tr>
+<tr>
+<td><strong>Pressed（按下）</strong></td>
+<td><code>rgb(200, 200, 200)</code> / <code>#C8C8C8</code></td>
+<td>中灰色，点击按下时</td>
+</tr>
+<tr>
+<td><strong>Selected（选中）</strong></td>
+<td><code>rgb(245, 245, 245)</code> / <code>#F5F5F5</code></td>
+<td>与Highlighted相同</td>
+</tr>
+<tr>
+<td><strong>Disabled（禁用）</strong></td>
+<td><code>rgb(200, 200, 200, 128)</code> / <code>#C8C8C880</code></td>
+<td>中灰色，半透明（a=0.5）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>YAML中的实现：</strong></p>
+<pre class="hljs"><code><div><span class="hljs-attr">m_Colors:</span>
+  <span class="hljs-attr">m_NormalColor:</span> <span class="hljs-string">{r:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span> <span class="hljs-attr">g:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span> <span class="hljs-attr">b:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span> <span class="hljs-attr">a:</span> <span class="hljs-number">1</span><span class="hljs-string">}</span>
+  <span class="hljs-attr">m_HighlightedColor:</span> <span class="hljs-string">{r:</span> <span class="hljs-number">0.9607843</span><span class="hljs-string">,</span> <span class="hljs-attr">g:</span> <span class="hljs-number">0.9607843</span><span class="hljs-string">,</span> <span class="hljs-attr">b:</span> <span class="hljs-number">0.9607843</span><span class="hljs-string">,</span> <span class="hljs-attr">a:</span> <span class="hljs-number">1</span><span class="hljs-string">}</span>
+  <span class="hljs-attr">m_PressedColor:</span> <span class="hljs-string">{r:</span> <span class="hljs-number">0.78431374</span><span class="hljs-string">,</span> <span class="hljs-attr">g:</span> <span class="hljs-number">0.78431374</span><span class="hljs-string">,</span> <span class="hljs-attr">b:</span> <span class="hljs-number">0.78431374</span><span class="hljs-string">,</span> <span class="hljs-attr">a:</span> <span class="hljs-number">1</span><span class="hljs-string">}</span>
+  <span class="hljs-attr">m_SelectedColor:</span> <span class="hljs-string">{r:</span> <span class="hljs-number">0.9607843</span><span class="hljs-string">,</span> <span class="hljs-attr">g:</span> <span class="hljs-number">0.9607843</span><span class="hljs-string">,</span> <span class="hljs-attr">b:</span> <span class="hljs-number">0.9607843</span><span class="hljs-string">,</span> <span class="hljs-attr">a:</span> <span class="hljs-number">1</span><span class="hljs-string">}</span>
+  <span class="hljs-attr">m_DisabledColor:</span> <span class="hljs-string">{r:</span> <span class="hljs-number">0.78431374</span><span class="hljs-string">,</span> <span class="hljs-attr">g:</span> <span class="hljs-number">0.78431374</span><span class="hljs-string">,</span> <span class="hljs-attr">b:</span> <span class="hljs-number">0.78431374</span><span class="hljs-string">,</span> <span class="hljs-attr">a:</span> <span class="hljs-number">0.5019608</span><span class="hljs-string">}</span>
+  <span class="hljs-attr">m_ColorMultiplier:</span> <span class="hljs-number">1</span>
+  <span class="hljs-attr">m_FadeDuration:</span> <span class="hljs-number">0.1</span>
+</div></code></pre>
+<p><strong>使用原则：</strong></p>
+<ul>
+<li>所有按钮默认使用上述配置</li>
+<li>通过修改<code>m_TargetGraphic</code>的Image组件的<code>m_Color</code>来实现按钮背景色</li>
+<li>特殊需求可以覆盖，但需保持视觉一致性</li>
+</ul>
+<h3 id="%E9%80%8F%E6%98%8E%E5%BA%A6%E4%BD%BF%E7%94%A8">透明度使用</h3>
+<ul>
+<li><strong>完全不透明（a=1）</strong>：正常可见的UI元素</li>
+<li><strong>半透明（a=0.5）</strong>：禁用状态</li>
+<li><strong>接近透明（a=0）</strong>：OptionButton背景（透明按钮，只显示文字）</li>
+</ul>
+<h3 id="%E6%96%87%E6%9C%AC%E9%A2%9C%E8%89%B2%E8%A7%84%E8%8C%83">文本颜色规范</h3>
+<p>全项目统一深色主题。<code>RectangleSolid.png</code> 本身为黑色圆角矩形，<code>Image.color</code> 为乘法 tint（白色 tint 保持原色），因此所有面板背景均为深色，文本统一使用白色系。</p>
+<h4 id="%E6%A0%87%E5%87%86%E6%96%87%E6%9C%AC%E9%A2%9C%E8%89%B2%E5%85%A8%E9%A1%B9%E7%9B%AE%E7%BB%9F%E4%B8%80">标准文本颜色（全项目统一）</h4>
+<p>覆盖所有 UI，包括 Prefab 体系（Home、Option、Story、Login、Initialize）和动态创建（StartSettings）。</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>RGBA</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>正文/标题/标签</strong></td>
+<td><code>(1, 1, 1, 1)</code> 白色</td>
+<td>所有主要文本</td>
+</tr>
+<tr>
+<td><strong>次要文本</strong></td>
+<td><code>(1, 1, 1, 0.6)</code> 半透白</td>
+<td>设置项值、辅助说明</td>
+</tr>
+<tr>
+<td><strong>分区标题</strong></td>
+<td><code>(1, 1, 1, 0.5)</code> 半透白</td>
+<td>Section Header</td>
+</tr>
+<tr>
+<td><strong>强调/操作</strong></td>
+<td><code>(0.2, 0.5, 0.9, 1)</code> 蓝色</td>
+<td>添加按钮、确认操作、选中项</td>
+</tr>
+<tr>
+<td><strong>危险操作</strong></td>
+<td><code>(1, 0.4, 0.4, 1)</code> 红色</td>
+<td>删除等破坏性操作文字</td>
+</tr>
+<tr>
+<td><strong>输入框占位符</strong></td>
+<td><code>(1, 1, 1, 0.5)</code> 半透白</td>
+<td>InputField Placeholder</td>
+</tr>
+<tr>
+<td><strong>正向数值提示</strong></td>
+<td><code>Color.yellow</code></td>
+<td>NumericalTip 正值</td>
+</tr>
+<tr>
+<td><strong>负向数值提示</strong></td>
+<td><code>Color.red</code></td>
+<td>NumericalTip 负值</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E9%80%9A%E7%94%A8%E8%A7%84%E5%88%99">通用规则</h4>
+<ul>
+<li>标准字号 <code>38px</code>（全项目统一，Prefab 和动态创建均一致）</li>
+<li>所有面板使用 <code>RectangleSolid.png</code>（黑色）+ <code>Image.color = Color.white</code> 的标准模式</li>
+<li>文本颜色统一白色系，通过透明度区分层级</li>
+<li>禁止在代码中使用魔法数字定义文字颜色，应使用命名常量</li>
+</ul>
+<hr>
+<h2 id="%E4%BA%94%E5%90%84%E7%B1%BB%E7%BB%84%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%BC%8F">五、各类组件的使用模式</h2>
+<h3 id="%E6%8C%89%E9%92%AEoption-%E9%A2%84%E5%88%B6%E4%BD%93">按钮（Option* 预制体）</h3>
+<ul>
+<li><strong>背景</strong>：Unity内置 <code>10905</code>（白色方块）+ 颜色着色</li>
+<li><strong>文本</strong>：子GameObject，带Text组件</li>
+<li><strong>标准尺寸</strong>：<code>UnitHeight = 83px</code></li>
+</ul>
+<h3 id="%E5%BC%80%E5%85%B3optiontoggle">开关（OptionToggle）</h3>
+<ul>
+<li><strong>背景</strong>：Unity内置 <code>10905</code></li>
+<li><strong>勾选标记</strong>：Unity内置 <code>10901</code></li>
+<li><strong>标签</strong>：Text组件作为兄弟节点</li>
+</ul>
+<h3 id="%E6%BB%91%E5%9D%97optionslider">滑块（OptionSlider）</h3>
+<ul>
+<li><strong>背景</strong>：Unity内置 <code>10907</code> 或 <code>10913</code></li>
+<li><strong>填充</strong>：Unity内置 <code>10905</code>（带颜色）</li>
+<li><strong>把手</strong>：Unity内置 <code>10911</code></li>
+</ul>
+<h3 id="%E8%BF%9B%E5%BA%A6%E6%9D%A1">进度条</h3>
+<ul>
+<li><strong>背景</strong>：Unity内置 <code>10913</code></li>
+<li><strong>填充</strong>：<code>Sprite.png</code>（自定义，guid: a65d834b426c0df4985749fa99d1d465）</li>
+<li><strong>数值文本</strong>：可选的覆盖层</li>
+</ul>
+<h3 id="%E8%BE%93%E5%85%A5%E6%A1%86">输入框</h3>
+<ul>
+<li><strong>背景</strong>：Unity内置 <code>10911</code></li>
+<li><strong>特殊输入框</strong>：使用 <code>Radar.png</code> 实现特定样式</li>
+</ul>
+<h3 id="%E9%9D%A2%E6%9D%BF">面板</h3>
+<ul>
+<li><strong>主要背景</strong>：<code>RectangleSolid.png</code>（最常用）</li>
+<li><strong>装饰效果</strong>：<code>RadiativeRing.png</code> 用于视觉效果</li>
+</ul>
+<hr>
+<h2 id="%E5%85%AD%E8%B5%84%E6%BA%90%E9%80%89%E6%8B%A9%E5%86%B3%E7%AD%96%E6%B5%81%E7%A8%8B">六、资源选择决策流程</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    Start[需要UI图片资源] --> Q1{是否为简单几何形状?}
+    Q1 -->|是| Q2{Unity内置sprite有合适的吗?}
+    Q2 -->|有| UseBuiltin[使用Unity内置sprite<br/>通过m_Color改变颜色]
+    Q2 -->|无| CheckExisting{项目中已有类似图片?}
+    
+    Q1 -->|否| Q3{是否为复杂图标/装饰?}
+    Q3 -->|是| CheckExisting
+    Q3 -->|否| UseBuiltin
+    
+    CheckExisting -->|有| ReuseCustom[复用现有自定义图片<br/>如: RectangleSolid.png]
+    CheckExisting -->|无| CreateNew[创建新的自定义图片<br/>注意: 需评审必要性]
+    
+    UseBuiltin --> End[完成]
+    ReuseCustom --> End
+    CreateNew --> End
+    
+    style UseBuiltin fill:#90EE90
+    style ReuseCustom fill:#FFD700
+    style CreateNew fill:#FFA07A
+</div></code></pre>
+<p><strong>决策优先级：</strong></p>
+<ol>
+<li>✅ <strong>优先</strong>：Unity内置sprite（10901, 10905, 10907, 10911, 10913, 10917）</li>
+<li>✅ <strong>次选</strong>：复用现有自定义图片（RectangleSolid.png, Increase.png等）</li>
+<li>⚠️ <strong>慎用</strong>：创建新的自定义图片（需团队评审）</li>
+</ol>
+<hr>
+<h2 id="%E4%B8%83%E5%8A%A0%E8%BD%BD%E6%96%B9%E5%BC%8F">七、加载方式</h2>
+<h3 id="1-%E9%A2%84%E5%88%B6%E4%BD%93%E5%BC%95%E7%94%A8%E9%9D%99%E6%80%81">1. 预制体引用（静态）</h3>
+<p>在Prefab的YAML中定义：</p>
+<pre class="hljs"><code><div><span class="hljs-attr">m_Sprite:</span> <span class="hljs-string">{fileID:</span> <span class="hljs-number">21300000</span><span class="hljs-string">,</span> <span class="hljs-attr">guid:</span> <span class="hljs-string">d7ef6b31ab55e354a9a21ff536ad24c4,</span> <span class="hljs-attr">type:</span> <span class="hljs-number">3</span><span class="hljs-string">}</span>
+</div></code></pre>
+<h3 id="2-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E8%BF%90%E8%A1%8C%E6%97%B6">2. 动态加载（运行时）</h3>
+<p>在C#脚本中使用：</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">var</span> sprite = AssetManager.Instance.LoadSprite(<span class="hljs-string">"RawAssets/Texture"</span>, <span class="hljs-string">"Settings"</span>);
+</div></code></pre>
+<p><strong>当前使用情况：</strong></p>
+<ul>
+<li><code>Start.cs</code>：动态加载 <code>Settings.png</code>（设置按钮）</li>
+<li><code>StartSettings.cs</code>：动态加载 <code>RectangleSolid.png</code>、<code>Edit.png</code>、<code>True.png</code>（缓存复用）</li>
+<li>其他所有UI均使用基于Prefab的静态引用</li>
+</ul>
+<hr>
+<h2 id="%E5%85%AB%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99">八、设计原则</h2>
+<h3 id="1-%E4%BC%98%E5%85%88%E4%BD%BF%E7%94%A8%E5%86%85%E7%BD%AEsprite">1. 优先使用内置Sprite</h3>
+<ul>
+<li>✅ 尽可能使用Unity内置sprite</li>
+<li>✅ 通过 <code>m_Color</code> 属性修改颜色</li>
+<li>❌ 不要为简单形状创建自定义图片</li>
+</ul>
+<h3 id="2-%E5%A4%8D%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90">2. 复用自定义资源</h3>
+<ul>
+<li>✅ <code>RectangleSolid.png</code> 是标准面板背景</li>
+<li>✅ <code>Increase.png</code>/<code>Decrease.png</code> 用于所有增减操作</li>
+<li>❌ 不要创建重复图片（注意：RectangleSolid副本.png应删除）</li>
+</ul>
+<h3 id="3-%E4%BF%9D%E6%8C%81%E4%B8%80%E8%87%B4%E5%B0%BA%E5%AF%B8">3. 保持一致尺寸</h3>
+<ul>
+<li>标准按钮高度：<code>83px</code>（1个单位高度）</li>
+<li>图标应匹配容器尺寸（如：设置按钮为83x83px）</li>
+</ul>
+<h3 id="4-%E5%9F%BA%E4%BA%8E%E9%A2%9C%E8%89%B2%E7%9A%84%E5%8F%98%E4%BD%93">4. 基于颜色的变体</h3>
+<ul>
+<li>同一sprite，不同颜色表示不同状态（正常/高亮/按下/禁用）</li>
+<li>在Button组件的 <code>m_Colors</code> 部分定义</li>
+</ul>
+<hr>
+<h2 id="%E4%B9%9Dstartsettings%E9%87%8D%E6%9E%84%E5%BB%BA%E8%AE%AE">九、StartSettings重构建议</h2>
+<p>基于现有模式和设计规范，StartSettings各组件的详细参数：</p>
+<h3 id="91-tab%E6%8C%89%E9%92%AEstartsettingstabbutton">9.1 Tab按钮（StartSettingsTabButton）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>背景图片</strong></td>
+<td><code>RectangleSolid.png</code></td>
+<td>参考OptionTitleButton</td>
+</tr>
+<tr>
+<td><strong>高度</strong></td>
+<td><code>0.5 × UnitHeight = 41.5px</code></td>
+<td>Tab按钮通常为半个单位高度</td>
+</tr>
+<tr>
+<td><strong>文本字号</strong></td>
+<td><code>38px</code></td>
+<td>标准按钮文字大小</td>
+</tr>
+<tr>
+<td><strong>文本对齐</strong></td>
+<td>居中（Center）</td>
+<td>水平垂直居中</td>
+</tr>
+<tr>
+<td><strong>颜色配置</strong></td>
+<td>标准Button颜色</td>
+<td>见&quot;四、颜色规范&quot;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92-%E6%B7%BB%E5%8A%A0%E8%B4%A6%E5%8F%B7%E6%8C%89%E9%92%AEstartsettingsaddbutton">9.2 添加账号按钮（StartSettingsAddButton）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>背景图片</strong></td>
+<td>Unity内置 <code>10905</code></td>
+<td>参考OptionButton</td>
+</tr>
+<tr>
+<td><strong>背景透明度</strong></td>
+<td><code>a=0</code></td>
+<td>透明背景，只显示文字</td>
+</tr>
+<tr>
+<td><strong>高度</strong></td>
+<td><code>1 × UnitHeight = 83px</code></td>
+<td>标准按钮高度</td>
+</tr>
+<tr>
+<td><strong>文本字号</strong></td>
+<td><code>38px</code></td>
+<td>与其他按钮一致</td>
+</tr>
+<tr>
+<td><strong>文本对齐</strong></td>
+<td>居中（Center）</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3 id="93-%E8%B4%A6%E5%8F%B7%E5%88%97%E8%A1%A8%E9%A1%B9startsettingsaccountitem">9.3 账号列表项（StartSettingsAccountItem）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>背景图片</strong></td>
+<td><code>RectangleSolid.png</code></td>
+<td>与Tab按钮风格统一</td>
+</tr>
+<tr>
+<td><strong>高度</strong></td>
+<td><code>1 × UnitHeight = 83px</code></td>
+<td>标准列表项高度</td>
+</tr>
+<tr>
+<td><strong>内部间距</strong></td>
+<td>左右各 <code>10px</code></td>
+<td>文字与边缘的距离</td>
+</tr>
+<tr>
+<td><strong>列表间距</strong></td>
+<td><code>5px</code></td>
+<td>两个账号项之间的间隔</td>
+</tr>
+<tr>
+<td><strong>编辑按钮</strong></td>
+<td><code>Edit.png</code> 图标</td>
+<td>1024×1024原图，缩放至约40×40px（StartSettings.cs已使用）</td>
+</tr>
+<tr>
+<td><strong>删除按钮</strong></td>
+<td>纯文字 &quot;Delete&quot;</td>
+<td>与编辑按钮同一行，右对齐</td>
+</tr>
+</tbody>
+</table>
+<h3 id="94-%E8%AF%AD%E8%A8%80%E8%AE%BE%E7%BD%AE%E9%A1%B9startsettingslanguageitem">9.4 语言设置项（StartSettingsLanguageItem）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>高度</strong></td>
+<td><code>1 × UnitHeight = 83px</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>Dropdown箭头</strong></td>
+<td>Unity内置 <code>10911</code></td>
+<td>标准下拉箭头</td>
+</tr>
+<tr>
+<td><strong>文本字号</strong></td>
+<td><code>38px</code></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3 id="95-%E9%9F%B3%E6%95%88%E8%AE%BE%E7%BD%AE%E9%A1%B9startsettingssounditem">9.5 音效设置项（StartSettingsSoundItem）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>高度</strong></td>
+<td><code>1 × UnitHeight = 83px</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>Toggle背景</strong></td>
+<td>Unity内置 <code>10905</code></td>
+<td>参考OptionToggle</td>
+</tr>
+<tr>
+<td><strong>Checkmark</strong></td>
+<td>Unity内置 <code>10901</code></td>
+<td>勾选标记</td>
+</tr>
+<tr>
+<td><strong>Toggle尺寸</strong></td>
+<td><code>50×50px</code></td>
+<td>标准Toggle大小</td>
+</tr>
+</tbody>
+</table>
+<h3 id="96-%E9%9D%A2%E6%9D%BF%E6%95%B4%E4%BD%93%E5%B8%83%E5%B1%80">9.6 面板整体布局</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>面板高度</strong></td>
+<td><code>12 × UnitHeight = 996px</code></td>
+<td>StartSettings.cs中定义</td>
+</tr>
+<tr>
+<td><strong>TabBar高度</strong></td>
+<td><code>1 × UnitHeight = 83px</code></td>
+<td>Tab按钮+分隔线</td>
+</tr>
+<tr>
+<td><strong>Content区域</strong></td>
+<td><code>11 × UnitHeight = 913px</code></td>
+<td>面板高度 - TabBar高度</td>
+</tr>
+<tr>
+<td><strong>ScrollView间距</strong></td>
+<td>上下各 <code>20px</code></td>
+<td>内容与边缘的padding</td>
+</tr>
+</tbody>
+</table>
+<p><strong>架构原则：</strong></p>
+<ul>
+<li>✅ 所有组件必须为Prefab</li>
+<li>✅ C#代码中使用 <code>AddPrefab(&quot;Prefabs/UI&quot;, &quot;组件名&quot;)</code> 加载</li>
+<li>✅ 遵循单位高度系统（83px倍数）</li>
+<li>✅ 最小化自定义图片使用</li>
+</ul>
+<hr>
+<h2 id="%E5%8D%81%E6%96%87%E4%BB%B6%E5%BC%95%E7%94%A8%E5%AF%B9%E7%85%A7%E8%A1%A8guid%E5%88%B0%E6%96%87%E4%BB%B6%E5%90%8D">十、文件引用对照表（GUID到文件名）</h2>
+<p>供开发者处理YAML时参考：</p>
+<pre class="hljs"><code><div>d7ef6b31ab55e354a9a21ff536ad24c4 → RectangleSolid.png
+7b84f5d88895ffa4ebc526b21542d185 → RadiativeRing.png
+a65d834b426c0df4985749fa99d1d465 → Sprite.png
+631ef34dc0593854cba947dce1f9ef4b → Increase.png
+b79803a6321fa034ca1ff355740846c1 → Decrease.png
+de9bce3ad415b9a469b54786edaf9ef0 → Radar.png
+bf270f8141102b34a896d7d90de11ab0 → RectangleSolid - 副本.png
+ae371a810b535f2459c56ff4c380dabc → True.png
+69c3b353ee9dc4bbab2bf9427a27fa0c → Settings.png
+f26ff36c4f4cb1b49a36c84bef5e14fd → Edit.png
+639b7ad6f044b3a4da3752891d598836 → Ring.png
+926e960b99b42884692b2bcdb480a5ac → wheelgradient.png
+</div></code></pre>
+<hr>
+<h2 id="%E5%8D%81%E4%B8%80%E7%BB%B4%E6%8A%A4%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">十一、维护注意事项</h2>
+<h3 id="%E6%9C%AA%E4%BD%BF%E7%94%A8%E7%9A%84%E8%B5%84%E6%BA%90%E9%9C%80%E5%9B%A2%E9%98%9F%E8%AF%84%E5%AE%A1">未使用的资源（需团队评审）</h3>
+<p>共7个基础形状图片 + 2个特殊图标：</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>类型</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>False.png</code>, <code>Circle.png</code>, <code>CircleOutline.png</code></td>
+<td>基础形状</td>
+<td>预留或删除</td>
+</tr>
+<tr>
+<td><code>Border.png</code>, <code>Rectangle.png</code>, <code>Focus.png</code>, <code>Pixel.png</code></td>
+<td>基础形状</td>
+<td>预留或删除</td>
+</tr>
+<tr>
+<td><code>Author.png</code>, <code>ICON.png</code></td>
+<td>特殊图标</td>
+<td>确认用途或删除</td>
+</tr>
+</tbody>
+</table>
+<p><strong>决策建议</strong>：</p>
+<ul>
+<li>如果预留未来使用，需在此文档中明确记录预期用途</li>
+<li>如果确认不使用，可安全删除（可通过版本控制系统找回）</li>
+</ul>
+<h3 id="%E9%87%8D%E5%A4%8D%E6%96%87%E4%BB%B6%E5%BE%85%E5%A4%84%E7%90%86">重复文件（待处理）</h3>
+<ul>
+<li><code>RectangleSolid - 副本.png</code>（GUID: bf270f8141102b34a896d7d90de11ab0）</li>
+<li>被 <code>OptionRadar.prefab</code> 引用</li>
+<li><strong>处理方案</strong>：在Unity编辑器中将引用替换为原文件后删除</li>
+</ul>
+<h3 id="%E8%B5%84%E6%BA%90%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83">资源命名规范</h3>
+<ul>
+<li>✅ 统一使用英文PascalCase命名（如：<code>RectangleSolid.png</code>, <code>Settings.png</code>）</li>
+<li>❌ 避免中文命名（如：<code>RectangleSolid - 副本.png</code> 应为 <code>RectangleSolidCopy.png</code>）</li>
+<li>❌ 禁止无意义命名（如：<code>abc.png</code>, <code>test.png</code>）</li>
+</ul>
+<h3 id="%E8%B5%84%E6%BA%90%E7%BB%9F%E8%AE%A1%E6%88%AA%E8%87%B3%E6%9C%80%E8%BF%91%E6%9B%B4%E6%96%B0">资源统计（截至最近更新）</h3>
+<ul>
+<li><strong>总文件数</strong>：21个PNG（已清理2个无效文件）</li>
+<li><strong>使用中</strong>：11个（52.4%）</li>
+<li><strong>未使用</strong>：9个（42.9%）</li>
+<li><strong>待处理</strong>：1个副本文件（4.8%）</li>
+</ul>
+
+</body>
+</html>
