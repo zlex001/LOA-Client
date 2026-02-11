@@ -83,66 +83,55 @@ m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
 
 | 预览 | 图片名称 | 代码加载 | Prefab引用 | 使用详情 | 状态 |
 |------|---------|---------|-----------|---------|------|
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid.png" width="50" style="background-color: black; padding: 5px;"> | **RectangleSolid.png** | ✅ StartSettings.cs:83 | ✅ 14个Prefab | 面板背景（Home, Login, Initialize, Option, OptionTitleButton等） | ✅ 高频使用 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid.png" width="50" style="background-color: black; padding: 5px;"> | **RectangleSolid.png** | ✅ StartSettings.cs:83 | ✅ 4个Prefab (9次) | 面板背景（Home×5, Option×2, Login, OptionTitleButton） | ✅ 高频使用 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Sprite.png" width="50" style="background-color: black; padding: 5px;"> | **Sprite.png** | ❌ | ✅ 4个Prefab (6次) | 进度条填充（Home×3, OptionProgressWithValue, OptionTitleButtonWithProgress, Login） | ✅ 高频使用 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/True.png" width="50" style="background-color: black; padding: 5px;"> | **True.png** | ✅ StartSettings.cs:85 | ✅ 4个Prefab | Checkmark图标（Story, OptionConfirm, Accounts, Account） | ✅ 使用中 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/Settings.png" width="50" style="background-color: black; padding: 5px;"> | **Settings.png** | ✅ Start.cs:484 | ❌ | 设置按钮图标 | ✅ 使用中 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/Edit.png" width="50" style="background-color: black; padding: 5px;"> | **Edit.png** | ✅ StartSettings.cs:84 | ❌ | 编辑按钮图标（缓存复用） | ✅ 使用中 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/True.png" width="50" style="background-color: black; padding: 5px;"> | **True.png** | ✅ StartSettings.cs:85 | ✅ 2个Prefab | Checkmark图标（Story, OptionConfirm） | ✅ 使用中 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Ring.png" width="50" style="background-color: black; padding: 5px;"> | **Ring.png** | ✅ Utils.cs:94 | ✅ 2个Prefab | 点击特效、遮罩动画（Dark, ClickEffect） | ✅ 使用中 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/Increase.png" width="50" style="background-color: black; padding: 5px;"> | **Increase.png** | ❌ | ✅ 2个Prefab | 增加按钮（Home, OptionAmount） | ✅ 使用中 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/Decrease.png" width="50" style="background-color: black; padding: 5px;"> | **Decrease.png** | ❌ | ✅ 2个Prefab | 减少按钮（Home, OptionAmount） | ✅ 使用中 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Sprite.png" width="50" style="background-color: black; padding: 5px;"> | **Sprite.png** | ❌ | ✅ 1个Prefab | 进度条填充（OptionProgressWithValue） | ✅ 使用中 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png" width="50" style="background-color: black; padding: 5px;"> | **RadiativeRing.png** | ❌ | ✅ 3个Prefab | 装饰效果（Initialize, Login） | ✅ 使用中 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Radar.png" width="50" style="background-color: black; padding: 5px;"> | **Radar.png** | ❌ | ✅ 1个Prefab | 雷达可视化（OptionRadar） | ✅ 使用中 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Ring.png" width="50" style="background-color: black; padding: 5px;"> | **Ring.png** | ❌ | ✅ 7个Prefab | 点击特效、UI动画（Root, Home, Dark, Account, Accounts, ClickEffect） | ✅ 使用中 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/wheelgradient.png" width="50" style="background-color: black; padding: 5px;"> | **wheelgradient.png** | ❌ | ✅ 1个Prefab | 点击特效（ClickEffect） | ✅ 使用中 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png" width="50" style="background-color: black; padding: 5px;"> | **RadiativeRing.png** | ❌ | ✅ 2个Prefab (4次) | 装饰效果（Login×2, Initialize×2） | ✅ 使用中 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Radar.png" width="50" style="background-color: black; padding: 5px;"> | **Radar.png** | ❌ | ✅ 2个Prefab | 雷达可视化（OptionInput, Initialize） | ✅ 使用中 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/False.png" width="50" style="background-color: black; padding: 5px;"> | **False.png** | ❌ | ✅ 2个Prefab | 账号系统图标（Accounts, Account） | ✅ 使用中 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Border.png" width="50" style="background-color: black; padding: 5px;"> | **Border.png** | ❌ | ✅ 1个Prefab | 边框装饰（Home） | ✅ 使用中 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Focus.png" width="50" style="background-color: black; padding: 5px;"> | **Focus.png** | ❌ | ✅ 1个Prefab | 焦点指示器（Home） | ✅ 使用中 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Pixel.png" width="50" style="background-color: black; padding: 5px;"> | **Pixel.png** | ❌ | ✅ 1个Prefab | 1x1像素工具图（Root） | ✅ 使用中 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Rectangle.png" width="50" style="background-color: black; padding: 5px;"> | **Rectangle.png** | ❌ | ✅ 1个Prefab | 进度条背景（OptionTitleButtonWithProgress） | ✅ 使用中 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid - 副本.png" width="50" style="background-color: black; padding: 5px;"> | **RectangleSolid - 副本.png** | ❌ | ✅ 1个Prefab | 重复文件（OptionRadar） | ⚠️ 待替换删除 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/False.png" width="50" style="background-color: black; padding: 5px;"> | **False.png** | ❌ | ❌ | - | ❌ 未使用 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/Circle.png" width="50" style="background-color: black; padding: 5px;"> | **Circle.png** | ❌ | ❌ | - | ❌ 未使用 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/CircleOutline.png" width="50" style="background-color: black; padding: 5px;"> | **CircleOutline.png** | ❌ | ❌ | - | ❌ 未使用 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Border.png" width="50" style="background-color: black; padding: 5px;"> | **Border.png** | ❌ | ❌ | - | ❌ 未使用 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Rectangle.png" width="50" style="background-color: black; padding: 5px;"> | **Rectangle.png** | ❌ | ❌ | - | ❌ 未使用 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Focus.png" width="50" style="background-color: black; padding: 5px;"> | **Focus.png** | ❌ | ❌ | - | ❌ 未使用 |
-| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Pixel.png" width="50" style="background-color: black; padding: 5px;"> | **Pixel.png** | ❌ | ❌ | - | ❌ 未使用 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/ICON.png" width="50" style="background-color: black; padding: 5px;"> | **ICON.png** | ❌ | ❌ | 关联材质：ICON.mat | ⚠️ 材质可能使用 |
 | <img src="../../Assets/Game/HotResources/RawAssets/Texture/Author.png" width="50" style="background-color: black; padding: 5px;"> | **Author.png** | ❌ | ❌ | - | ❌ 未使用 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/wheelgradient.png" width="50" style="background-color: black; padding: 5px;"> | **wheelgradient.png** | ❌ | ❌ | - | ❌ 未使用 |
 
-**使用情况统计**：
+**使用情况统计（准确数据）**：
 - **总文件数**：21个PNG（已清理2个无效文件：abc.png、hrhr.png）
-- **✅ 使用中**：11个（52.4%） - RectangleSolid, Settings, Edit, True, Increase, Decrease, Sprite, RadiativeRing, Radar, Ring, wheelgradient
-- **❌ 未使用**：8个（38.1%） - False, Circle, CircleOutline, Border, Rectangle, Focus, Pixel, Author
-- **⚠️ 待决策**：2个（9.5%） - ICON.png（材质可能使用）、RectangleSolid副本（待替换删除）
+- **✅ 使用中**：16个（76.2%） - RectangleSolid, Sprite, True, Settings, Edit, Ring, Increase, Decrease, RadiativeRing, Radar, False, Border, Focus, Pixel, Rectangle, RectangleSolid副本
+- **❌ 未使用**：5个（23.8%） - Circle, CircleOutline, ICON, Author, wheelgradient
+- **代码动态加载**：5个文件 - RectangleSolid, Edit, True, Settings, Ring
+- **Prefab静态引用**：16个文件，共计32处引用
 
-### 核心UI图片
+### 核心UI图片（按使用频率排序）
 
 | 文件名 | 尺寸 | GUID | 使用频率 | 用于 |
 |--------|------|------|----------|------|
-| **RectangleSolid.png** | 80×40 | `d7ef6b31ab55e354a9a21ff536ad24c4` | ⭐⭐⭐⭐⭐ | 14个Prefab + StartSettings代码加载（面板背景） |
-| **Ring.png** | - | `639b7ad6f044b3a4da3752891d598836` | ⭐⭐⭐⭐ | 7个Prefab（Root, Home, Dark, Account, ClickEffect等点击特效/UI动画） |
-| **RadiativeRing.png** | - | `7b84f5d88895ffa4ebc526b21542d185` | ⭐⭐⭐ | 3个Prefab（Initialize, Login, Account装饰元素） |
-| **Sprite.png** | - | `a65d834b426c0df4985749fa99d1d465` | ⭐⭐ | OptionProgressWithValue（进度条填充） |
-| **True.png** | - | `ae371a810b535f2459c56ff4c380dabc` | ⭐⭐ | 2个Prefab + StartSettings代码加载（确认图标） |
-| **Increase.png** | 1024×1024 | `631ef34dc0593854cba947dce1f9ef4b` | ⭐⭐ | 2个Prefab（OptionAmount, Home增加按钮） |
-| **Decrease.png** | 1024×1024 | `b79803a6321fa034ca1ff355740846c1` | ⭐⭐ | 2个Prefab（OptionAmount, Home减少按钮） |
-| **Radar.png** | - | `de9bce3ad415b9a469b54786edaf9ef0` | ⭐ | OptionRadar（雷达可视化） |
-| **wheelgradient.png** | - | `926e960b99b42884692b2bcdb480a5ac` | ⭐ | ClickEffect.prefab（点击特效渐变） |
-| **RectangleSolid - 副本.png** | - | `bf270f8141102b34a896d7d90de11ab0` | ⭐ | OptionRadar（⚠️ 重复文件，待替换删除） |
-
-### 功能图标
-
-| 文件名 | 尺寸 | GUID | 用途 | 状态 |
-|--------|------|------|------|------|
-| `Settings.png` | 2048×2048 | `69c3b353ee9dc4bbab2bf9427a27fa0c` | 设置按钮（齿轮图标） | ✅ 使用中（Start.cs动态加载） |
-| `Edit.png` | 1024×1024 | `f26ff36c4f4cb1b49a36c84bef5e14fd` | 编辑操作图标 | ✅ 使用中（StartSettings.cs动态加载） |
-| `Ring.png` | - | `639b7ad6f044b3a4da3752891d598836` | 点击特效、UI动画 | ✅ 使用中（Root, Home, Dark, Account等7个Prefab） |
-| `wheelgradient.png` | - | `926e960b99b42884692b2bcdb480a5ac` | 点击特效渐变 | ✅ 使用中（ClickEffect.prefab） |
-| `False.png` | - | `60eb08970ce85964b8ce4b9cf3d70928` | 否定/关闭状态图标 | ⚠️ 可用但未使用 |
-| `Circle.png` | - | `854f5a1a78ca36e4eb8e70d0bc0cfd53` | 圆形基础图形 | ⚠️ 可用但未使用 |
-| `CircleOutline.png` | - | `473ec83ee9e8e9a4da868a1a257d93e7` | 圆形轮廓 | ⚠️ 可用但未使用 |
-| `Border.png` | - | `be64b6d3c74b88c43959dac5b03334be` | 边框装饰 | ⚠️ 可用但未使用 |
-| `Rectangle.png` | - | `147aa7121b9e52d498226eaf3cc9d606` | 矩形基础图形 | ⚠️ 可用但未使用 |
-| `Focus.png` | - | `ca6722533be8f1b449f17a1e0110160f` | 焦点指示器 | ⚠️ 可用但未使用 |
-| `Author.png` | - | `48127ddb8a302ca44bb8ad7e50c43ae4` | 特殊图标 | ⚠️ 可用但未使用 |
-| `ICON.png` | - | `2a07a4d1c1f31d94eb19ee67ecf021c0` | 材质关联（ICON.mat） | ⚠️ 可用但未使用 |
-| `Pixel.png` | - | `eaf53a854f957da4cb5a2d2c0694aabd` | 1x1像素工具图 | ⚠️ 可用但未使用 |
+| **RectangleSolid.png** | 80×40 | `d7ef6b31ab55e354a9a21ff536ad24c4` | ⭐⭐⭐⭐⭐ | 4个Prefab (9次) + 代码加载（Home×5, Option×2, Login, OptionTitleButton） |
+| **Sprite.png** | - | `a65d834b426c0df4985749fa99d1d465` | ⭐⭐⭐⭐ | 4个Prefab (6次)（Home×3, OptionProgressWithValue, OptionTitleButtonWithProgress, Login） |
+| **RadiativeRing.png** | - | `7b84f5d88895ffa4ebc526b21542d185` | ⭐⭐⭐ | 2个Prefab (4次)（Login×2, Initialize×2） |
+| **True.png** | - | `ae371a810b535f2459c56ff4c380dabc` | ⭐⭐⭐ | 4个Prefab + 代码加载（Story, OptionConfirm, Accounts, Account） |
+| **Ring.png** | - | `639b7ad6f044b3a4da3752891d598836` | ⭐⭐ | 2个Prefab + 代码加载（Dark, ClickEffect；Utils.cs点击特效） |
+| **Increase.png** | 1024×1024 | `631ef34dc0593854cba947dce1f9ef4b` | ⭐⭐ | 2个Prefab（OptionAmount, Home） |
+| **Decrease.png** | 1024×1024 | `b79803a6321fa034ca1ff355740846c1` | ⭐⭐ | 2个Prefab（OptionAmount, Home） |
+| **Radar.png** | - | `de9bce3ad415b9a469b54786edaf9ef0` | ⭐⭐ | 2个Prefab（OptionInput, Initialize） |
+| **Settings.png** | 2048×2048 | `69c3b353ee9dc4bbab2bf9427a27fa0c` | ⭐ | 仅代码加载（Start.cs设置按钮） |
+| **Edit.png** | 1024×1024 | `f26ff36c4f4cb1b49a36c84bef5e14fd` | ⭐ | 仅代码加载（StartSettings.cs编辑按钮） |
+| **False.png** | - | `60eb08970ce85964b8ce4b9cf3d70928` | ⭐ | 2个Prefab（Accounts, Account） |
+| **Border.png** | - | `be64b6d3c74b88c43959dac5b03334be` | ⭐ | 1个Prefab（Home） |
+| **Focus.png** | - | `ca6722533be8f1b449f17a1e0110160f` | ⭐ | 1个Prefab（Home） |
+| **Pixel.png** | - | `eaf53a854f957da4cb5a2d2c0694aabd` | ⭐ | 1个Prefab（Root） |
+| **Rectangle.png** | - | `147aa7121b9e52d498226eaf3cc9d606` | ⭐ | 1个Prefab（OptionTitleButtonWithProgress） |
+| **RectangleSolid - 副本.png** | - | `bf270f8141102b34a896d7d90de11ab0` | ⭐ | 1个Prefab（OptionRadar，⚠️ 重复文件待删除） |
 
 ---
 
@@ -410,19 +399,22 @@ f26ff36c4f4cb1b49a36c84bef5e14fd → Edit.png
 
 ## 十一、维护注意事项
 
-### 未使用的资源（需团队评审）
+### 真正未使用的资源（需决策）
 
-共7个基础形状图片 + 2个特殊图标：
+经准确核查，仅5个文件完全未使用：
 
 | 文件名 | 类型 | 建议 |
 |--------|------|------|
-| `False.png`, `Circle.png`, `CircleOutline.png` | 基础形状 | 预留或删除 |
-| `Border.png`, `Rectangle.png`, `Focus.png`, `Pixel.png` | 基础形状 | 预留或删除 |
-| `Author.png`, `ICON.png` | 特殊图标 | 确认用途或删除 |
+| `Circle.png` | 基础形状 | 可考虑删除 |
+| `CircleOutline.png` | 基础形状 | 可考虑删除 |
+| `Author.png` | 特殊图标 | 可考虑删除 |
+| `ICON.png` | 特殊图标 | 检查材质使用后决定 |
+| `wheelgradient.png` | 渐变效果 | 可考虑删除 |
 
 **决策建议**：
 - 如果预留未来使用，需在此文档中明确记录预期用途
 - 如果确认不使用，可安全删除（可通过版本控制系统找回）
+- 资源使用率已达76.2%，属于健康状态
 
 ### 重复文件（待处理）
 - `RectangleSolid - 副本.png`（GUID: bf270f8141102b34a896d7d90de11ab0）
