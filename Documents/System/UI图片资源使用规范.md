@@ -81,30 +81,34 @@ m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
 
 | 文件名 | 尺寸 | GUID | 使用频率 | 用于 |
 |--------|------|------|----------|------|
-| **RectangleSolid.png** | 80×40 | `d7ef6b31ab55e354a9a21ff536ad24c4` | ⭐⭐⭐⭐⭐ | Option, OptionTitleButton, Start, Login, Home（面板背景） |
-| **RadiativeRing.png** | - | `7b84f5d88895ffa4ebc526b21542d185` | ⭐⭐⭐ | Start, Login, Initialize（装饰元素） |
-| **Sprite.png** | - | `a65d834b426c0df4985749fa99d1d465` | ⭐⭐⭐ | OptionProgressWithValue, OptionTitleButtonWithProgress（进度条） |
-| **True.png** | - | `ae371a810b535f2459c56ff4c380dabc` | ⭐⭐ | Story, OptionConfirm（确认图标） |
-| **Increase.png** | 1024×1024 | `631ef34dc0593854cba947dce1f9ef4b` | ⭐⭐ | OptionAmount, Home（增加按钮） |
-| **Decrease.png** | 1024×1024 | `b79803a6321fa034ca1ff355740846c1` | ⭐⭐ | OptionAmount, Home（减少按钮） |
-| **Radar.png** | - | `de9bce3ad415b9a469b54786edaf9ef0` | ⭐ | OptionInput, Initialize, OptionRadar（特殊UI） |
-| **RectangleSolid - 副本.png** | - | `bf270f8141102b34a896d7d90de11ab0` | ⭐ | OptionRadar（重复文件，建议清理） |
+| **RectangleSolid.png** | 80×40 | `d7ef6b31ab55e354a9a21ff536ad24c4` | ⭐⭐⭐⭐⭐ | 14个Prefab + StartSettings代码加载（面板背景） |
+| **Ring.png** | - | `639b7ad6f044b3a4da3752891d598836` | ⭐⭐⭐⭐ | 7个Prefab（Root, Home, Dark, Account, ClickEffect等点击特效/UI动画） |
+| **RadiativeRing.png** | - | `7b84f5d88895ffa4ebc526b21542d185` | ⭐⭐⭐ | 3个Prefab（Initialize, Login, Account装饰元素） |
+| **Sprite.png** | - | `a65d834b426c0df4985749fa99d1d465` | ⭐⭐ | OptionProgressWithValue（进度条填充） |
+| **True.png** | - | `ae371a810b535f2459c56ff4c380dabc` | ⭐⭐ | 2个Prefab + StartSettings代码加载（确认图标） |
+| **Increase.png** | 1024×1024 | `631ef34dc0593854cba947dce1f9ef4b` | ⭐⭐ | 2个Prefab（OptionAmount, Home增加按钮） |
+| **Decrease.png** | 1024×1024 | `b79803a6321fa034ca1ff355740846c1` | ⭐⭐ | 2个Prefab（OptionAmount, Home减少按钮） |
+| **Radar.png** | - | `de9bce3ad415b9a469b54786edaf9ef0` | ⭐ | OptionRadar（雷达可视化） |
+| **wheelgradient.png** | - | `926e960b99b42884692b2bcdb480a5ac` | ⭐ | ClickEffect.prefab（点击特效渐变） |
+| **RectangleSolid - 副本.png** | - | `bf270f8141102b34a896d7d90de11ab0` | ⭐ | OptionRadar（⚠️ 重复文件，待替换删除） |
 
 ### 功能图标
 
-| 文件名 | 尺寸 | 用途 | 状态 |
-|--------|------|------|------|
-| `Settings.png` | 2048×2048 | 设置按钮（齿轮图标） | ✅ 使用中（Start.cs） |
-| `Edit.png` | 1024×1024 | 编辑操作图标 | ⚠️ 可用但未使用 |
-| `False.png` | - | 否定/关闭状态图标 | ⚠️ 可用但未使用 |
-| `Circle.png` / `CircleOutline.png` | 圆形基础图形 | ⚠️ 可用但未使用 |
-| `Border.png` | 边框装饰 | ⚠️ 可用但未使用 |
-| `Rectangle.png` | 矩形基础图形 | ⚠️ 可用但未使用 |
-| `Focus.png` | 焦点指示器 | ⚠️ 可用但未使用 |
-| `Author.png` | 特殊图标 | ⚠️ 可用但未使用 |
-| `ICON.png` | 用途未知 | ⚠️ 可用但未使用 |
-| `Pixel.png` | 1x1像素工具图 | ⚠️ 可用但未使用 |
-| `Ring.png` | 圆环基础图形 | ⚠️ 可用但未使用 |
+| 文件名 | 尺寸 | GUID | 用途 | 状态 |
+|--------|------|------|------|------|
+| `Settings.png` | 2048×2048 | `69c3b353ee9dc4bbab2bf9427a27fa0c` | 设置按钮（齿轮图标） | ✅ 使用中（Start.cs动态加载） |
+| `Edit.png` | 1024×1024 | `f26ff36c4f4cb1b49a36c84bef5e14fd` | 编辑操作图标 | ✅ 使用中（StartSettings.cs动态加载） |
+| `Ring.png` | - | `639b7ad6f044b3a4da3752891d598836` | 点击特效、UI动画 | ✅ 使用中（Root, Home, Dark, Account等7个Prefab） |
+| `wheelgradient.png` | - | `926e960b99b42884692b2bcdb480a5ac` | 点击特效渐变 | ✅ 使用中（ClickEffect.prefab） |
+| `False.png` | - | `60eb08970ce85964b8ce4b9cf3d70928` | 否定/关闭状态图标 | ⚠️ 可用但未使用 |
+| `Circle.png` | - | `854f5a1a78ca36e4eb8e70d0bc0cfd53` | 圆形基础图形 | ⚠️ 可用但未使用 |
+| `CircleOutline.png` | - | `473ec83ee9e8e9a4da868a1a257d93e7` | 圆形轮廓 | ⚠️ 可用但未使用 |
+| `Border.png` | - | `be64b6d3c74b88c43959dac5b03334be` | 边框装饰 | ⚠️ 可用但未使用 |
+| `Rectangle.png` | - | `147aa7121b9e52d498226eaf3cc9d606` | 矩形基础图形 | ⚠️ 可用但未使用 |
+| `Focus.png` | - | `ca6722533be8f1b449f17a1e0110160f` | 焦点指示器 | ⚠️ 可用但未使用 |
+| `Author.png` | - | `48127ddb8a302ca44bb8ad7e50c43ae4` | 特殊图标 | ⚠️ 可用但未使用 |
+| `ICON.png` | - | `2a07a4d1c1f31d94eb19ee67ecf021c0` | 材质关联（ICON.mat） | ⚠️ 可用但未使用 |
+| `Pixel.png` | - | `eaf53a854f957da4cb5a2d2c0694aabd` | 1x1像素工具图 | ⚠️ 可用但未使用 |
 
 ---
 
@@ -252,7 +256,8 @@ var sprite = AssetManager.Instance.LoadSprite("RawAssets/Texture", "Settings");
 ```
 
 **当前使用情况：**
-- 仅 `Start.cs` 使用动态加载（设置按钮）
+- `Start.cs`：动态加载 `Settings.png`（设置按钮）
+- `StartSettings.cs`：动态加载 `RectangleSolid.png`、`Edit.png`、`True.png`（缓存复用）
 - 其他所有UI均使用基于Prefab的静态引用
 
 ---
@@ -311,7 +316,7 @@ var sprite = AssetManager.Instance.LoadSprite("RawAssets/Texture", "Settings");
 | **高度** | `1 × UnitHeight = 83px` | 标准列表项高度 |
 | **内部间距** | 左右各 `10px` | 文字与边缘的距离 |
 | **列表间距** | `5px` | 两个账号项之间的间隔 |
-| **编辑按钮** | `Edit.png` 图标（推荐） | 1024×1024原图，缩放至约40×40px |
+| **编辑按钮** | `Edit.png` 图标 | 1024×1024原图，缩放至约40×40px（StartSettings.cs已使用） |
 | **删除按钮** | 纯文字 "Delete" | 与编辑按钮同一行，右对齐 |
 
 ### 9.4 语言设置项（StartSettingsLanguageItem）
@@ -361,19 +366,42 @@ b79803a6321fa034ca1ff355740846c1 → Decrease.png
 de9bce3ad415b9a469b54786edaf9ef0 → Radar.png
 bf270f8141102b34a896d7d90de11ab0 → RectangleSolid - 副本.png
 ae371a810b535f2459c56ff4c380dabc → True.png
+69c3b353ee9dc4bbab2bf9427a27fa0c → Settings.png
+f26ff36c4f4cb1b49a36c84bef5e14fd → Edit.png
+639b7ad6f044b3a4da3752891d598836 → Ring.png
+926e960b99b42884692b2bcdb480a5ac → wheelgradient.png
 ```
 
 ---
 
 ## 十一、维护注意事项
 
-### 未使用的资源需审查
-- `Edit.png`, `False.png`, `Circle.png`, `CircleOutline.png`, `Border.png`, `Rectangle.png`, `Focus.png`
-- 建议记录预期用途或删除已过时的资源
+### 未使用的资源（需团队评审）
 
-### 重复文件
-- `RectangleSolid - 副本.png`（副本=拷贝）- 应合并删除
+共7个基础形状图片 + 2个特殊图标：
 
-### 资源命名
-- 大部分文件使用英文命名（便于协作）
-- 一个文件带中文后缀（副本）- 建议为保持一致性而重命名
+| 文件名 | 类型 | 建议 |
+|--------|------|------|
+| `False.png`, `Circle.png`, `CircleOutline.png` | 基础形状 | 预留或删除 |
+| `Border.png`, `Rectangle.png`, `Focus.png`, `Pixel.png` | 基础形状 | 预留或删除 |
+| `Author.png`, `ICON.png` | 特殊图标 | 确认用途或删除 |
+
+**决策建议**：
+- 如果预留未来使用，需在此文档中明确记录预期用途
+- 如果确认不使用，可安全删除（可通过版本控制系统找回）
+
+### 重复文件（待处理）
+- `RectangleSolid - 副本.png`（GUID: bf270f8141102b34a896d7d90de11ab0）
+- 被 `OptionRadar.prefab` 引用
+- **处理方案**：在Unity编辑器中将引用替换为原文件后删除
+
+### 资源命名规范
+- ✅ 统一使用英文PascalCase命名（如：`RectangleSolid.png`, `Settings.png`）
+- ❌ 避免中文命名（如：`RectangleSolid - 副本.png` 应为 `RectangleSolidCopy.png`）
+- ❌ 禁止无意义命名（如：`abc.png`, `test.png`）
+
+### 资源统计（截至最近更新）
+- **总文件数**：21个PNG（已清理2个无效文件）
+- **使用中**：11个（52.4%）
+- **未使用**：9个（42.9%）
+- **待处理**：1个副本文件（4.8%）

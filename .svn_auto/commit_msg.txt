@@ -1,1 +1,7 @@
-[修复] StartSettings 文本颜色修正：RectangleSolid为黑色图片，全面对齐游戏深色主题（白色文本+白色tint），同步修正文档文本颜色规范
+[文档] 更新UI图片资源使用规范，修正误标记并补充遗漏信息
+
+- 修正：Ring.png和Edit.png从"未使用"更正为"使用中"
+- 补充：wheelgradient.png信息（ClickEffect使用）
+- 增强：功能图标表新增GUID列便于追溯
+- 更新：资源统计（21个PNG，使用率52.4%）
+- 说明：abc.png和hrhr.png已被清理
