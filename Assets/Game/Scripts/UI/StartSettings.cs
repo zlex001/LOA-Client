@@ -147,7 +147,8 @@ namespace Game
         public override void OnExit()
         {
             Utils.Debug.Log("StartSettings", "OnExit - closing panel");
-            DOTween.KillAll();
+            if (_panelRect != null) _panelRect.DOKill();
+            if (_maskImage != null) _maskImage.DOKill();
         }
         #endregion
 
