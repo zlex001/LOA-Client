@@ -81,29 +81,29 @@ m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
 
 所有PNG图片的详细使用情况：
 
-| 图片名称 | GUID | 代码加载 | Prefab引用 | 使用详情 | 状态 |
-|---------|------|---------|-----------|---------|------|
-| **RectangleSolid.png** | d7ef6b31ab55e354a9a21ff536ad24c4 | ✅ StartSettings.cs:83 | ✅ 14个Prefab | 面板背景（Home, Login, Initialize, Option, OptionTitleButton等） | ✅ 高频使用 |
-| **Settings.png** | 69c3b353ee9dc4bbab2bf9427a27fa0c | ✅ Start.cs:484 | ❌ | 设置按钮图标 | ✅ 使用中 |
-| **Edit.png** | f26ff36c4f4cb1b49a36c84bef5e14fd | ✅ StartSettings.cs:84 | ❌ | 编辑按钮图标（缓存复用） | ✅ 使用中 |
-| **True.png** | ae371a810b535f2459c56ff4c380dabc | ✅ StartSettings.cs:85 | ✅ 2个Prefab | Checkmark图标（Story, OptionConfirm） | ✅ 使用中 |
-| **Increase.png** | 631ef34dc0593854cba947dce1f9ef4b | ❌ | ✅ 2个Prefab | 增加按钮（Home, OptionAmount） | ✅ 使用中 |
-| **Decrease.png** | b79803a6321fa034ca1ff355740846c1 | ❌ | ✅ 2个Prefab | 减少按钮（Home, OptionAmount） | ✅ 使用中 |
-| **Sprite.png** | a65d834b426c0df4985749fa99d1d465 | ❌ | ✅ 1个Prefab | 进度条填充（OptionProgressWithValue） | ✅ 使用中 |
-| **RadiativeRing.png** | 7b84f5d88895ffa4ebc526b21542d185 | ❌ | ✅ 3个Prefab | 装饰效果（Initialize, Login） | ✅ 使用中 |
-| **Radar.png** | de9bce3ad415b9a469b54786edaf9ef0 | ❌ | ✅ 1个Prefab | 雷达可视化（OptionRadar） | ✅ 使用中 |
-| **Ring.png** | 639b7ad6f044b3a4da3752891d598836 | ❌ | ✅ 7个Prefab | 点击特效、UI动画（Root, Home, Dark, Account, Accounts, ClickEffect） | ✅ 使用中 |
-| **wheelgradient.png** | 926e960b99b42884692b2bcdb480a5ac | ❌ | ✅ 1个Prefab | 点击特效（ClickEffect） | ✅ 使用中 |
-| **RectangleSolid - 副本.png** | bf270f8141102b34a896d7d90de11ab0 | ❌ | ✅ 1个Prefab | 重复文件（OptionRadar） | ⚠️ 待替换删除 |
-| **False.png** | 60eb08970ce85964b8ce4b9cf3d70928 | ❌ | ❌ | - | ❌ 未使用 |
-| **Circle.png** | 854f5a1a78ca36e4eb8e70d0bc0cfd53 | ❌ | ❌ | - | ❌ 未使用 |
-| **CircleOutline.png** | 473ec83ee9e8e9a4da868a1a257d93e7 | ❌ | ❌ | - | ❌ 未使用 |
-| **Border.png** | be64b6d3c74b88c43959dac5b03334be | ❌ | ❌ | - | ❌ 未使用 |
-| **Rectangle.png** | 147aa7121b9e52d498226eaf3cc9d606 | ❌ | ❌ | - | ❌ 未使用 |
-| **Focus.png** | ca6722533be8f1b449f17a1e0110160f | ❌ | ❌ | - | ❌ 未使用 |
-| **Pixel.png** | eaf53a854f957da4cb5a2d2c0694aabd | ❌ | ❌ | - | ❌ 未使用 |
-| **ICON.png** | 2a07a4d1c1f31d94eb19ee67ecf021c0 | ❌ | ❌ | 关联材质：ICON.mat | ⚠️ 材质可能使用 |
-| **Author.png** | 48127ddb8a302ca44bb8ad7e50c43ae4 | ❌ | ❌ | - | ❌ 未使用 |
+| 图片名称 | 代码加载 | Prefab引用 | 使用详情 | 状态 |
+|---------|---------|-----------|---------|------|
+| **RectangleSolid.png** | ✅ StartSettings.cs:83 | ✅ 14个Prefab | 面板背景（Home, Login, Initialize, Option, OptionTitleButton等） | ✅ 高频使用 |
+| **Settings.png** | ✅ Start.cs:484 | ❌ | 设置按钮图标 | ✅ 使用中 |
+| **Edit.png** | ✅ StartSettings.cs:84 | ❌ | 编辑按钮图标（缓存复用） | ✅ 使用中 |
+| **True.png** | ✅ StartSettings.cs:85 | ✅ 2个Prefab | Checkmark图标（Story, OptionConfirm） | ✅ 使用中 |
+| **Increase.png** | ❌ | ✅ 2个Prefab | 增加按钮（Home, OptionAmount） | ✅ 使用中 |
+| **Decrease.png** | ❌ | ✅ 2个Prefab | 减少按钮（Home, OptionAmount） | ✅ 使用中 |
+| **Sprite.png** | ❌ | ✅ 1个Prefab | 进度条填充（OptionProgressWithValue） | ✅ 使用中 |
+| **RadiativeRing.png** | ❌ | ✅ 3个Prefab | 装饰效果（Initialize, Login） | ✅ 使用中 |
+| **Radar.png** | ❌ | ✅ 1个Prefab | 雷达可视化（OptionRadar） | ✅ 使用中 |
+| **Ring.png** | ❌ | ✅ 7个Prefab | 点击特效、UI动画（Root, Home, Dark, Account, Accounts, ClickEffect） | ✅ 使用中 |
+| **wheelgradient.png** | ❌ | ✅ 1个Prefab | 点击特效（ClickEffect） | ✅ 使用中 |
+| **RectangleSolid - 副本.png** | ❌ | ✅ 1个Prefab | 重复文件（OptionRadar） | ⚠️ 待替换删除 |
+| **False.png** | ❌ | ❌ | - | ❌ 未使用 |
+| **Circle.png** | ❌ | ❌ | - | ❌ 未使用 |
+| **CircleOutline.png** | ❌ | ❌ | - | ❌ 未使用 |
+| **Border.png** | ❌ | ❌ | - | ❌ 未使用 |
+| **Rectangle.png** | ❌ | ❌ | - | ❌ 未使用 |
+| **Focus.png** | ❌ | ❌ | - | ❌ 未使用 |
+| **Pixel.png** | ❌ | ❌ | - | ❌ 未使用 |
+| **ICON.png** | ❌ | ❌ | 关联材质：ICON.mat | ⚠️ 材质可能使用 |
+| **Author.png** | ❌ | ❌ | - | ❌ 未使用 |
 
 **使用情况统计**：
 - **总文件数**：21个PNG（已清理2个无效文件：abc.png、hrhr.png）
