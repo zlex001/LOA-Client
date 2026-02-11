@@ -26,12 +26,20 @@ namespace Game
         private static readonly Color ColorAccountNormal = Color.white;
         private static readonly Color ColorButtonEdit = new Color(0.2f, 0.6f, 1f, 1f);
         private static readonly Color ColorButtonDelete = new Color(1f, 0.4f, 0.4f, 1f);
-        private static readonly Color ColorButtonAddBackground = new Color(0.95f, 0.97f, 1f, 1f);
         private static readonly Color ColorButtonAddText = new Color(0.2f, 0.5f, 0.9f, 1f);
         private static readonly Color ColorSectionHeader = new Color(0.5f, 0.5f, 0.52f, 1f);
         private static readonly Color ColorSettingItemBackground = new Color(0.98f, 0.98f, 0.99f, 1f);
         private static readonly Color ColorTextPrimary = Color.black;
         private static readonly Color ColorTextSecondary = new Color(0.557f, 0.557f, 0.576f, 1f);
+        private static readonly Color ColorButtonTextOnDark = Color.white;
+        private static readonly Color ColorPlaceholder = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        private static readonly Color ColorDialogMask = new Color(0f, 0f, 0f, 0.8f);
+        private static readonly Color ColorDialogPanel = Color.white;
+        private static readonly Color ColorDialogConfirm = new Color(0f, 0.5f, 1f, 1f);
+        private static readonly Color ColorDialogCancel = new Color(0.8f, 0.8f, 0.8f, 1f);
+        private static readonly Color ColorInputFieldBackground = new Color(0.95f, 0.95f, 0.95f, 1f);
+        private static readonly Color ColorToggleBackground = new Color(0.9f, 0.9f, 0.9f, 1f);
+        private static readonly Color ColorTransparent = new Color(1f, 1f, 1f, 0f);
         #endregion
         
         #region Helper Methods
@@ -274,7 +282,7 @@ namespace Game
             var headerText = headerObj.AddComponent<Text>();
             headerText.text = title;
             headerText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            headerText.fontSize = 24;
+            headerText.fontSize = 38;
             headerText.color = ColorSectionHeader;
             headerText.alignment = TextAnchor.MiddleLeft;
             headerObj.AddComponent<Framework.FontScaler>();
@@ -315,7 +323,7 @@ namespace Game
             // Display format: "AccountID (Note)" or just "AccountID" if no note
             text.text = account.Id + (string.IsNullOrEmpty(account.Note) ? "" : $" ({account.Note})");
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 28;
+            text.fontSize = 38;
             text.color = ColorTextPrimary;
             text.alignment = TextAnchor.MiddleLeft;
             textObj.AddComponent<Framework.FontScaler>();
@@ -353,6 +361,8 @@ namespace Game
             deleteButtonRect.sizeDelta = Vector2.zero;
             
             var deleteButtonImage = deleteButtonObj.AddComponent<Image>();
+            if (_rectangleSolid != null) deleteButtonImage.sprite = _rectangleSolid;
+            deleteButtonImage.type = Image.Type.Sliced;
             deleteButtonImage.color = ColorButtonDelete;
             
             var deleteButton = deleteButtonObj.AddComponent<Button>();
@@ -371,8 +381,8 @@ namespace Game
             var deleteText = deleteTextObj.AddComponent<Text>();
             deleteText.text = Localization.Instance.Get("start_settings_delete");
             deleteText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            deleteText.fontSize = 24;
-            deleteText.color = Color.white;
+            deleteText.fontSize = 38;
+            deleteText.color = ColorButtonTextOnDark;
             deleteText.alignment = TextAnchor.MiddleCenter;
             deleteTextObj.AddComponent<Framework.FontScaler>();
             
@@ -391,7 +401,7 @@ namespace Game
             buttonRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var buttonImage = buttonObj.AddComponent<Image>();
-            buttonImage.color = new Color(1f, 1f, 1f, 0f);
+            buttonImage.color = ColorTransparent;
             
             var button = buttonObj.AddComponent<Button>();
             button.targetGraphic = buttonImage;
@@ -410,7 +420,7 @@ namespace Game
             var text = textObj.AddComponent<Text>();
             text.text = Localization.Instance.Get("start_settings_add_account");
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 32;
+            text.fontSize = 38;
             text.color = ColorButtonAddText;
             text.alignment = TextAnchor.MiddleCenter;
             textObj.AddComponent<Framework.FontScaler>();
@@ -449,7 +459,7 @@ namespace Game
             var labelText = labelObj.AddComponent<Text>();
             labelText.text = Localization.Instance.Get("start_settings_language");
             labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            labelText.fontSize = 32;
+            labelText.fontSize = 38;
             labelText.color = ColorTextPrimary;
             labelText.alignment = TextAnchor.MiddleLeft;
             labelObj.AddComponent<Framework.FontScaler>();
@@ -466,7 +476,7 @@ namespace Game
             var valueText = valueObj.AddComponent<Text>();
             valueText.text = Data.Instance.Language.ToString();
             valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            valueText.fontSize = 28;
+            valueText.fontSize = 38;
             valueText.color = ColorTextSecondary;
             valueText.alignment = TextAnchor.MiddleRight;
             valueObj.AddComponent<Framework.FontScaler>();
@@ -500,7 +510,7 @@ namespace Game
             var labelText = labelObj.AddComponent<Text>();
             labelText.text = Localization.Instance.Get("start_settings_ui_sound");
             labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            labelText.fontSize = 32;
+            labelText.fontSize = 38;
             labelText.color = ColorTextPrimary;
             labelText.alignment = TextAnchor.MiddleLeft;
             labelObj.AddComponent<Framework.FontScaler>();
@@ -512,7 +522,7 @@ namespace Game
             var toggleRect = toggleObj.AddComponent<RectTransform>();
             toggleRect.anchorMin = new Vector2(1, 0.5f);
             toggleRect.anchorMax = new Vector2(1, 0.5f);
-            toggleRect.sizeDelta = new Vector2(60, 40);
+            toggleRect.sizeDelta = new Vector2(50, 50);
             toggleRect.anchoredPosition = new Vector2(-30, 0);
             
             // Background
@@ -525,7 +535,7 @@ namespace Game
             var bgImage = bgObj.AddComponent<Image>();
             if (_rectangleSolid != null) bgImage.sprite = _rectangleSolid;
             bgImage.type = Image.Type.Sliced;
-            bgImage.color = new Color(0.9f, 0.9f, 0.9f, 1f);
+            bgImage.color = ColorToggleBackground;
             
             // Checkmark
             var checkObj = new GameObject("Checkmark");
@@ -702,7 +712,7 @@ namespace Game
             
             // Semi-transparent mask
             var mask = dialogObj.AddComponent<Image>();
-            mask.color = new Color(0, 0, 0, 0.8f);
+            mask.color = ColorDialogMask;
             
             // Add button to mask to intercept clicks and prevent penetration
             var maskButton = dialogObj.AddComponent<Button>();
@@ -720,7 +730,9 @@ namespace Game
             panelRect.anchoredPosition = Vector2.zero;
             
             var panelImage = panelObj.AddComponent<Image>();
-            panelImage.color = Color.white;
+            if (_rectangleSolid != null) panelImage.sprite = _rectangleSolid;
+            panelImage.type = Image.Type.Sliced;
+            panelImage.color = ColorDialogPanel;
             
             // Title
             var titleObj = new GameObject("Title");
@@ -734,8 +746,8 @@ namespace Game
             var titleText = titleObj.AddComponent<Text>();
             titleText.text = Localization.Instance.Get("start_settings_add_account");
             titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            titleText.fontSize = 32;
-            titleText.color = Color.black;
+            titleText.fontSize = 38;
+            titleText.color = ColorTextPrimary;
             titleText.alignment = TextAnchor.MiddleCenter;
             titleObj.AddComponent<Framework.FontScaler>();
             
@@ -784,7 +796,7 @@ namespace Game
             
             // Semi-transparent mask
             var mask = dialogObj.AddComponent<Image>();
-            mask.color = new Color(0, 0, 0, 0.8f);
+            mask.color = ColorDialogMask;
             
             // Add button to mask to intercept clicks and prevent penetration
             var maskButton = dialogObj.AddComponent<Button>();
@@ -802,7 +814,9 @@ namespace Game
             panelRect.anchoredPosition = Vector2.zero;
             
             var panelImage = panelObj.AddComponent<Image>();
-            panelImage.color = Color.white;
+            if (_rectangleSolid != null) panelImage.sprite = _rectangleSolid;
+            panelImage.type = Image.Type.Sliced;
+            panelImage.color = ColorDialogPanel;
             
             // Title
             var titleObj = new GameObject("Title");
@@ -816,8 +830,8 @@ namespace Game
             var titleText = titleObj.AddComponent<Text>();
             titleText.text = Localization.Instance.Get("start_settings_edit_account");
             titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            titleText.fontSize = 32;
-            titleText.color = Color.black;
+            titleText.fontSize = 38;
+            titleText.color = ColorTextPrimary;
             titleText.alignment = TextAnchor.MiddleCenter;
             titleObj.AddComponent<Framework.FontScaler>();
             
@@ -863,7 +877,9 @@ namespace Game
             inputRect.sizeDelta = Vector2.zero;
             
             var inputImage = inputObj.AddComponent<Image>();
-            inputImage.color = new Color(0.95f, 0.95f, 0.95f, 1f);
+            if (_rectangleSolid != null) inputImage.sprite = _rectangleSolid;
+            inputImage.type = Image.Type.Sliced;
+            inputImage.color = ColorInputFieldBackground;
             
             var inputField = inputObj.AddComponent<InputField>();
             inputField.text = defaultValue;
@@ -880,8 +896,8 @@ namespace Game
             var text = textObj.AddComponent<Text>();
             text.text = defaultValue;
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 28;
-            text.color = Color.black;
+            text.fontSize = 38;
+            text.color = ColorTextPrimary;
             text.alignment = TextAnchor.MiddleLeft;
             text.supportRichText = false;
             textObj.AddComponent<Framework.FontScaler>();
@@ -900,8 +916,8 @@ namespace Game
             var placeholderText = placeholderObj.AddComponent<Text>();
             placeholderText.text = placeholder;
             placeholderText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            placeholderText.fontSize = 28;
-            placeholderText.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            placeholderText.fontSize = 38;
+            placeholderText.color = ColorPlaceholder;
             placeholderText.alignment = TextAnchor.MiddleLeft;
             placeholderText.supportRichText = false;
             placeholderObj.AddComponent<Framework.FontScaler>();
@@ -926,7 +942,7 @@ namespace Game
             
             // Semi-transparent mask
             var mask = dialogObj.AddComponent<Image>();
-            mask.color = new Color(0, 0, 0, 0.8f);
+            mask.color = ColorDialogMask;
             
             // Add button to mask to intercept clicks and prevent penetration
             var maskButton = dialogObj.AddComponent<Button>();
@@ -944,7 +960,9 @@ namespace Game
             panelRect.anchoredPosition = Vector2.zero;
             
             var panelImage = panelObj.AddComponent<Image>();
-            panelImage.color = Color.white;
+            if (_rectangleSolid != null) panelImage.sprite = _rectangleSolid;
+            panelImage.type = Image.Type.Sliced;
+            panelImage.color = ColorDialogPanel;
             
             // Message text
             var messageObj = new GameObject("Message");
@@ -958,8 +976,8 @@ namespace Game
             var messageText = messageObj.AddComponent<Text>();
             messageText.text = message;
             messageText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            messageText.fontSize = 28;
-            messageText.color = Color.black;
+            messageText.fontSize = 38;
+            messageText.color = ColorTextPrimary;
             messageText.alignment = TextAnchor.MiddleCenter;
             messageObj.AddComponent<Framework.FontScaler>();
             
@@ -992,7 +1010,7 @@ namespace Game
             
             // Semi-transparent mask
             var mask = dialogObj.AddComponent<Image>();
-            mask.color = new Color(0, 0, 0, 0.8f);
+            mask.color = ColorDialogMask;
             
             // Add button to mask to intercept clicks and prevent penetration
             var maskButton = dialogObj.AddComponent<Button>();
@@ -1010,7 +1028,9 @@ namespace Game
             panelRect.anchoredPosition = Vector2.zero;
             
             var panelImage = panelObj.AddComponent<Image>();
-            panelImage.color = Color.white;
+            if (_rectangleSolid != null) panelImage.sprite = _rectangleSolid;
+            panelImage.type = Image.Type.Sliced;
+            panelImage.color = ColorDialogPanel;
             
             // Title text
             var titleObj = new GameObject("Title");
@@ -1024,8 +1044,8 @@ namespace Game
             var titleText = titleObj.AddComponent<Text>();
             titleText.text = title;
             titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            titleText.fontSize = 32;
-            titleText.color = Color.black;
+            titleText.fontSize = 38;
+            titleText.color = ColorTextPrimary;
             titleText.alignment = TextAnchor.MiddleCenter;
             titleObj.AddComponent<Framework.FontScaler>();
             
@@ -1039,7 +1059,9 @@ namespace Game
             inputRect.sizeDelta = Vector2.zero;
             
             var inputImage = inputObj.AddComponent<Image>();
-            inputImage.color = new Color(0.95f, 0.95f, 0.95f, 1f);
+            if (_rectangleSolid != null) inputImage.sprite = _rectangleSolid;
+            inputImage.type = Image.Type.Sliced;
+            inputImage.color = ColorInputFieldBackground;
             
             var inputField = inputObj.AddComponent<InputField>();
             inputField.text = defaultValue;
@@ -1056,8 +1078,8 @@ namespace Game
             var text = textObj.AddComponent<Text>();
             text.text = defaultValue;
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 28;
-            text.color = Color.black;
+            text.fontSize = 38;
+            text.color = ColorTextPrimary;
             text.alignment = TextAnchor.MiddleLeft;
             text.supportRichText = false;
             textObj.AddComponent<Framework.FontScaler>();
@@ -1076,8 +1098,8 @@ namespace Game
             var placeholderText = placeholderObj.AddComponent<Text>();
             placeholderText.text = title;
             placeholderText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            placeholderText.fontSize = 28;
-            placeholderText.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            placeholderText.fontSize = 38;
+            placeholderText.color = ColorPlaceholder;
             placeholderText.alignment = TextAnchor.MiddleLeft;
             placeholderText.supportRichText = false;
             placeholderObj.AddComponent<Framework.FontScaler>();
@@ -1110,9 +1132,9 @@ namespace Game
             buttonRect.sizeDelta = Vector2.zero;
             
             var buttonImage = buttonObj.AddComponent<Image>();
-            buttonImage.color = name == "Confirm" 
-                ? new Color(0, 0.5f, 1f, 1f)  // Blue for confirm
-                : new Color(0.8f, 0.8f, 0.8f, 1f);  // Gray for cancel
+            if (_rectangleSolid != null) buttonImage.sprite = _rectangleSolid;
+            buttonImage.type = Image.Type.Sliced;
+            buttonImage.color = name == "Confirm" ? ColorDialogConfirm : ColorDialogCancel;
             
             var button = buttonObj.AddComponent<Button>();
             button.targetGraphic = buttonImage;
@@ -1129,8 +1151,8 @@ namespace Game
             var text = textObj.AddComponent<Text>();
             text.text = buttonText;
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 32;
-            text.color = name == "Confirm" ? Color.white : Color.black;
+            text.fontSize = 38;
+            text.color = name == "Confirm" ? ColorButtonTextOnDark : ColorTextPrimary;
             text.alignment = TextAnchor.MiddleCenter;
             textObj.AddComponent<Framework.FontScaler>();
         }
