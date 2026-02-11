@@ -1,1 +1,1 @@
-[修复] StartSettings关闭时DOTween.KillAll()误杀Start界面tip闪烁动画，改为精确DOKill目标对象
+[优化] StartSettings设置面板颜色与图片优化：使用RectangleSolid.png圆角背景、Edit.png编辑图标、True.png勾选图标，对齐标准按钮颜色配置

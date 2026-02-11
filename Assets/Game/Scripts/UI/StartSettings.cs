@@ -42,10 +42,10 @@ namespace Game
         {
             var colors = button.colors;
             colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(0.95f, 0.95f, 0.95f, 1f);
-            colors.pressedColor = new Color(0.9f, 0.9f, 0.9f, 1f);
-            colors.selectedColor = new Color(0.95f, 0.95f, 0.95f, 1f);
-            colors.disabledColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+            colors.highlightedColor = new Color(0.9607843f, 0.9607843f, 0.9607843f, 1f);
+            colors.pressedColor = new Color(0.78431374f, 0.78431374f, 0.78431374f, 1f);
+            colors.selectedColor = new Color(0.9607843f, 0.9607843f, 0.9607843f, 1f);
+            colors.disabledColor = new Color(0.78431374f, 0.78431374f, 0.78431374f, 0.5019608f);
             button.colors = colors;
             button.transition = Selectable.Transition.ColorTint;
         }
@@ -63,10 +63,21 @@ namespace Game
         private List<GameObject> _accountItemObjects = new List<GameObject>();
         #endregion
 
+        #region Sprite Cache
+        private Sprite _rectangleSolid;
+        private Sprite _editIcon;
+        private Sprite _checkmark;
+        #endregion
+
         #region Lifecycle
         public override void OnCreate(params object[] args)
         {
             Utils.Debug.Log("StartSettings", "OnCreate - Simplified version with dynamic UI");
+            
+            // Load sprites
+            _rectangleSolid = AssetManager.Instance.LoadSprite("RawAssets/Texture", "RectangleSolid");
+            _editIcon = AssetManager.Instance.LoadSprite("RawAssets/Texture", "Edit");
+            _checkmark = AssetManager.Instance.LoadSprite("RawAssets/Texture", "True");
             
             // Cache references
             _panelRect = transform.Find("Panel")?.GetComponent<RectTransform>();
@@ -78,6 +89,8 @@ namespace Game
             {
                 panelImage = _panelRect.gameObject.AddComponent<Image>();
             }
+            if (_rectangleSolid != null) panelImage.sprite = _rectangleSolid;
+            panelImage.type = Image.Type.Sliced;
             panelImage.color = ColorPanelBackground;
             panelImage.raycastTarget = true; // Intercept clicks on panel
             
@@ -279,6 +292,8 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
+            if (_rectangleSolid != null) itemImage.sprite = _rectangleSolid;
+            itemImage.type = Image.Type.Sliced;
             itemImage.color = isSelected ? ColorAccountSelected : ColorAccountNormal;
             
             var itemButton = itemObj.AddComponent<Button>();
@@ -305,38 +320,28 @@ namespace Game
             text.alignment = TextAnchor.MiddleLeft;
             textObj.AddComponent<Framework.FontScaler>();
             
-            // Edit button (right side)
+            // Edit button (right side) - icon only
             var editButtonObj = new GameObject("EditButton");
             editButtonObj.transform.SetParent(itemObj.transform, false);
             
+            float editButtonSize = UnitHeight * 0.5f;
             var editButtonRect = editButtonObj.AddComponent<RectTransform>();
-            editButtonRect.anchorMin = new Vector2(0.65f, 0.25f);
-            editButtonRect.anchorMax = new Vector2(0.8f, 0.75f);
-            editButtonRect.sizeDelta = Vector2.zero;
+            editButtonRect.anchorMin = new Vector2(1f, 0.5f);
+            editButtonRect.anchorMax = new Vector2(1f, 0.5f);
+            editButtonRect.pivot = new Vector2(0.5f, 0.5f);
+            editButtonRect.sizeDelta = new Vector2(editButtonSize, editButtonSize);
+            editButtonRect.anchoredPosition = new Vector2(-UnitHeight * 1.2f, 0);
             
             var editButtonImage = editButtonObj.AddComponent<Image>();
+            if (_editIcon != null) editButtonImage.sprite = _editIcon;
+            editButtonImage.type = Image.Type.Simple;
+            editButtonImage.preserveAspect = true;
             editButtonImage.color = ColorButtonEdit;
             
             var editButton = editButtonObj.AddComponent<Button>();
             editButton.targetGraphic = editButtonImage;
             editButton.onClick.AddListener(() => OnAccountEdit(account));
             ApplyButtonColorBlock(editButton, editButtonImage.color);
-            
-            var editTextObj = new GameObject("Text");
-            editTextObj.transform.SetParent(editButtonObj.transform, false);
-            
-            var editTextRect = editTextObj.AddComponent<RectTransform>();
-            editTextRect.anchorMin = Vector2.zero;
-            editTextRect.anchorMax = Vector2.one;
-            editTextRect.sizeDelta = Vector2.zero;
-            
-            var editText = editTextObj.AddComponent<Text>();
-            editText.text = Localization.Instance.Get("start_settings_edit");
-            editText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            editText.fontSize = 24;
-            editText.color = Color.white;
-            editText.alignment = TextAnchor.MiddleCenter;
-            editTextObj.AddComponent<Framework.FontScaler>();
             
             // Delete button (right side)
             var deleteButtonObj = new GameObject("DeleteButton");
@@ -386,7 +391,7 @@ namespace Game
             buttonRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var buttonImage = buttonObj.AddComponent<Image>();
-            buttonImage.color = ColorButtonAddBackground;
+            buttonImage.color = new Color(1f, 1f, 1f, 0f);
             
             var button = buttonObj.AddComponent<Button>();
             button.targetGraphic = buttonImage;
@@ -423,6 +428,8 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
+            if (_rectangleSolid != null) itemImage.sprite = _rectangleSolid;
+            itemImage.type = Image.Type.Sliced;
             itemImage.color = ColorSettingItemBackground;
             
             var itemButton = itemObj.AddComponent<Button>();
@@ -477,6 +484,8 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
+            if (_rectangleSolid != null) itemImage.sprite = _rectangleSolid;
+            itemImage.type = Image.Type.Sliced;
             itemImage.color = ColorSettingItemBackground;
             
             var labelObj = new GameObject("Label");
@@ -514,7 +523,9 @@ namespace Game
             bgRect.anchorMax = Vector2.one;
             bgRect.sizeDelta = Vector2.zero;
             var bgImage = bgObj.AddComponent<Image>();
-            bgImage.color = new Color(0.8f, 0.8f, 0.8f, 1f);
+            if (_rectangleSolid != null) bgImage.sprite = _rectangleSolid;
+            bgImage.type = Image.Type.Sliced;
+            bgImage.color = new Color(0.9f, 0.9f, 0.9f, 1f);
             
             // Checkmark
             var checkObj = new GameObject("Checkmark");
@@ -524,6 +535,9 @@ namespace Game
             checkRect.anchorMax = new Vector2(0.5f, 0.5f);
             checkRect.sizeDelta = new Vector2(30, 30);
             var checkImage = checkObj.AddComponent<Image>();
+            if (_checkmark != null) checkImage.sprite = _checkmark;
+            checkImage.type = Image.Type.Simple;
+            checkImage.preserveAspect = true;
             checkImage.color = ColorButtonEdit;
             
             // Toggle component
