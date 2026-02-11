@@ -249,11 +249,10 @@ namespace Game
             _tipText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             _tipText.fontSize = 38;
             _tipText.alignment = TextAnchor.MiddleCenter;
-            _tipText.color = Color.white;
+            _tipText.color = new Color(1f, 1f, 1f, 0f); // Start with alpha=0
             _tipText.raycastTarget = false;
             
-            // Pulsing animation
-            _tipText.DOFade(0.3f, 1f).SetLoops(-1, LoopType.Yoyo);
+            // Note: Animation will be started in Animate() after fade-in
             
             // Create click area (sized to text content with padding)
             var clickAreaObj = new GameObject("ClickArea");
@@ -404,10 +403,19 @@ namespace Game
             
             yield return new WaitForSeconds(ANIMATION_TIME);
             
-            // Show tip UI
-            if (_tipContainer != null)
+            // Fade in tip UI
+            if (_tipContainer != null && _tipText != null)
             {
                 _tipContainer.SetActive(true);
+                Utils.Debug.Log("Start", "Starting Tip fade-in animation");
+                
+                // Fade in from alpha=0 to alpha=1
+                yield return _tipText.DOFade(1f, 0.8f).SetEase(Ease.InOutQuad).WaitForCompletion();
+                
+                Utils.Debug.Log("Start", "Tip fade-in completed, starting pulse animation");
+                
+                // Start pulsing animation (1.0 -> 0.3 -> 1.0, loop)
+                _tipText.DOFade(0.3f, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutQuad);
             }
             
             Utils.Debug.Log("Start", "=== Title Animation Finished ===");
