@@ -18,6 +18,37 @@ namespace Game
         private const float UnitHeight = 83f;
         private const float PanelHeightUnits = 12f;
         private const float AnimationDuration = 0.3f;
+        
+        // Color scheme - iOS/WeChat style
+        private static readonly Color ColorPanelBackground = new Color(0.95f, 0.95f, 0.97f, 1f);
+        private static readonly Color ColorMaskBackground = new Color(0.1f, 0.1f, 0.1f, 0.5f);
+        private static readonly Color ColorAccountSelected = new Color(0.9f, 0.95f, 1f, 1f);
+        private static readonly Color ColorAccountNormal = Color.white;
+        private static readonly Color ColorButtonEdit = new Color(0.2f, 0.6f, 1f, 1f);
+        private static readonly Color ColorButtonDelete = new Color(1f, 0.4f, 0.4f, 1f);
+        private static readonly Color ColorButtonAddBackground = new Color(0.95f, 0.97f, 1f, 1f);
+        private static readonly Color ColorButtonAddText = new Color(0.2f, 0.5f, 0.9f, 1f);
+        private static readonly Color ColorSectionHeader = new Color(0.5f, 0.5f, 0.52f, 1f);
+        private static readonly Color ColorSettingItemBackground = new Color(0.98f, 0.98f, 0.99f, 1f);
+        private static readonly Color ColorTextPrimary = Color.black;
+        private static readonly Color ColorTextSecondary = new Color(0.557f, 0.557f, 0.576f, 1f);
+        #endregion
+        
+        #region Helper Methods
+        /// <summary>
+        /// Apply interactive color feedback to button
+        /// </summary>
+        private void ApplyButtonColorBlock(Button button, Color normalColor)
+        {
+            var colors = button.colors;
+            colors.normalColor = Color.white;
+            colors.highlightedColor = new Color(0.95f, 0.95f, 0.95f, 1f);
+            colors.pressedColor = new Color(0.9f, 0.9f, 0.9f, 1f);
+            colors.selectedColor = new Color(0.95f, 0.95f, 0.95f, 1f);
+            colors.disabledColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+            button.colors = colors;
+            button.transition = Selectable.Transition.ColorTint;
+        }
         #endregion
 
         #region Account Data
@@ -46,8 +77,8 @@ namespace Game
             if (panelImage == null)
             {
                 panelImage = _panelRect.gameObject.AddComponent<Image>();
-                panelImage.color = Color.white;
             }
+            panelImage.color = ColorPanelBackground;
             panelImage.raycastTarget = true; // Intercept clicks on panel
             
             // Find or create Content container
@@ -103,11 +134,11 @@ namespace Game
             
             // Initial state
             _panelRect.anchoredPosition = new Vector2(0, -panelHeight);
-            _maskImage.color = new Color(0, 0, 0, 0);
+            _maskImage.color = new Color(ColorMaskBackground.r, ColorMaskBackground.g, ColorMaskBackground.b, 0f);
             
             // Animate
             var sequence = DOTween.Sequence();
-            sequence.Append(_maskImage.DOFade(0.7f, 0.25f));
+            sequence.Append(_maskImage.DOColor(ColorMaskBackground, 0.25f));
             sequence.Join(_panelRect.DOAnchorPosY(0, AnimationDuration).SetEase(Ease.OutCubic));
             
             Utils.Debug.Log("StartSettings", "Animation sequence started");
@@ -230,7 +261,7 @@ namespace Game
             headerText.text = title;
             headerText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             headerText.fontSize = 24;
-            headerText.color = new Color(0.557f, 0.557f, 0.576f, 1f);
+            headerText.color = ColorSectionHeader;
             headerText.alignment = TextAnchor.MiddleLeft;
             headerObj.AddComponent<Framework.FontScaler>();
             
@@ -247,11 +278,12 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
-            itemImage.color = isSelected ? new Color(0.9f, 0.9f, 0.9f, 1f) : Color.white;
+            itemImage.color = isSelected ? ColorAccountSelected : ColorAccountNormal;
             
             var itemButton = itemObj.AddComponent<Button>();
             itemButton.targetGraphic = itemImage;
             itemButton.onClick.AddListener(() => OnAccountSwitch(account));
+            ApplyButtonColorBlock(itemButton, itemImage.color);
             
             // Account text (left aligned)
             var textObj = new GameObject("Text");
@@ -268,7 +300,7 @@ namespace Game
             text.text = account.Id + (string.IsNullOrEmpty(account.Note) ? "" : $" ({account.Note})");
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 28;
-            text.color = Color.black;
+            text.color = ColorTextPrimary;
             text.alignment = TextAnchor.MiddleLeft;
             textObj.AddComponent<Framework.FontScaler>();
             
@@ -282,11 +314,12 @@ namespace Game
             editButtonRect.sizeDelta = Vector2.zero;
             
             var editButtonImage = editButtonObj.AddComponent<Image>();
-            editButtonImage.color = new Color(0, 0.5f, 1f, 1f);
+            editButtonImage.color = ColorButtonEdit;
             
             var editButton = editButtonObj.AddComponent<Button>();
             editButton.targetGraphic = editButtonImage;
             editButton.onClick.AddListener(() => OnAccountEdit(account));
+            ApplyButtonColorBlock(editButton, editButtonImage.color);
             
             var editTextObj = new GameObject("Text");
             editTextObj.transform.SetParent(editButtonObj.transform, false);
@@ -314,11 +347,12 @@ namespace Game
             deleteButtonRect.sizeDelta = Vector2.zero;
             
             var deleteButtonImage = deleteButtonObj.AddComponent<Image>();
-            deleteButtonImage.color = new Color(1f, 0.3f, 0.3f, 1f);
+            deleteButtonImage.color = ColorButtonDelete;
             
             var deleteButton = deleteButtonObj.AddComponent<Button>();
             deleteButton.targetGraphic = deleteButtonImage;
             deleteButton.onClick.AddListener(() => OnAccountDelete(account));
+            ApplyButtonColorBlock(deleteButton, deleteButtonImage.color);
             
             var deleteTextObj = new GameObject("Text");
             deleteTextObj.transform.SetParent(deleteButtonObj.transform, false);
@@ -351,11 +385,12 @@ namespace Game
             buttonRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var buttonImage = buttonObj.AddComponent<Image>();
-            buttonImage.color = Color.white;
+            buttonImage.color = ColorButtonAddBackground;
             
             var button = buttonObj.AddComponent<Button>();
             button.targetGraphic = buttonImage;
             button.onClick.AddListener(OnAddAccountClick);
+            ApplyButtonColorBlock(button, buttonImage.color);
             
             var textObj = new GameObject("Text");
             textObj.transform.SetParent(buttonObj.transform, false);
@@ -370,7 +405,7 @@ namespace Game
             text.text = Localization.Instance.Get("start_settings_add_account");
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 32;
-            text.color = new Color(0, 0.5f, 1, 1);
+            text.color = ColorButtonAddText;
             text.alignment = TextAnchor.MiddleCenter;
             textObj.AddComponent<Framework.FontScaler>();
             
@@ -387,11 +422,12 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
-            itemImage.color = Color.white;
+            itemImage.color = ColorSettingItemBackground;
             
             var itemButton = itemObj.AddComponent<Button>();
             itemButton.targetGraphic = itemImage;
             itemButton.onClick.AddListener(OnLanguageItemClick);
+            ApplyButtonColorBlock(itemButton, itemImage.color);
             
             var labelObj = new GameObject("Label");
             labelObj.transform.SetParent(itemObj.transform, false);
@@ -406,7 +442,7 @@ namespace Game
             labelText.text = Localization.Instance.Get("start_settings_language");
             labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             labelText.fontSize = 32;
-            labelText.color = Color.black;
+            labelText.color = ColorTextPrimary;
             labelText.alignment = TextAnchor.MiddleLeft;
             labelObj.AddComponent<Framework.FontScaler>();
             
@@ -423,7 +459,7 @@ namespace Game
             valueText.text = Data.Instance.Language.ToString();
             valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             valueText.fontSize = 28;
-            valueText.color = new Color(0.557f, 0.557f, 0.576f, 1f);
+            valueText.color = ColorTextSecondary;
             valueText.alignment = TextAnchor.MiddleRight;
             valueObj.AddComponent<Framework.FontScaler>();
             
@@ -440,7 +476,7 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
-            itemImage.color = Color.white;
+            itemImage.color = ColorSettingItemBackground;
             
             var labelObj = new GameObject("Label");
             labelObj.transform.SetParent(itemObj.transform, false);
@@ -455,7 +491,7 @@ namespace Game
             labelText.text = Localization.Instance.Get("start_settings_ui_sound");
             labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             labelText.fontSize = 32;
-            labelText.color = Color.black;
+            labelText.color = ColorTextPrimary;
             labelText.alignment = TextAnchor.MiddleLeft;
             labelObj.AddComponent<Framework.FontScaler>();
             
@@ -487,7 +523,7 @@ namespace Game
             checkRect.anchorMax = new Vector2(0.5f, 0.5f);
             checkRect.sizeDelta = new Vector2(30, 30);
             var checkImage = checkObj.AddComponent<Image>();
-            checkImage.color = new Color(0, 0.5f, 1f, 1f);
+            checkImage.color = ColorButtonEdit;
             
             // Toggle component
             var toggle = toggleObj.AddComponent<Toggle>();
