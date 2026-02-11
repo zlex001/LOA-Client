@@ -1,1 +1,1 @@
-[文档] 补充Settings和RadiativeRing图片预览
+[文档] 控制UI设计风格分析文档中所有图片尺寸，防止PDF转换时图片过大

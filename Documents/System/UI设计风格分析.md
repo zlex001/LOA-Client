@@ -30,10 +30,10 @@
 
 | 图片预览 | 图片名称 | 视觉特征 |
 |---------|---------|---------|
-| ![RectangleSolid](../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid.png) | **RectangleSolid.png** | 纯黑色圆角矩形（80x40），无渐变、无纹理 |
-| ![Sprite](../../Assets/Game/HotResources/RawAssets/Texture/Sprite.png) | **Sprite.png** | 纯白色矩形，用于进度条填充 |
-| ![Ring](../../Assets/Game/HotResources/RawAssets/Texture/Ring.png) | **Ring.png** | 简洁的圆环形状，透明背景 |
-| ![Radar](../../Assets/Game/HotResources/RawAssets/Texture/Radar.png) | **Radar.png** | 径向渐变黑色圆形，复杂度最低 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid.png" width="80" style="background-color: #ffffff; padding: 5px;"> | **RectangleSolid.png** | 纯黑色圆角矩形（80x40），无渐变、无纹理 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Sprite.png" width="80" style="background-color: #000000; padding: 5px;"> | **Sprite.png** | 纯白色矩形，用于进度条填充 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Ring.png" width="80" style="background-color: #000000; padding: 5px;"> | **Ring.png** | 简洁的圆环形状，透明背景 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Radar.png" width="80" style="background-color: #ffffff; padding: 5px;"> | **Radar.png** | 径向渐变黑色圆形，复杂度最低 |
 
 **设计规则：**
 - 无装饰性细节
@@ -57,33 +57,21 @@ image.color = new Color(0.2f, 0.2f, 0.2f, 1f); // 着色到所需颜色
 
 <table>
 <tr>
-<td width="150" align="center">
-
-![Increase](../../Assets/Game/HotResources/RawAssets/Texture/Increase.png)
-
-**Increase.png**
-
+<td width="150" align="center" style="background-color: #ffffff; padding: 10px;">
+<img src="../../Assets/Game/HotResources/RawAssets/Texture/Increase.png" width="120"><br/>
+<strong>Increase.png</strong>
 </td>
-<td width="150" align="center">
-
-![Decrease](../../Assets/Game/HotResources/RawAssets/Texture/Decrease.png)
-
-**Decrease.png**
-
+<td width="150" align="center" style="background-color: #ffffff; padding: 10px;">
+<img src="../../Assets/Game/HotResources/RawAssets/Texture/Decrease.png" width="120"><br/>
+<strong>Decrease.png</strong>
 </td>
-<td width="150" align="center">
-
-![Edit](../../Assets/Game/HotResources/RawAssets/Texture/Edit.png)
-
-**Edit.png**
-
+<td width="150" align="center" style="background-color: #ffffff; padding: 10px;">
+<img src="../../Assets/Game/HotResources/RawAssets/Texture/Edit.png" width="120"><br/>
+<strong>Edit.png</strong>
 </td>
-<td width="150" align="center">
-
-![Focus](../../Assets/Game/HotResources/RawAssets/Texture/Focus.png)
-
-**Focus.png**
-
+<td width="150" align="center" style="background-color: #ffffff; padding: 10px;">
+<img src="../../Assets/Game/HotResources/RawAssets/Texture/Focus.png" width="120"><br/>
+<strong>Focus.png</strong>
 </td>
 </tr>
 </table>
@@ -122,18 +110,12 @@ image.color = new Color(0.2f, 0.2f, 0.2f, 1f); // 着色到所需颜色
 <table>
 <tr>
 <td width="200" align="center" style="background-color: #000000; padding: 20px;">
-
-![Settings](../../Assets/Game/HotResources/RawAssets/Texture/Settings.png)
-
-**Settings.png**
-
+<img src="../../Assets/Game/HotResources/RawAssets/Texture/Settings.png" width="150"><br/>
+<strong style="color: white;">Settings.png</strong>
 </td>
 <td width="200" align="center" style="background-color: #000000; padding: 20px;">
-
-![RadiativeRing](../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png)
-
-**RadiativeRing.png**
-
+<img src="../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png" width="150"><br/>
+<strong style="color: white;">RadiativeRing.png</strong>
 </td>
 </tr>
 </table>
@@ -211,10 +193,10 @@ m_Colors:
 
 | 预览 | 图标 | 文件 | 尺寸 | 用途 | 风格注释 |
 |------|------|------|------|------|---------|
-| ![Increase](../../Assets/Game/HotResources/RawAssets/Texture/Increase.png) | 增加 | Increase.png | 1024x1024 | 加号按钮（Home, OptionAmount） | 双层轮廓十字 |
-| ![Decrease](../../Assets/Game/HotResources/RawAssets/Texture/Decrease.png) | 减少 | Decrease.png | 1024x1024 | 减号按钮（Home, OptionAmount） | 双层轮廓减号 |
-| ![Edit](../../Assets/Game/HotResources/RawAssets/Texture/Edit.png) | 编辑 | Edit.png | 1024x1024 | 编辑按钮（StartSettings） | 像素化铅笔，锯齿边缘 |
-| ![Focus](../../Assets/Game/HotResources/RawAssets/Texture/Focus.png) | 焦点 | Focus.png | - | 焦点指示器（Home） | 准星/目标图标，8-bit风格 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Increase.png" width="60" style="background-color: #ffffff; padding: 3px;"> | 增加 | Increase.png | 1024x1024 | 加号按钮（Home, OptionAmount） | 双层轮廓十字 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Decrease.png" width="60" style="background-color: #ffffff; padding: 3px;"> | 减少 | Decrease.png | 1024x1024 | 减号按钮（Home, OptionAmount） | 双层轮廓减号 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Edit.png" width="60" style="background-color: #ffffff; padding: 3px;"> | 编辑 | Edit.png | 1024x1024 | 编辑按钮（StartSettings） | 像素化铅笔，锯齿边缘 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Focus.png" width="60" style="background-color: #ffffff; padding: 3px;"> | 焦点 | Focus.png | - | 焦点指示器（Home） | 准星/目标图标，8-bit风格 |
 
 **设计指南：**
 - 在所有缩放级别保持像素网格对齐
@@ -234,8 +216,8 @@ m_Colors:
 
 | 预览 | 图标 | 文件 | 尺寸 | 用途 | 风格注释 |
 |------|------|------|------|------|---------|
-| ![Settings](../../Assets/Game/HotResources/RawAssets/Texture/Settings.png) | 设置 | Settings.png | 2048x2048 | 设置按钮（Start） | 多层齿轮，细线条 |
-| ![RadiativeRing](../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png) | 辐射环 | RadiativeRing.png | - | 装饰效果（Login, Initialize） | 渐变光晕，带透明度 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Settings.png" width="60" style="background-color: #000000; padding: 3px;"> | 设置 | Settings.png | 2048x2048 | 设置按钮（Start） | 多层齿轮，细线条 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png" width="60" style="background-color: #000000; padding: 3px;"> | 辐射环 | RadiativeRing.png | - | 装饰效果（Login, Initialize） | 渐变光晕，带透明度 |
 
 **设计指南：**
 - 保持线条粗细一致（原生分辨率下2-3px）
@@ -254,9 +236,9 @@ m_Colors:
 
 | 预览 | 图标 | 文件 | 用途 | 风格注释 |
 |------|------|------|------|---------|
-| ![True](../../Assets/Game/HotResources/RawAssets/Texture/True.png) | 对勾 | True.png | 确认标记（Story, OptionConfirm, Accounts） | 简单对勾，白色透明背景 |
-| ![False](../../Assets/Game/HotResources/RawAssets/Texture/False.png) | 错误 | False.png | 账号系统图标（Accounts, Account） | 符号表示 |
-| ![Radar](../../Assets/Game/HotResources/RawAssets/Texture/Radar.png) | 雷达 | Radar.png | 雷达可视化（OptionInput, Initialize） | 径向渐变圆形 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/True.png" width="60" style="background-color: #000000; padding: 3px;"> | 对勾 | True.png | 确认标记（Story, OptionConfirm, Accounts） | 简单对勾，白色透明背景 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/False.png" width="60" style="background-color: #000000; padding: 3px;"> | 错误 | False.png | 账号系统图标（Accounts, Account） | 符号表示 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Radar.png" width="60" style="background-color: #ffffff; padding: 3px;"> | 雷达 | Radar.png | 雷达可视化（OptionInput, Initialize） | 径向渐变圆形 |
 
 ### 装饰性元素
 
@@ -269,8 +251,8 @@ m_Colors:
 
 | 预览 | 元素 | 文件 | 用途 | 风格注释 |
 |------|------|------|------|---------|
-| ![Ring](../../Assets/Game/HotResources/RawAssets/Texture/Ring.png) | 圆环 | Ring.png | 点击效果、遮罩动画（Dark, ClickEffect） | 简单圆环，在Utils.cs中用于动态效果 |
-| ![Border](../../Assets/Game/HotResources/RawAssets/Texture/Border.png) | 边框 | Border.png | 边框装饰（Home） | 用于视觉分隔的框架元素 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Ring.png" width="60" style="background-color: #000000; padding: 3px;"> | 圆环 | Ring.png | 点击效果、遮罩动画（Dark, ClickEffect） | 简单圆环，在Utils.cs中用于动态效果 |
+| <img src="../../Assets/Game/HotResources/RawAssets/Texture/Border.png" width="60" style="background-color: #000000; padding: 3px;"> | 边框 | Border.png | 边框装饰（Home） | 用于视觉分隔的框架元素 |
 
 ---
 
