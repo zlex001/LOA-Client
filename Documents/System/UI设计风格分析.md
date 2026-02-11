@@ -119,6 +119,25 @@ image.color = new Color(0.2f, 0.2f, 0.2f, 1f); // 着色到所需颜色
 
 **核心原则**：使用一致的描边粗细定义形状，避免实心填充。
 
+<table>
+<tr>
+<td width="200" align="center" style="background-color: #000000; padding: 20px;">
+
+![Settings](../../Assets/Game/HotResources/RawAssets/Texture/Settings.png)
+
+**Settings.png**
+
+</td>
+<td width="200" align="center" style="background-color: #000000; padding: 20px;">
+
+![RadiativeRing](../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png)
+
+**RadiativeRing.png**
+
+</td>
+</tr>
+</table>
+
 **Settings.png - 齿轮图标**
 - 细线条勾勒齿轮形状
 - 多层同心线条营造深度感
