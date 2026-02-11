@@ -28,12 +28,12 @@
 
 **代表性资源：**
 
-| 图片 | 视觉特征 |
-|------|---------|
-| **RectangleSolid.png** | 纯黑色圆角矩形（80x40），无渐变、无纹理 |
-| **Sprite.png** | 纯白色矩形，用于进度条填充 |
-| **Ring.png** | 简洁的圆环形状，透明背景 |
-| **Radar.png** | 径向渐变黑色圆形，复杂度最低 |
+| 图片预览 | 图片名称 | 视觉特征 |
+|---------|---------|---------|
+| ![RectangleSolid](../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid.png) | **RectangleSolid.png** | 纯黑色圆角矩形（80x40），无渐变、无纹理 |
+| ![Sprite](../../Assets/Game/HotResources/RawAssets/Texture/Sprite.png) | **Sprite.png** | 纯白色矩形，用于进度条填充 |
+| ![Ring](../../Assets/Game/HotResources/RawAssets/Texture/Ring.png) | **Ring.png** | 简洁的圆环形状，透明背景 |
+| ![Radar](../../Assets/Game/HotResources/RawAssets/Texture/Radar.png) | **Radar.png** | 径向渐变黑色圆形，复杂度最低 |
 
 **设计规则：**
 - 无装饰性细节
@@ -54,6 +54,39 @@ image.color = new Color(0.2f, 0.2f, 0.2f, 1f); // 着色到所需颜色
 **核心原则**：拥抱低分辨率、网格对齐的艺术风格，致敬8-bit/16-bit时代游戏。
 
 **代表性资源：**
+
+<table>
+<tr>
+<td width="150" align="center">
+
+![Increase](../../Assets/Game/HotResources/RawAssets/Texture/Increase.png)
+
+**Increase.png**
+
+</td>
+<td width="150" align="center">
+
+![Decrease](../../Assets/Game/HotResources/RawAssets/Texture/Decrease.png)
+
+**Decrease.png**
+
+</td>
+<td width="150" align="center">
+
+![Edit](../../Assets/Game/HotResources/RawAssets/Texture/Edit.png)
+
+**Edit.png**
+
+</td>
+<td width="150" align="center">
+
+![Focus](../../Assets/Game/HotResources/RawAssets/Texture/Focus.png)
+
+**Focus.png**
+
+</td>
+</tr>
+</table>
 
 **Increase.png / Decrease.png**
 - 加号/减号图标采用像素化设计
@@ -157,12 +190,12 @@ m_Colors:
 
 **图标清单：**
 
-| 图标 | 文件 | 尺寸 | 用途 | 风格注释 |
-|------|------|------|------|---------|
-| 增加 | Increase.png | 1024x1024 | 加号按钮（Home, OptionAmount） | 双层轮廓十字 |
-| 减少 | Decrease.png | 1024x1024 | 减号按钮（Home, OptionAmount） | 双层轮廓减号 |
-| 编辑 | Edit.png | 1024x1024 | 编辑按钮（StartSettings） | 像素化铅笔，锯齿边缘 |
-| 焦点 | Focus.png | - | 焦点指示器（Home） | 准星/目标图标，8-bit风格 |
+| 预览 | 图标 | 文件 | 尺寸 | 用途 | 风格注释 |
+|------|------|------|------|------|---------|
+| ![Increase](../../Assets/Game/HotResources/RawAssets/Texture/Increase.png) | 增加 | Increase.png | 1024x1024 | 加号按钮（Home, OptionAmount） | 双层轮廓十字 |
+| ![Decrease](../../Assets/Game/HotResources/RawAssets/Texture/Decrease.png) | 减少 | Decrease.png | 1024x1024 | 减号按钮（Home, OptionAmount） | 双层轮廓减号 |
+| ![Edit](../../Assets/Game/HotResources/RawAssets/Texture/Edit.png) | 编辑 | Edit.png | 1024x1024 | 编辑按钮（StartSettings） | 像素化铅笔，锯齿边缘 |
+| ![Focus](../../Assets/Game/HotResources/RawAssets/Texture/Focus.png) | 焦点 | Focus.png | - | 焦点指示器（Home） | 准星/目标图标，8-bit风格 |
 
 **设计指南：**
 - 在所有缩放级别保持像素网格对齐
@@ -180,10 +213,10 @@ m_Colors:
 
 **图标清单：**
 
-| 图标 | 文件 | 尺寸 | 用途 | 风格注释 |
-|------|------|------|------|---------|
-| 设置 | Settings.png | 2048x2048 | 设置按钮（Start） | 多层齿轮，细线条 |
-| 辐射环 | RadiativeRing.png | - | 装饰效果（Login, Initialize） | 渐变光晕，带透明度 |
+| 预览 | 图标 | 文件 | 尺寸 | 用途 | 风格注释 |
+|------|------|------|------|------|---------|
+| ![Settings](../../Assets/Game/HotResources/RawAssets/Texture/Settings.png) | 设置 | Settings.png | 2048x2048 | 设置按钮（Start） | 多层齿轮，细线条 |
+| ![RadiativeRing](../../Assets/Game/HotResources/RawAssets/Texture/RadiativeRing.png) | 辐射环 | RadiativeRing.png | - | 装饰效果（Login, Initialize） | 渐变光晕，带透明度 |
 
 **设计指南：**
 - 保持线条粗细一致（原生分辨率下2-3px）
@@ -200,11 +233,11 @@ m_Colors:
 
 **图标清单：**
 
-| 图标 | 文件 | 用途 | 风格注释 |
-|------|------|------|---------|
-| 对勾 | True.png | 确认标记（Story, OptionConfirm, Accounts） | 简单对勾，白色透明背景 |
-| 错误 | False.png | 账号系统图标（Accounts, Account） | 符号表示 |
-| 雷达 | Radar.png | 雷达可视化（OptionInput, Initialize） | 径向渐变圆形 |
+| 预览 | 图标 | 文件 | 用途 | 风格注释 |
+|------|------|------|------|---------|
+| ![True](../../Assets/Game/HotResources/RawAssets/Texture/True.png) | 对勾 | True.png | 确认标记（Story, OptionConfirm, Accounts） | 简单对勾，白色透明背景 |
+| ![False](../../Assets/Game/HotResources/RawAssets/Texture/False.png) | 错误 | False.png | 账号系统图标（Accounts, Account） | 符号表示 |
+| ![Radar](../../Assets/Game/HotResources/RawAssets/Texture/Radar.png) | 雷达 | Radar.png | 雷达可视化（OptionInput, Initialize） | 径向渐变圆形 |
 
 ### 装饰性元素
 
@@ -215,10 +248,10 @@ m_Colors:
 
 **元素清单：**
 
-| 元素 | 文件 | 用途 | 风格注释 |
-|------|------|------|---------|
-| 圆环 | Ring.png | 点击效果、遮罩动画（Dark, ClickEffect） | 简单圆环，在Utils.cs中用于动态效果 |
-| 边框 | Border.png | 边框装饰（Home） | 用于视觉分隔的框架元素 |
+| 预览 | 元素 | 文件 | 用途 | 风格注释 |
+|------|------|------|------|---------|
+| ![Ring](../../Assets/Game/HotResources/RawAssets/Texture/Ring.png) | 圆环 | Ring.png | 点击效果、遮罩动画（Dark, ClickEffect） | 简单圆环，在Utils.cs中用于动态效果 |
+| ![Border](../../Assets/Game/HotResources/RawAssets/Texture/Border.png) | 边框 | Border.png | 边框装饰（Home） | 用于视觉分隔的框架元素 |
 
 ---
 
@@ -645,20 +678,24 @@ image.color = new Color(0.2f, 0.2f, 0.2f, 1f);  // 相同视觉效果
 
 ### 色彩调色板参考
 
-```
-文本颜色（深色背景上）：
-███████ #FFFFFF  主标题 (255, 255, 255, 1.0)
-██████  #E0E0E0  正文文本 (224, 224, 224, 1.0)
-█████   #C0C0C0  次要信息 (192, 192, 192, 1.0)
-████    #A0A0A0  提示文本 (160, 160, 160, 1.0)
-███     #808080  禁用 (128, 128, 128, 0.5)
+**文本颜色（深色背景上）：**
 
-交互状态：
-███████ #FFFFFF  正常 (255, 255, 255, 1.0)
-██████  #F5F5F5  高亮 (245, 245, 245, 1.0)
-█████   #C8C8C8  按下 (200, 200, 200, 1.0)
-███     #C8C8C8  禁用 (200, 200, 200, 0.5)
-```
+| 色块 | 颜色代码 | 用途 | RGB值 |
+|------|---------|------|-------|
+| <span style="display:inline-block;width:50px;height:20px;background-color:#FFFFFF;border:1px solid #000;"></span> | `#FFFFFF` | 主标题 | (255, 255, 255, 1.0) |
+| <span style="display:inline-block;width:50px;height:20px;background-color:#E0E0E0;border:1px solid #000;"></span> | `#E0E0E0` | 正文文本 | (224, 224, 224, 1.0) |
+| <span style="display:inline-block;width:50px;height:20px;background-color:#C0C0C0;border:1px solid #000;"></span> | `#C0C0C0` | 次要信息 | (192, 192, 192, 1.0) |
+| <span style="display:inline-block;width:50px;height:20px;background-color:#A0A0A0;border:1px solid #000;"></span> | `#A0A0A0` | 提示文本 | (160, 160, 160, 1.0) |
+| <span style="display:inline-block;width:50px;height:20px;background-color:#808080;border:1px solid #000;"></span> | `#808080` | 禁用 | (128, 128, 128, 0.5) |
+
+**交互状态：**
+
+| 色块 | 颜色代码 | 状态 | RGB值 |
+|------|---------|------|-------|
+| <span style="display:inline-block;width:50px;height:20px;background-color:#FFFFFF;border:1px solid #000;"></span> | `#FFFFFF` | 正常 | (255, 255, 255, 1.0) |
+| <span style="display:inline-block;width:50px;height:20px;background-color:#F5F5F5;border:1px solid #000;"></span> | `#F5F5F5` | 高亮 | (245, 245, 245, 1.0) |
+| <span style="display:inline-block;width:50px;height:20px;background-color:#C8C8C8;border:1px solid #000;"></span> | `#C8C8C8` | 按下 | (200, 200, 200, 1.0) |
+| <span style="display:inline-block;width:50px;height:20px;background-color:rgba(200,200,200,0.5);border:1px solid #000;"></span> | `#C8C8C880` | 禁用 | (200, 200, 200, 0.5) |
 
 ### 布局网格可视化
 
