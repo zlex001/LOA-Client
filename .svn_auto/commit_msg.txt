@@ -1,1 +1,1 @@
-[优化] StartSettings 设置界面视觉规范化：统一字号38px、消除魔法数字颜色为命名常量、全组件添加RectangleSolid圆角、Toggle尺寸修正为50x50
+[修复] StartSettings 文本颜色修正：RectangleSolid为黑色图片，全面对齐游戏深色主题（白色文本+白色tint），同步修正文档文本颜色规范
