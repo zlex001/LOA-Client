@@ -1,708 +1,709 @@
-# UI Design Style Analysis
+# UI设计风格分析
 
-## Overview
+## 概述
 
-This document analyzes the UI design style of the LOA Client project based on actual visual assets, code implementation, and documented design specifications.
+本文档基于实际的视觉资源、代码实现和设计规范，分析LOA客户端项目的UI设计风格。
 
-### Core Design Philosophy
+### 核心设计哲学
 
-> **"UI design is mathematical proof, not artistic creation."**
+> **"UI设计是数学证明，而非艺术创作。"**
 
-The project adopts a systematic, data-driven approach to interface design, prioritizing consistency, reproducibility, and mathematical harmony over subjective aesthetics.
+本项目采用系统化、数据驱动的界面设计方法，优先考虑一致性、可复现性和数学和谐性，而非主观美学。
 
-### Design Goals
+### 设计目标
 
-- **Consistency**: Mathematical constraints ensure visual coherence across all screens
-- **Efficiency**: Minimal custom assets reduce package size and improve hot-update performance
-- **Maintainability**: Programmatic color systems enable rapid iteration without asset recreation
-- **Accessibility**: High-contrast dark theme reduces eye strain during extended use
-- **Distinctiveness**: Retro pixel art aesthetic differentiates the product in a crowded market
+- **一致性**：数学约束确保所有屏幕的视觉连贯性
+- **效率**：最小化自定义资源，减少包体积，提升热更新性能
+- **可维护性**：程序化色彩系统支持快速迭代，无需重新制作资源
+- **可访问性**：高对比度深色主题减少长时间使用的视觉疲劳
+- **独特性**：复古像素艺术美学在竞争激烈的市场中脱颖而出
 
 ---
 
-## Visual Style Definition
+## 视觉风格定义
 
-### 1. Minimalism
+### 1. 极简主义（Minimalism）
 
-**Core Principle**: Reject decorative elements in favor of pure geometric forms.
+**核心原则**：拒绝装饰性元素，采用纯粹的几何形状。
 
-**Representative Assets:**
+**代表性资源：**
 
-| Image | Visual Characteristics |
-|-------|----------------------|
-| **RectangleSolid.png** | Pure black rounded rectangle (80x40), no gradients, no textures |
-| **Sprite.png** | Pure white rectangle for progress bar fills |
-| **Ring.png** | Simple circular ring shape with transparent background |
-| **Radar.png** | Radial gradient black circle, minimal complexity |
+| 图片 | 视觉特征 |
+|------|---------|
+| **RectangleSolid.png** | 纯黑色圆角矩形（80x40），无渐变、无纹理 |
+| **Sprite.png** | 纯白色矩形，用于进度条填充 |
+| **Ring.png** | 简洁的圆环形状，透明背景 |
+| **Radar.png** | 径向渐变黑色圆形，复杂度最低 |
 
-**Design Rules:**
-- No ornamental details
-- Solid color fills only
-- Geometric shapes kept simple and recognizable
-- Transparency used sparingly for layering effects
+**设计规则：**
+- 无装饰性细节
+- 仅使用纯色填充
+- 几何形状保持简洁易识别
+- 谨慎使用透明度进行图层叠加效果
 
-**Implementation:**
+**实现方式：**
 ```csharp
-// Minimalist approach: single asset with programmatic coloring
+// 极简主义方法：单一资源 + 程序化着色
 var background = AssetManager.Instance.LoadSprite("RawAssets/Texture", "RectangleSolid");
 image.sprite = background;
-image.color = new Color(0.2f, 0.2f, 0.2f, 1f); // Tint to desired color
+image.color = new Color(0.2f, 0.2f, 0.2f, 1f); // 着色到所需颜色
 ```
 
-### 2. Pixel Art Aesthetic
+### 2. 像素艺术美学（Pixel Art）
 
-**Core Principle**: Embrace low-resolution, grid-aligned artwork reminiscent of 8-bit/16-bit era games.
+**核心原则**：拥抱低分辨率、网格对齐的艺术风格，致敬8-bit/16-bit时代游戏。
 
-**Representative Assets:**
+**代表性资源：**
 
 **Increase.png / Decrease.png**
-- Plus/minus icons with pixelated design
-- Sharp edges with visible pixel grid
-- Pure black-and-white, no anti-aliasing
-- Double outline layers for visual depth
+- 加号/减号图标采用像素化设计
+- 边缘锐利，具有可见的像素网格
+- 纯黑白配色，无抗锯齿
+- 双层轮廓增强视觉深度
 
 **Edit.png**
-- Pencil icon in pixel art style
-- Jagged edges (gear-tooth decoration)
-- Strong retro game aesthetic
+- 铅笔图标，像素艺术风格
+- 锯齿状边缘（齿轮装饰）
+- 强烈的复古游戏美学
 
 **Focus.png**
-- Pixelated focus indicator/crosshair icon
-- Obvious 8-bit game style
-- High contrast black-and-white, no intermediate tones
+- 像素化的焦点指示器/准星图标
+- 明显的8-bit游戏风格
+- 高对比度黑白，无中间色调
 
-**Design Intent:**
-- Pay homage to classic game aesthetics
-- Enhance technological/digital feel
-- Reduce production costs while maintaining style consistency
-- Facilitate quick prototyping and iteration
+**设计意图：**
+- 向经典游戏美学致敬
+- 增强科技感和数字感
+- 降低制作成本，保持风格一致性
+- 便于快速原型设计和迭代
 
-**Technical Implementation:**
-- All pixel art icons are 1024x1024 to preserve crisp edges at high DPI
-- No texture filtering (Point mode) to maintain pixel sharpness
-- Alpha channel for transparency, no gradients
+**技术实现：**
+- 所有像素艺术图标均为1024x1024以在高DPI下保持清晰边缘
+- 无纹理过滤（Point模式）保持像素锐度
+- 使用Alpha通道实现透明度，无渐变
 
-### 3. Line Art Technique
+### 3. 线条艺术技法（Line Art）
 
-**Core Principle**: Use consistent stroke weights to define forms without solid fills.
+**核心原则**：使用一致的描边粗细定义形状，避免实心填充。
 
-**Settings.png - Gear Icon**
-- Fine lines outline the gear shape
-- Multiple concentric lines create depth perception
-- White transparent background, black lines
-- High contrast for instant recognition
+**Settings.png - 齿轮图标**
+- 细线条勾勒齿轮形状
+- 多层同心线条营造深度感
+- 白色透明背景，黑色线条
+- 高对比度，瞬间可识别
 
-**RadiativeRing.png - Radiating Effect**
-- Radiating circular ring effect
-- Gradients and transparency create halo/glow
-- Suitable as decorative background element
-- Used in Login and Initialize screens
+**RadiativeRing.png - 辐射效果**
+- 辐射状圆环效果
+- 渐变和透明度营造光晕/发光效果
+- 适合作为装饰性背景元素
+- 用于Login和Initialize界面
 
-**Characteristics:**
-- Consistent line weight throughout
-- Avoid solid fills (use strokes only)
-- Ideal for animated effects (rotation, pulsing)
-- Scales well across different resolutions
+**特点：**
+- 整体线条粗细一致
+- 避免实心填充（仅使用描边）
+- 适合动画效果（旋转、脉冲）
+- 在不同分辨率下缩放良好
 
-### 4. Dark Theme System
+### 4. 深色主题系统（Dark Theme）
 
-**Core Principle**: Dark backgrounds with light text for reduced eye strain and modern aesthetic.
+**核心原则**：深色背景搭配浅色文本，减少视觉疲劳，营造现代美学。
 
-**Color Scheme (from Unity YAML):**
+**配色方案（来自Unity YAML）：**
 
 ```yaml
-# Button State Colors
+# 按钮状态颜色
 m_Colors:
-  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}              # Pure white
-  m_HighlightedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1} # Light gray (245, 245, 245)
-  m_PressedColor: {r: 0.78, g: 0.78, b: 0.78, a: 1}     # Medium gray (200, 200, 200)
-  m_SelectedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1}    # Same as highlighted
-  m_DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}  # Semi-transparent gray
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}              # 纯白色
+  m_HighlightedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1} # 浅灰色 (245, 245, 245)
+  m_PressedColor: {r: 0.78, g: 0.78, b: 0.78, a: 1}     # 中灰色 (200, 200, 200)
+  m_SelectedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1}    # 同高亮色
+  m_DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}  # 半透明灰
   m_ColorMultiplier: 1
   m_FadeDuration: 0.1
 ```
 
-**Text Color Hierarchy (Universal):**
+**文本颜色层级（全局统一）：**
 
-| Role | RGBA | Hex | Use Case |
-|------|------|-----|----------|
-| Primary Title | `rgba(255, 255, 255, 1)` | `#FFFFFF` | Main headings, important labels |
-| Body Text | `rgba(224, 224, 224, 1)` | `#E0E0E0` | Standard readable content |
-| Secondary Info | `rgba(192, 192, 192, 1)` | `#C0C0C0` | Supporting information |
-| Hint Text | `rgba(160, 160, 160, 1)` | `#A0A0A0` | Placeholders, tooltips |
-| Disabled State | `rgba(128, 128, 128, 0.5)` | `#80808080` | Non-interactive elements |
+| 角色 | RGBA | 十六进制 | 使用场景 |
+|------|------|---------|---------|
+| 主标题 | `rgba(255, 255, 255, 1)` | `#FFFFFF` | 主标题、重要标签 |
+| 正文文本 | `rgba(224, 224, 224, 1)` | `#E0E0E0` | 标准可读内容 |
+| 次要信息 | `rgba(192, 192, 192, 1)` | `#C0C0C0` | 辅助信息 |
+| 提示文本 | `rgba(160, 160, 160, 1)` | `#A0A0A0` | 占位符、工具提示 |
+| 禁用状态 | `rgba(128, 128, 128, 0.5)` | `#80808080` | 非交互元素 |
 
-**Background System:**
-- `RectangleSolid.png` is black, tinted via `Image.color` for variety
-- Unity built-in `UISprite (fileID: 10905)` for dark panel backgrounds
-- All text uses white-based colors to ensure readability
+**背景系统：**
+- `RectangleSolid.png` 本身为黑色，通过 `Image.color` 着色实现变化
+- Unity内置 `UISprite (fileID: 10905)` 用于深色面板背景
+- 所有文本使用白色系确保可读性
 
-**Advantages:**
-- Reduces screen power consumption (OLED displays)
-- Decreases visual fatigue during extended use
-- Creates professional/technological atmosphere
-- Improves focus on interactive elements
-
----
-
-## Icon Design Language
-
-### Pixel Icons
-
-**Style Characteristics:**
-- Grid-aligned pixels, no anti-aliasing
-- Pure black-and-white (or monochrome)
-- Bold, easily recognizable shapes
-- Retro gaming aesthetic
-
-**Icon Inventory:**
-
-| Icon | File | Size | Usage | Style Notes |
-|------|------|------|-------|-------------|
-| Increase | Increase.png | 1024x1024 | Plus button (Home, OptionAmount) | Double-outlined cross |
-| Decrease | Decrease.png | 1024x1024 | Minus button (Home, OptionAmount) | Double-outlined minus |
-| Edit | Edit.png | 1024x1024 | Edit button (StartSettings) | Pixelated pencil with jagged edges |
-| Focus | Focus.png | - | Focus indicator (Home) | Crosshair/target icon, 8-bit style |
-
-**Design Guidelines:**
-- Maintain pixel grid alignment at all scales
-- Use double outlines for depth and visibility
-- Keep icon complexity low (readable at small sizes)
-- Avoid color fills (rely on silhouette)
-
-### Line Art Icons
-
-**Style Characteristics:**
-- Smooth curves and consistent stroke weights
-- Outlined forms without solid fills
-- Higher resolution for detail preservation
-- Suitable for animation
-
-**Icon Inventory:**
-
-| Icon | File | Size | Usage | Style Notes |
-|------|------|------|-------|-------------|
-| Settings | Settings.png | 2048x2048 | Settings button (Start) | Multi-layer gear with fine lines |
-| Radiative Ring | RadiativeRing.png | - | Decorative effect (Login, Initialize) | Gradient halo with transparency |
-
-**Design Guidelines:**
-- Keep line weight consistent (2-3px at native resolution)
-- Use transparency for layered effects
-- Avoid overly complex details that don't scale well
-- Ideal for rotation animations
-
-### Functional Icons
-
-**Style Characteristics:**
-- Clear symbolic meaning
-- High contrast for visibility
-- Minimal visual complexity
-
-**Icon Inventory:**
-
-| Icon | File | Usage | Style Notes |
-|------|------|-------|-------------|
-| True | True.png | Checkmark (Story, OptionConfirm, Accounts) | Simple checkmark, white on transparent |
-| False | False.png | Account system icon (Accounts, Account) | Symbolic representation |
-| Radar | Radar.png | Radar visualization (OptionInput, Initialize) | Radial gradient circle |
-
-### Decorative Elements
-
-**Style Characteristics:**
-- Support visual hierarchy
-- Non-interactive
-- Enhance spatial perception
-
-**Element Inventory:**
-
-| Element | File | Usage | Style Notes |
-|---------|------|-------|-------------|
-| Ring | Ring.png | Click effects, mask animations (Dark, ClickEffect) | Simple circular ring, used in Utils.cs for dynamic effects |
-| Border | Border.png | Border decoration (Home) | Frame element for visual separation |
+**优势：**
+- 降低屏幕功耗（OLED显示屏）
+- 减少长时间使用的视觉疲劳
+- 营造专业/科技感氛围
+- 改善对交互元素的关注
 
 ---
 
-## Color System
+## 图标设计语言
 
-### Dark Theme Palette
+### 像素图标
+
+**风格特征：**
+- 网格对齐像素，无抗锯齿
+- 纯黑白（或单色）
+- 粗体、易识别的形状
+- 复古游戏美学
+
+**图标清单：**
+
+| 图标 | 文件 | 尺寸 | 用途 | 风格注释 |
+|------|------|------|------|---------|
+| 增加 | Increase.png | 1024x1024 | 加号按钮（Home, OptionAmount） | 双层轮廓十字 |
+| 减少 | Decrease.png | 1024x1024 | 减号按钮（Home, OptionAmount） | 双层轮廓减号 |
+| 编辑 | Edit.png | 1024x1024 | 编辑按钮（StartSettings） | 像素化铅笔，锯齿边缘 |
+| 焦点 | Focus.png | - | 焦点指示器（Home） | 准星/目标图标，8-bit风格 |
+
+**设计指南：**
+- 在所有缩放级别保持像素网格对齐
+- 使用双层轮廓增加深度和可见性
+- 保持图标复杂度低（小尺寸下可读）
+- 避免颜色填充（依赖轮廓）
+
+### 线条艺术图标
+
+**风格特征：**
+- 平滑曲线和一致的描边粗细
+- 轮廓形式，无实心填充
+- 更高分辨率以保留细节
+- 适合动画
+
+**图标清单：**
+
+| 图标 | 文件 | 尺寸 | 用途 | 风格注释 |
+|------|------|------|------|---------|
+| 设置 | Settings.png | 2048x2048 | 设置按钮（Start） | 多层齿轮，细线条 |
+| 辐射环 | RadiativeRing.png | - | 装饰效果（Login, Initialize） | 渐变光晕，带透明度 |
+
+**设计指南：**
+- 保持线条粗细一致（原生分辨率下2-3px）
+- 使用透明度实现分层效果
+- 避免缩放不佳的过于复杂的细节
+- 适合旋转动画
+
+### 功能性图标
+
+**风格特征：**
+- 清晰的符号意义
+- 高对比度可见性
+- 最小视觉复杂度
+
+**图标清单：**
+
+| 图标 | 文件 | 用途 | 风格注释 |
+|------|------|------|---------|
+| 对勾 | True.png | 确认标记（Story, OptionConfirm, Accounts） | 简单对勾，白色透明背景 |
+| 错误 | False.png | 账号系统图标（Accounts, Account） | 符号表示 |
+| 雷达 | Radar.png | 雷达可视化（OptionInput, Initialize） | 径向渐变圆形 |
+
+### 装饰性元素
+
+**风格特征：**
+- 支持视觉层级
+- 非交互
+- 增强空间感知
+
+**元素清单：**
+
+| 元素 | 文件 | 用途 | 风格注释 |
+|------|------|------|---------|
+| 圆环 | Ring.png | 点击效果、遮罩动画（Dark, ClickEffect） | 简单圆环，在Utils.cs中用于动态效果 |
+| 边框 | Border.png | 边框装饰（Home） | 用于视觉分隔的框架元素 |
+
+---
+
+## 色彩系统
+
+### 深色主题调色板
 
 ```mermaid
 graph TD
-    DarkTheme[Dark Theme Core]
+    DarkTheme[深色主题核心]
     
-    DarkTheme --> Backgrounds[Backgrounds]
-    DarkTheme --> Foregrounds[Foregrounds]
-    DarkTheme --> Interactive[Interactive States]
+    DarkTheme --> Backgrounds[背景]
+    DarkTheme --> Foregrounds[前景]
+    DarkTheme --> Interactive[交互状态]
     
-    Backgrounds --> BG1["Pure Black<br/>RectangleSolid.png<br/>Tinted via code"]
-    Backgrounds --> BG2["Unity UISprite<br/>fileID: 10905<br/>Deep gray tones"]
+    Backgrounds --> BG1["纯黑色<br/>RectangleSolid.png<br/>通过代码着色"]
+    Backgrounds --> BG2["Unity UISprite<br/>fileID: 10905<br/>深灰色调"]
     
-    Foregrounds --> Text[Text Hierarchy]
-    Foregrounds --> Icons[Icon Colors]
+    Foregrounds --> Text[文本层级]
+    Foregrounds --> Icons[图标颜色]
     
-    Text --> T1["Primary: #FFFFFF<br/>Alpha: 1.0"]
-    Text --> T2["Body: #E0E0E0<br/>Alpha: 1.0"]
-    Text --> T3["Secondary: #C0C0C0<br/>Alpha: 1.0"]
-    Text --> T4["Hint: #A0A0A0<br/>Alpha: 1.0"]
-    Text --> T5["Disabled: #808080<br/>Alpha: 0.5"]
+    Text --> T1["主标题: #FFFFFF<br/>Alpha: 1.0"]
+    Text --> T2["正文: #E0E0E0<br/>Alpha: 1.0"]
+    Text --> T3["次要: #C0C0C0<br/>Alpha: 1.0"]
+    Text --> T4["提示: #A0A0A0<br/>Alpha: 1.0"]
+    Text --> T5["禁用: #808080<br/>Alpha: 0.5"]
     
-    Icons --> IC1["Pixel Icons: Pure Black"]
-    Icons --> IC2["Line Icons: White strokes"]
+    Icons --> IC1["像素图标: 纯黑色"]
+    Icons --> IC2["线条图标: 白色描边"]
     
-    Interactive --> Normal["Normal: #FFFFFF"]
-    Interactive --> Hover["Hover: #F5F5F5"]
-    Interactive --> Press["Press: #C8C8C8"]
-    Interactive --> Disabled["Disabled: #C8C8C880"]
+    Interactive --> Normal["正常: #FFFFFF"]
+    Interactive --> Hover["悬停: #F5F5F5"]
+    Interactive --> Press["按下: #C8C8C8"]
+    Interactive --> Disabled["禁用: #C8C8C880"]
 ```
 
-### Transparency Usage Principles
+### 透明度使用原则
 
-| Alpha Value | Use Case | Example |
-|-------------|----------|---------|
-| `1.0` | Fully visible, primary elements | Main text, solid backgrounds |
-| `0.7` | Semi-transparent overlays | Ring.png in Utils.cs overlay |
-| `0.5` | Disabled states | Disabled button text, non-interactive UI |
-| `0.0` | Completely transparent | OptionButton backgrounds (text-only buttons) |
+| Alpha值 | 使用场景 | 示例 |
+|---------|---------|------|
+| `1.0` | 完全可见，主要元素 | 主文本、实心背景 |
+| `0.7` | 半透明叠加层 | Utils.cs中Ring.png叠加层 |
+| `0.5` | 禁用状态 | 禁用按钮文本、非交互UI |
+| `0.0` | 完全透明 | OptionButton背景（纯文本按钮） |
 
-### Color Application Rules
+### 色彩应用规则
 
-1. **Never use RGB color literals in UI code** - always reference the centralized color system
-2. **Text color is determined by hierarchy** - not by subjective preference
-3. **Backgrounds tinted programmatically** - `RectangleSolid.png` + `Image.color` multiplication
-4. **Maintain contrast ratio** - minimum 4.5:1 for WCAG AA compliance
+1. **禁止在UI代码中使用RGB颜色字面量** - 始终引用集中式色彩系统
+2. **文本颜色由层级决定** - 而非主观偏好
+3. **背景通过程序着色** - `RectangleSolid.png` + `Image.color` 乘法
+4. **维持对比度** - 最低4.5:1符合WCAG AA标准
 
 ---
 
-## Layout Mathematics
+## 布局数学
 
-### Unit Height System (83px Quantum Grid)
+### 单位高度系统（83px量子化网格）
 
-**Origin:** iPhone 6/7/8 standard screen height (1334px) ÷ 16 = 83.375px ≈ 83px
+**起源：** iPhone 6/7/8标准屏幕高度（1334px）÷ 16 = 83.375px ≈ 83px
 
-**Core Rule:** All vertical dimensions must be integer multiples of 83px.
+**核心规则：** 所有垂直尺寸必须是83px的整数倍。
 
-**Rationale:**
-- Forces quantization, eliminating arbitrary pixel values
-- Ensures visual harmony through consistent spacing
-- Simplifies responsive design (scale grid, not individual elements)
-- Reduces decision fatigue during layout design
+**理论依据：**
+- 强制量子化，消除任意像素值
+- 通过一致的间距确保视觉和谐
+- 简化响应式设计（缩放网格，而非单个元素）
+- 减少布局设计中的决策疲劳
 
-**Implementation:**
+**实现方式：**
 
 ```csharp
-// Theoretical unit height constant
+// 理论单位高度常量
 private const float UnitHeight = 83f;
 
-// UI element heights
+// UI元素高度
 float titleHeight = UnitHeight * 1;      // 83px
 float contentHeight = UnitHeight * 4;    // 332px
 float buttonHeight = UnitHeight * 1;     // 83px
 float screenHeight = UnitHeight * 16;    // 1328px ≈ 1334px
 ```
 
-**Example Vertical Layout:**
+**垂直布局示例：**
 
 ```
 ┌─────────────────────┐
-│  Title Bar (1 unit) │  83px
+│  标题栏 (1单位)      │  83px
 ├─────────────────────┤
 │                     │
-│  Content Area       │  
-│  (8 units)          │  664px
+│  内容区域            │  
+│  (8单位)            │  664px
 │                     │
 │                     │
 ├─────────────────────┤
-│  Button (1 unit)    │  83px
+│  按钮 (1单位)        │  83px
 └─────────────────────┘
-Total: 10 units = 830px
+总计: 10单位 = 830px
 ```
 
-### Golden Ratio (φ ≈ 0.618)
+### 黄金比例（φ ≈ 0.618）
 
-**Application Areas:**
-- Horizontal panel width distribution
-- Margin proportions
-- Nested layout recursion
+**应用领域：**
+- 水平面板宽度分配
+- 边距比例
+- 嵌套布局递归
 
-**Code Constants:**
+**代码常量：**
 
 ```csharp
 private const float GoldenRatio = 0.618f;        // φ
 private const float GoldenRatioSmall = 0.382f;   // 1 - φ
 ```
 
-**Example Horizontal Layout:**
+**水平布局示例：**
 
 ```
-┌───────────────┬──────────┐
-│               │          │
-│  Main Panel   │  Sidebar │
-│  (61.8%)      │  (38.2%) │
-│               │          │
-└───────────────┴──────────┘
+┌───────────────────────┬──────────────┐
+│                       │              │
+│   主内容面板           │   侧边栏      │
+│   (φ = 0.618)         │ (1-φ = 0.382)│
+│                       │              │
+└───────────────────────┴──────────────┘
+    屏幕宽度的61.8%         屏幕宽度的38.2%
 ```
 
-**Recursive Application:**
+**递归应用：**
 
 ```csharp
 float screenWidth = GetComponent<RectTransform>().rect.width;
 float mainPanelWidth = screenWidth * GoldenRatio;      // 61.8%
 float sidebarWidth = screenWidth * GoldenRatioSmall;   // 38.2%
 
-// Further divide main panel
-float leftSection = mainPanelWidth * GoldenRatio;      // 38.2% of screen
-float rightSection = mainPanelWidth * GoldenRatioSmall; // 23.6% of screen
+// 进一步分割主面板
+float leftSection = mainPanelWidth * GoldenRatio;      // 屏幕的38.2%
+float rightSection = mainPanelWidth * GoldenRatioSmall; // 屏幕的23.6%
 ```
 
-### Mathematical Design Decision Tree
+### 数学化设计决策树
 
 ```mermaid
 graph TD
-    LayoutDecision[Layout Decision Needed]
+    LayoutDecision[布局决策需求]
     
-    LayoutDecision --> Vertical{Vertical<br/>Dimension?}
-    LayoutDecision --> Horizontal{Horizontal<br/>Dimension?}
+    LayoutDecision --> Vertical{垂直<br/>尺寸?}
+    LayoutDecision --> Horizontal{水平<br/>尺寸?}
     
-    Vertical --> UnitCalc["Calculate:<br/>height = n × 83px"]
-    UnitCalc --> ValidateUnit{Is n<br/>integer?}
-    ValidateUnit -->|Yes| UseUnit[Apply Dimension]
-    ValidateUnit -->|No| AdjustUnit[Round to nearest integer]
+    Vertical --> UnitCalc["计算:<br/>height = n × 83px"]
+    UnitCalc --> ValidateUnit{n是<br/>整数?}
+    ValidateUnit -->|是| UseUnit[应用尺寸]
+    ValidateUnit -->|否| AdjustUnit[四舍五入到最近整数]
     AdjustUnit --> UseUnit
     
-    Horizontal --> GoldenCheck{Can apply<br/>Golden Ratio?}
-    GoldenCheck -->|Yes| CalcGolden["Calculate:<br/>width = total × 0.618"]
-    GoldenCheck -->|No| UseHalf["Use 50% or<br/>Equal Distribution"]
-    CalcGolden --> UseWidth[Apply Dimension]
+    Horizontal --> GoldenCheck{可应用<br/>黄金比例?}
+    GoldenCheck -->|是| CalcGolden["计算:<br/>width = total × 0.618"]
+    GoldenCheck -->|否| UseHalf["使用50%或<br/>等分分配"]
+    CalcGolden --> UseWidth[应用尺寸]
     UseHalf --> UseWidth
 ```
 
 ---
 
-## Animation and Effects Style
+## 动画与特效风格
 
-### Fade Transitions
+### 淡入淡出过渡
 
-**Standard Duration:** 0.1 seconds (100ms)
+**标准时长：** 0.1秒（100毫秒）
 
 ```yaml
 m_FadeDuration: 0.1
 ```
 
-**Rationale:**
-- Quick enough to feel responsive
-- Slow enough to be perceptible (not jarring)
-- Consistent across all UI interactions
+**理论依据：**
+- 足够快以感觉响应迅速
+- 足够慢以可感知（不突兀）
+- 所有UI交互保持一致
 
-**Application:**
-- Button state changes (Normal → Highlighted → Pressed)
-- Panel show/hide transitions
-- Text color changes
+**应用场景：**
+- 按钮状态变化（Normal → Highlighted → Pressed）
+- 面板显示/隐藏过渡
+- 文本颜色变化
 
-### Click Feedback System
+### 点击反馈系统
 
-**Visual Feedback Chain:**
+**视觉反馈链：**
 
-1. **Instant:** Button color changes to `m_PressedColor` (0ms)
-2. **Dynamic:** Ring.png overlay spawned at click position (via Utils.cs:94)
-3. **Fade Out:** Ring overlay fades over 0.3-0.5 seconds
-4. **Completion:** Button returns to Normal state (0.1s fade)
+1. **即时：** 按钮颜色变为 `m_PressedColor`（0ms）
+2. **动态：** Ring.png叠加层在点击位置生成（通过Utils.cs:94）
+3. **淡出：** Ring叠加层在0.3-0.5秒内淡出
+4. **完成：** 按钮恢复正常状态（0.1s淡入淡出）
 
-**Implementation (Utils.cs):**
+**实现方式（Utils.cs）：**
 
 ```csharp
 var img = obj.AddComponent<Image>();
 img.sprite = AssetManager.Instance.LoadSprite("RawAssets/Texture", "Ring");
-img.color = new Color(1, 1, 1, 0.7f);  // White with 70% opacity
-img.raycastTarget = false;  // Don't block further clicks
+img.color = new Color(1, 1, 1, 0.7f);  // 白色，70%不透明度
+img.raycastTarget = false;  // 不阻挡后续点击
 ```
 
-### Particle Effects
+### 粒子效果
 
-**ClickEffect.prefab:**
-- Uses `Ring.png` as particle texture
-- Radial expansion with fade-out
-- Appears in Dark overlay and interactive elements
-- Creates tactile feedback for user actions
+**ClickEffect.prefab：**
+- 使用 `Ring.png` 作为粒子纹理
+- 径向扩张并淡出
+- 出现在Dark叠加层和交互元素中
+- 为用户操作创建触觉反馈
 
-**RadiativeRing Effect:**
-- Static background decoration in Login/Initialize
-- Slow rotation animation (if animated)
-- Enhances spatial depth perception
-- Non-interactive, purely aesthetic
+**RadiativeRing效果：**
+- Login/Initialize中的静态背景装饰
+- 缓慢旋转动画（如果有动画）
+- 增强空间深度感知
+- 非交互，纯美学
 
 ---
 
-## Resource Reuse Strategy
+## 资源复用策略
 
-### Priority Hierarchy
+### 优先级层次
 
-1. **Unity Built-in Sprites** (highest priority)
-   - `UISprite (fileID: 10905)` - white square
-   - `Checkmark (fileID: 10901)` - checkmark icon
-   - `Background (fileID: 10907)` - slider background
-   - `Knob (fileID: 10911)` - circular knob
-   - `InputFieldBackground (fileID: 10917)` - input field background
+1. **Unity内置Sprite**（最高优先级）
+   - `UISprite (fileID: 10905)` - 白色方块
+   - `Checkmark (fileID: 10901)` - 对勾图标
+   - `Background (fileID: 10907)` - 滑块背景
+   - `Knob (fileID: 10911)` - 圆形旋钮
+   - `InputFieldBackground (fileID: 10917)` - 输入框背景
 
-2. **Custom Assets with Programmatic Coloring**
-   - `RectangleSolid.png` tinted via `Image.color`
-   - Single asset → infinite color variations
+2. **自定义资源 + 程序化着色**
+   - `RectangleSolid.png` 通过 `Image.color` 着色
+   - 单一资源 → 无限颜色变化
 
-3. **Unique Custom Assets** (lowest priority, use sparingly)
-   - Only when Unity built-ins and color tinting are insufficient
-   - Examples: Settings gear icon, pixel art UI elements
+3. **独特自定义资源**（最低优先级，谨慎使用）
+   - 仅当Unity内置和颜色着色不足时使用
+   - 示例：Settings齿轮图标、像素艺术UI元素
 
-### Benefits
+### 优势
 
-**Package Size:**
-- Current: 21 PNG files, 16 actively used
-- Unity built-ins: 0 bytes (engine-provided)
-- Hot-update download: only modified custom assets
+**包体积：**
+- 当前：21个PNG文件，16个在使用
+- Unity内置：0字节（引擎提供）
+- 热更新下载：仅修改的自定义资源
 
-**Performance:**
-- Unity built-ins are GPU-optimized
-- Single sprite atlas for custom assets
-- Reduced draw calls through batching
+**性能：**
+- Unity内置Sprite经过GPU优化
+- 自定义资源单一图集
+- 通过批处理减少绘制调用
 
-**Maintainability:**
-- Color changes via code (no asset re-export)
-- Consistent visual updates across all instances
-- Designer/developer collaboration simplified
+**可维护性：**
+- 颜色变化通过代码（无需重新导出资源）
+- 跨所有实例一致的视觉更新
+- 简化设计师/开发者协作
 
-### Implementation Example
+### 实现示例
 
 ```csharp
-// Unity built-in sprite (0 bytes in package)
+// Unity内置sprite（包中0字节）
 image.sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
-image.color = new Color(0.2f, 0.2f, 0.2f, 1f);  // Dark gray
+image.color = new Color(0.2f, 0.2f, 0.2f, 1f);  // 深灰色
 
 // vs
 
-// Custom sprite (adds to package size)
+// 自定义sprite（增加包体积）
 image.sprite = AssetManager.Instance.LoadSprite("RawAssets/Texture", "RectangleSolid");
-image.color = new Color(0.2f, 0.2f, 0.2f, 1f);  // Same visual result
+image.color = new Color(0.2f, 0.2f, 0.2f, 1f);  // 相同视觉效果
 ```
 
-**Decision Rule:** Use custom sprite only if built-in cannot achieve desired shape (e.g., rounded corners, specific icon).
+**决策规则：** 仅当内置无法实现所需形状时使用自定义sprite（例如圆角、特定图标）。
 
 ---
 
-## Design Style Summary
+## 设计风格总结
 
-### Core Keywords
+### 核心关键词
 
-1. **Minimalism** - Reject unnecessary decoration
-2. **Pixel Art** - Embrace retro gaming aesthetic
-3. **Mathematical** - Data-driven, reproducible decisions
-4. **Dark Theme** - Modern, eye-friendly interface
-5. **Systematic** - Consistency through constraints
+1. **极简主义（Minimalism）** - 拒绝不必要的装饰
+2. **像素艺术（Pixel Art）** - 拥抱复古游戏美学
+3. **数学化（Mathematical）** - 数据驱动、可复现的决策
+4. **深色主题（Dark Theme）** - 现代、护眼的界面
+5. **系统化（Systematic）** - 通过约束实现一致性
 
-### Style Label
+### 风格标签
 
-**Retro-Futuristic Procedural Minimalism**
+**复古未来主义程序化极简风格**（Retro-Futuristic Procedural Minimalism）
 
-- **Retro:** Pixel art icons, 8-bit aesthetic
-- **Futuristic:** Dark theme, clean geometric forms
-- **Procedural:** Color tinting, mathematical layouts
-- **Minimalism:** No ornamental details, pure functionality
+- **复古（Retro）：** 像素艺术图标，8-bit美学
+- **未来（Futuristic）：** 深色主题，简洁几何形状
+- **程序化（Procedural）：** 颜色着色，数学化布局
+- **极简（Minimalism）：** 无装饰细节，纯粹功能性
 
-### Comparison with Modern Trends
+### 与现代设计趋势的比较
 
-| Aspect | This Project | Material Design | iOS Human Interface |
-|--------|--------------|-----------------|---------------------|
-| Color System | Programmatic tinting | Predefined palette | Dynamic color extraction |
-| Layout | Mathematical (83px, φ) | 8dp grid | Flexible spacing |
-| Icons | Pixel art + Line art | Material Icons (filled/outlined) | SF Symbols (weight variants) |
-| Theme | Dark only | Light/Dark support | Adaptive (auto-switch) |
-| Animation | Fast (0.1s) | Medium (0.2-0.3s) | Context-dependent |
-| Philosophy | "Math proof" | "Material metaphor" | "Clarity, Deference, Depth" |
+| 方面 | 本项目 | Material Design | iOS Human Interface |
+|------|--------|-----------------|---------------------|
+| 色彩系统 | 程序化着色 | 预定义调色板 | 动态颜色提取 |
+| 布局 | 数学化（83px, φ） | 8dp网格 | 灵活间距 |
+| 图标 | 像素艺术 + 线条艺术 | Material Icons（填充/轮廓） | SF Symbols（权重变体） |
+| 主题 | 仅深色 | 明暗支持 | 自适应（自动切换） |
+| 动画 | 快速（0.1s） | 中速（0.2-0.3s） | 上下文相关 |
+| 哲学 | "数学证明" | "Material隐喻" | "清晰、尊重、深度" |
 
-### Relationship to Game UI Trends
+### 与游戏UI设计趋势的关系
 
-**Similarities:**
-- Dark themes common in modern games (especially RPGs, strategy)
-- Pixel art revival in indie games
-- HUD minimalism for player immersion
+**相似之处：**
+- 深色主题在现代游戏中常见（尤其是RPG、策略游戏）
+- 像素艺术在独立游戏中复兴
+- HUD极简主义增强玩家沉浸感
 
-**Differences:**
-- Game UIs often use skeuomorphic elements (leather, metal textures)
-- This project avoids textures entirely
-- No diegetic UI elements (in-world screens)
-
----
-
-## Design Decisions and Technical Constraints
-
-### Hot-Update Resource Limitations
-
-**Constraint:** Minimize hot-update package size for faster downloads.
-
-**Impact on Design:**
-- Strict limit on custom PNG assets (currently 21 total)
-- Strong preference for Unity built-in sprites
-- Color variations achieved via code, not separate assets
-- Icon reuse across multiple contexts (e.g., Ring.png for click effects, loading animations, overlays)
-
-**Result:** Resource usage rate 76.2% (16/21 assets actively used, 5 unused)
-
-### Performance Optimization
-
-**Constraint:** Maintain 60fps on mid-range mobile devices.
-
-**Impact on Design:**
-- No complex alpha blending effects
-- Particle effects kept minimal (ClickEffect uses single sprite)
-- Static backgrounds preferred over animated gradients
-- Color tinting more performant than texture swaps
-
-**Result:** UI rendering typically < 2ms per frame
-
-### Cross-Platform Adaptation
-
-**Constraint:** Support iOS, Android, and PC with single codebase.
-
-**Impact on Design:**
-- Unit Height System (83px) scales proportionally across resolutions
-- Golden Ratio layouts adapt to aspect ratio changes
-- Touch targets minimum 83px × 83px (1 unit square)
-- No platform-specific UI styles (unified appearance)
-
-**Result:** Consistent experience across all platforms
-
-### Code-Driven Design Philosophy
-
-**Constraint:** UI must be hot-updatable without app store resubmission.
-
-**Impact on Design:**
-- All UI layouts in code/prefabs (no native iOS/Android UI)
-- Color schemes defined in code, easily modified
-- Text localization via server-driven protocol
-- SDUI (Server-Driven UI) for post-login screens
-
-**Result:** 0 force-updates after launch (all changes via hot-update)
+**差异之处：**
+- 游戏UI通常使用拟物化元素（皮革、金属纹理）
+- 本项目完全避免纹理
+- 无diegetic UI元素（世界内屏幕）
 
 ---
 
-## Future Design Direction Recommendations
+## 设计决策与技术约束
 
-### Optimization Opportunities
+### 热更新资源限制
 
-1. **Consolidate Unused Assets**
-   - Currently 5 unused PNG files: Circle.png, CircleOutline.png, Author.png, ICON.png, wheelgradient.png
-   - Decision needed: delete or document future use cases
+**约束：** 最小化热更新包体积以实现更快下载。
 
-2. **Eliminate Duplicate Assets**
-   - `RectangleSolid - 副本.png` used in OptionRadar.prefab
-   - Replace with original `RectangleSolid.png` reference
+**对设计的影响：**
+- 严格限制自定义PNG资源（当前共21个）
+- 强烈偏好Unity内置sprite
+- 通过代码实现颜色变化，而非分离资源
+- 图标跨多个上下文复用（例如Ring.png用于点击效果、加载动画、叠加层）
 
-3. **Icon Unification**
-   - Standardize on either pixel art or line art (currently mixed)
-   - Recommendation: keep both, but document usage contexts clearly
+**结果：** 资源使用率76.2%（16/21资源在使用，5个未使用）
 
-### Potential Expansions
+### 性能优化
 
-1. **Color Theme Variants**
-   - Current: Dark theme only
-   - Future: Light theme option (invert text/background colors)
-   - Implementation: single boolean toggle in code
+**约束：** 在中端移动设备上保持60fps。
 
-2. **Accessibility Enhancements**
-   - High contrast mode (increase color difference)
-   - Larger text size option (multiply font sizes by 1.25x)
-   - Color-blind friendly palette (avoid red-green only indicators)
+**对设计的影响：**
+- 无复杂的Alpha混合效果
+- 粒子效果保持最小（ClickEffect使用单一sprite）
+- 偏好静态背景而非动画渐变
+- 颜色着色比纹理交换更高效
 
-3. **Animation Richness**
-   - Current: Simple fades and color transitions
-   - Future: Elastic easing for buttons, parallax backgrounds
-   - Constraint: maintain performance budget
+**结果：** UI渲染通常 < 每帧2ms
 
-4. **Particle System Expansion**
-   - Current: Basic ClickEffect
-   - Future: Contextual particles (success = green sparkles, error = red flash)
-   - Use existing Ring.png with color tinting
+### 跨平台适配
 
-### Style Consistency Pitfalls to Avoid
+**约束：** 用单一代码库支持iOS、Android和PC。
 
-1. **Don't introduce gradients inconsistently**
-   - Current: Only RadiativeRing and Radar use gradients (decorative only)
-   - If adding gradients elsewhere, establish clear usage rules
+**对设计的影响：**
+- 单位高度系统（83px）在不同分辨率间按比例缩放
+- 黄金比例布局适应宽高比变化
+- 触摸目标最小83px × 83px（1单位正方形）
+- 无平台特定UI样式（统一外观）
 
-2. **Don't violate Unit Height System**
-   - Easy to manually set `height = 100px` in code
-   - Always use `UnitHeight * n` formula
+**结果：** 所有平台上的一致体验
 
-3. **Don't add high-resolution photographic textures**
-   - Would clash with pixel art / minimalist aesthetic
-   - If textures needed, use procedural patterns (dots, lines)
+### 代码驱动的设计哲学
 
-4. **Don't introduce too many custom assets**
-   - Each new PNG increases hot-update size
-   - Always check: can Unity built-in sprite + color tinting achieve this?
+**约束：** UI必须可热更新，无需应用商店重新提交。
+
+**对设计的影响：**
+- 所有UI布局在代码/prefab中（无原生iOS/Android UI）
+- 色彩方案在代码中定义，易于修改
+- 文本本地化通过服务器驱动协议
+- 登录后界面采用SDUI（Server-Driven UI）
+
+**结果：** 上线后0次强制更新（所有变更通过热更新）
 
 ---
 
-## Appendix: Visual Reference
+## 未来设计方向建议
 
-### Color Palette Reference
+### 优化机会
+
+1. **整合未使用资源**
+   - 当前5个未使用的PNG文件：Circle.png、CircleOutline.png、Author.png、ICON.png、wheelgradient.png
+   - 需要决策：删除或记录未来使用场景
+
+2. **消除重复资源**
+   - `RectangleSolid - 副本.png` 在OptionRadar.prefab中使用
+   - 替换为原始 `RectangleSolid.png` 引用
+
+3. **图标统一**
+   - 标准化为像素艺术或线条艺术（目前混用）
+   - 建议：保留两者，但明确记录使用上下文
+
+### 潜在扩展
+
+1. **色彩主题变体**
+   - 当前：仅深色主题
+   - 未来：浅色主题选项（反转文本/背景颜色）
+   - 实现：代码中单一布尔开关
+
+2. **无障碍增强**
+   - 高对比度模式（增加颜色差异）
+   - 更大文字尺寸选项（字号乘以1.25x）
+   - 色盲友好调色板（避免仅用红绿指示）
+
+3. **动画丰富度**
+   - 当前：简单淡入淡出和颜色过渡
+   - 未来：按钮弹性缓动、视差背景
+   - 约束：保持性能预算
+
+4. **粒子系统扩展**
+   - 当前：基础ClickEffect
+   - 未来：上下文粒子（成功=绿色火花，错误=红色闪光）
+   - 使用现有Ring.png配合颜色着色
+
+### 需避免的风格一致性陷阱
+
+1. **不要不一致地引入渐变**
+   - 当前：仅RadiativeRing和Radar使用渐变（仅装饰）
+   - 如在其他地方添加渐变，需建立清晰使用规则
+
+2. **不要违反单位高度系统**
+   - 容易在代码中手动设置 `height = 100px`
+   - 始终使用 `UnitHeight * n` 公式
+
+3. **不要添加高分辨率照片纹理**
+   - 会与像素艺术/极简美学冲突
+   - 如需纹理，使用程序化图案（点、线）
+
+4. **不要引入过多自定义资源**
+   - 每个新PNG增加热更新大小
+   - 始终检查：Unity内置sprite + 颜色着色能实现吗？
+
+---
+
+## 附录：视觉参考
+
+### 色彩调色板参考
 
 ```
-Text Colors (on dark backgrounds):
-███████ #FFFFFF  Primary Title (255, 255, 255, 1.0)
-██████  #E0E0E0  Body Text (224, 224, 224, 1.0)
-█████   #C0C0C0  Secondary Info (192, 192, 192, 1.0)
-████    #A0A0A0  Hint Text (160, 160, 160, 1.0)
-███     #808080  Disabled (128, 128, 128, 0.5)
+文本颜色（深色背景上）：
+███████ #FFFFFF  主标题 (255, 255, 255, 1.0)
+██████  #E0E0E0  正文文本 (224, 224, 224, 1.0)
+█████   #C0C0C0  次要信息 (192, 192, 192, 1.0)
+████    #A0A0A0  提示文本 (160, 160, 160, 1.0)
+███     #808080  禁用 (128, 128, 128, 0.5)
 
-Interactive States:
-███████ #FFFFFF  Normal (255, 255, 255, 1.0)
-██████  #F5F5F5  Highlighted (245, 245, 245, 1.0)
-█████   #C8C8C8  Pressed (200, 200, 200, 1.0)
-███     #C8C8C8  Disabled (200, 200, 200, 0.5)
+交互状态：
+███████ #FFFFFF  正常 (255, 255, 255, 1.0)
+██████  #F5F5F5  高亮 (245, 245, 245, 1.0)
+█████   #C8C8C8  按下 (200, 200, 200, 1.0)
+███     #C8C8C8  禁用 (200, 200, 200, 0.5)
 ```
 
-### Layout Grid Visualization
+### 布局网格可视化
 
 ```
-Unit Height System (83px grid):
+单位高度系统（83px网格）：
 
 0px   ┬─────────────────────────┐
-      │      Title Bar          │
+      │      标题栏              │
 83px  ├─────────────────────────┤
       │                         │
       │                         │
-      │    Content Area         │
-      │     (8 units)           │
+      │    内容区域              │
+      │     (8单位)             │
       │                         │
       │                         │
       │                         │
 747px ├─────────────────────────┤
-      │    Button Row           │
+      │    按钮行                │
 830px ┴─────────────────────────┘
 ```
 
-### Golden Ratio Layout Example
+### 黄金比例布局示例
 
 ```
-Horizontal Division:
+水平分割：
 ┌───────────────────────┬──────────────┐
 │                       │              │
-│   Main Content        │   Sidebar    │
+│   主内容              │   侧边栏      │
 │   (φ = 0.618)         │ (1-φ = 0.382)│
 │                       │              │
 └───────────────────────┴──────────────┘
-    61.8% of width         38.2% of width
+    宽度的61.8%             宽度的38.2%
 ```
 
 ---
 
-## Related Documentation
+## 相关文档
 
-- [UI Image Resource Usage Specification](UI图片资源使用规范.md) - Detailed asset inventory and usage tracking
-- [UI System](UI系统.md) - UI manager architecture and lifecycle
-- [Data Management System](数据管理系统.md) - SDUI data flow and state management
-- [Localization System](本地化系统.md) - Multi-language text rendering
+- [UI图片资源使用规范](UI图片资源使用规范.md) - 详细的资源清单和使用跟踪
+- [UI系统](UI系统.md) - UI管理器架构和生命周期
+- [数据管理系统](数据管理系统.md) - SDUI数据流和状态管理
+- [本地化系统](本地化系统.md) - 多语言文本渲染
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-02-11  
-**Author:** System Analysis (AI-generated from codebase inspection)
+**文档版本：** 1.0  
+**最后更新：** 2026-02-11  
+**作者：** 系统分析（基于代码库检查的AI生成）

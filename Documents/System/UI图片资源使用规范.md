@@ -1,6 +1,6 @@
 # UI图片资源使用规范
 
-**Related Documentation:** [UI Design Style Analysis](UI设计风格分析.md) - Comprehensive analysis of the project's visual design language, icon styles, color systems, and layout mathematics.
+**相关文档：** [UI设计风格分析](UI设计风格分析.md) - 项目视觉设计语言、图标风格、色彩系统和布局数学的全面分析。
 
 ---
 
