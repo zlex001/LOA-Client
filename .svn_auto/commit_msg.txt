@@ -1,1 +1,1 @@
-[资源] 删除未使用的wheelgradient.png图片资源
+[文档] 修正RectangleSolid.png的视觉特征描述
