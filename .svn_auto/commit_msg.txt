@@ -1,1 +1,1 @@
-[文档] 将Increase/Decrease/Edit图标预览背景改为透明
+[资源] 将Increase/Decrease/Edit图标背景改为透明
