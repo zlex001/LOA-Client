@@ -1,1 +1,1 @@
-[文档] 修正RectangleSolid.png的视觉特征描述
+[资源] 删除冗余的Sprite.png，Unity内置资源可替代
