@@ -1,1 +1,1 @@
-[文档] 更正Rectangle.png描述为透明背景白边框
+[文档] 将Increase/Decrease/Edit图标预览背景改为透明
