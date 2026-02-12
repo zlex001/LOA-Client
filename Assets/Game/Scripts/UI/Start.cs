@@ -10,8 +10,6 @@ using System.Collections.Generic;
 using System;
 using Game.Flow;
 
-
-
 namespace Game
 {
     public class Start : UI.Core

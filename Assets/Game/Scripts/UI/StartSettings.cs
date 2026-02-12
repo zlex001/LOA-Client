@@ -70,7 +70,6 @@ namespace Game
 
         #region Sprite Cache
         private Sprite _rectangleSolid;
-        private Sprite _editIcon;
         private Sprite _checkmark;
         #endregion
 
@@ -81,7 +80,6 @@ namespace Game
             
             // Load sprites
             _rectangleSolid = AssetManager.Instance.LoadSprite("RawAssets/Texture", "RectangleSolid");
-            _editIcon = AssetManager.Instance.LoadSprite("RawAssets/Texture", "Edit");
             _checkmark = AssetManager.Instance.LoadSprite("RawAssets/Texture", "True");
             
             // Cache references
@@ -339,7 +337,6 @@ namespace Game
             editButtonRect.anchoredPosition = new Vector2(-UnitHeight * 1.2f, 0);
             
             var editButtonImage = editButtonObj.AddComponent<Image>();
-            if (_editIcon != null) editButtonImage.sprite = _editIcon;
             editButtonImage.type = Image.Type.Simple;
             editButtonImage.preserveAspect = true;
             editButtonImage.color = ColorButtonEdit;
