@@ -1,1 +1,1 @@
-[资源] 删除未使用的Circle.png和CircleOutline.png
+[文档] 更正Rectangle.png描述为透明背景白边框
