@@ -1,1 +1,1 @@
-[资源] 删除冗余的Sprite.png，Unity内置资源可替代
+[资源] 删除未使用的Circle.png和CircleOutline.png
