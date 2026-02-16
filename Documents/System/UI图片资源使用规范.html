@@ -566,8 +566,8 @@ code {
 <td>✅ 使用中</td>
 </tr>
 <tr>
-<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/RectangleSolid - 副本.png" width="50"></td>
-<td><strong>RectangleSolid - 副本.png</strong></td>
+<td><img src="../../Assets/Game/HotResources/RawAssets/Texture/TopBorder.png" width="50"></td>
+<td><strong>TopBorder.png</strong></td>
 <td>❌</td>
 <td>✅ 1个Prefab</td>
 <td>重复文件（OptionRadar）</td>
@@ -652,7 +652,7 @@ code {
 <li><strong>总文件数</strong>：21个PNG（已清理2个无效文件：abc.png、hrhr.png）</li>
 <li><strong>✅ 使用中</strong>：11个（52.4%） - RectangleSolid, Settings, Edit, True, Increase, Decrease, Sprite, RadiativeRing, Radar, Ring, wheelgradient</li>
 <li><strong>❌ 未使用</strong>：8个（38.1%） - False, Circle, CircleOutline, Border, Rectangle, Focus, Pixel, Author</li>
-<li><strong>⚠️ 待决策</strong>：2个（9.5%） - ICON.png（材质可能使用）、RectangleSolid副本（待替换删除）</li>
+<li><strong>⚠️ 待决策</strong>：1个（4.8%） - ICON.png（材质可能使用）</li>
 </ul>
 <h3 id="%E6%A0%B8%E5%BF%83ui%E5%9B%BE%E7%89%87">核心UI图片</h3>
 <table>
@@ -730,8 +730,8 @@ code {
 <td>ClickEffect.prefab（点击特效渐变）</td>
 </tr>
 <tr>
-<td><strong>RectangleSolid - 副本.png</strong></td>
-<td>-</td>
+<td><strong>TopBorder.png</strong></td>
+<td>OptionRadar顶部边框</td>
 <td><code>bf270f8141102b34a896d7d90de11ab0</code></td>
 <td>⭐</td>
 <td>OptionRadar（⚠️ 重复文件，待替换删除）</td>
@@ -1060,7 +1060,7 @@ code {
 <ul>
 <li>✅ <code>RectangleSolid.png</code> 是标准面板背景</li>
 <li>✅ <code>Increase.png</code>/<code>Decrease.png</code> 用于所有增减操作</li>
-<li>❌ 不要创建重复图片（注意：RectangleSolid副本.png应删除）</li>
+<li>✅ 为不同用途的资源使用语义化命名（如：TopBorder.png用于顶部边框）</li>
 </ul>
 <h3 id="3-%E4%BF%9D%E6%8C%81%E4%B8%80%E8%87%B4%E5%B0%BA%E5%AF%B8">3. 保持一致尺寸</h3>
 <ul>
@@ -1298,7 +1298,7 @@ a65d834b426c0df4985749fa99d1d465 → Sprite.png
 631ef34dc0593854cba947dce1f9ef4b → Increase.png
 b79803a6321fa034ca1ff355740846c1 → Decrease.png
 de9bce3ad415b9a469b54786edaf9ef0 → Radar.png
-bf270f8141102b34a896d7d90de11ab0 → RectangleSolid - 副本.png
+bf270f8141102b34a896d7d90de11ab0 → TopBorder.png
 ae371a810b535f2459c56ff4c380dabc → True.png
 69c3b353ee9dc4bbab2bf9427a27fa0c → Settings.png
 f26ff36c4f4cb1b49a36c84bef5e14fd → Edit.png
@@ -1340,16 +1340,16 @@ f26ff36c4f4cb1b49a36c84bef5e14fd → Edit.png
 <li>如果预留未来使用，需在此文档中明确记录预期用途</li>
 <li>如果确认不使用，可安全删除（可通过版本控制系统找回）</li>
 </ul>
-<h3 id="%E9%87%8D%E5%A4%8D%E6%96%87%E4%BB%B6%E5%BE%85%E5%A4%84%E7%90%86">重复文件（待处理）</h3>
+<h3 id="%E9%87%8D%E5%A4%8D%E6%96%87%E4%BB%B6%E5%BE%85%E5%A4%84%E7%90%86">特殊用途资源</h3>
 <ul>
-<li><code>RectangleSolid - 副本.png</code>（GUID: bf270f8141102b34a896d7d90de11ab0）</li>
+<li><code>TopBorder.png</code>（GUID: bf270f8141102b34a896d7d90de11ab0）</li>
 <li>被 <code>OptionRadar.prefab</code> 引用</li>
-<li><strong>处理方案</strong>：在Unity编辑器中将引用替换为原文件后删除</li>
+<li><strong>用途说明</strong>：仅包含顶部边框的80×40像素图片，用于雷达图装饰</li>
 </ul>
 <h3 id="%E8%B5%84%E6%BA%90%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83">资源命名规范</h3>
 <ul>
 <li>✅ 统一使用英文PascalCase命名（如：<code>RectangleSolid.png</code>, <code>Settings.png</code>）</li>
-<li>❌ 避免中文命名（如：<code>RectangleSolid - 副本.png</code> 应为 <code>RectangleSolidCopy.png</code>）</li>
+<li>✅ 使用语义化命名（如：<code>TopBorder.png</code> 明确表示顶部边框）</li>
 <li>❌ 禁止无意义命名（如：<code>abc.png</code>, <code>test.png</code>）</li>
 </ul>
 <h3 id="%E8%B5%84%E6%BA%90%E7%BB%9F%E8%AE%A1%E6%88%AA%E8%87%B3%E6%9C%80%E8%BF%91%E6%9B%B4%E6%96%B0">资源统计（截至最近更新）</h3>
