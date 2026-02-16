@@ -21,8 +21,8 @@ namespace Game
 
         private Protocol.Option lastOption;
 
-        private const float PanelGap = 20f;
-        private const float AnimDuration = 0.145924f;
+        private const float PanelGap = UnitHeight * 0.25f;
+        private const float AnimDuration = 0.1f;
         
         private void Animate(Protocol.Option option)
         {
@@ -234,7 +234,7 @@ namespace Game
                 if (layoutGroup != null)
                 {
                     var padding = layoutGroup.padding;
-                    padding.bottom = 100;
+                    padding.bottom = (int)UnitHeight;
                     layoutGroup.padding = padding;
                 }
                 
