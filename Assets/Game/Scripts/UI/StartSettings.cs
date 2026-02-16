@@ -681,7 +681,19 @@ namespace Game
         private void OnLanguageItemClick()
         {
             Utils.Debug.Log("StartSettings", "Language item clicked");
-            ShowLanguageDialog();
+            
+            // Cycle through languages
+            var allLanguages = Enum.GetValues(typeof(Data.Languages)).Cast<Data.Languages>().ToList();
+            int currentIndex = allLanguages.IndexOf(Data.Instance.Language);
+            int nextIndex = (currentIndex + 1) % allLanguages.Count;
+            var newLanguage = allLanguages[nextIndex];
+            
+            // Update language
+            Data.Instance.Language = newLanguage;
+            Local.Instance.Save(Data.Instance.User);
+            
+            // Rebuild UI to reflect new language
+            BuildUI();
         }
 
         private void OnSoundToggle(bool enabled)
@@ -922,146 +934,6 @@ namespace Game
             inputField.placeholder = placeholderText;
             
             return inputField;
-        }
-
-        private void ShowLanguageDialog()
-        {
-            Utils.Debug.Log("StartSettings", "Showing language selection dialog");
-            
-            var allLanguages = Enum.GetValues(typeof(Data.Languages)).Cast<Data.Languages>().ToList();
-            var currentLanguage = Data.Instance.Language;
-            
-            // Create dialog overlay
-            var dialogObj = new GameObject("LanguageDialog");
-            dialogObj.transform.SetParent(transform, false);
-            
-            var dialogRect = dialogObj.AddComponent<RectTransform>();
-            dialogRect.anchorMin = Vector2.zero;
-            dialogRect.anchorMax = Vector2.one;
-            dialogRect.sizeDelta = Vector2.zero;
-            
-            // Semi-transparent mask
-            var mask = dialogObj.AddComponent<Image>();
-            mask.color = ColorDialogMask;
-            
-            // Add button to mask to intercept clicks
-            var maskButton = dialogObj.AddComponent<Button>();
-            maskButton.targetGraphic = mask;
-            maskButton.onClick.AddListener(() => GameObject.Destroy(dialogObj));
-            
-            // Dialog panel - larger to accommodate language list
-            var panelObj = new GameObject("Panel");
-            panelObj.transform.SetParent(dialogObj.transform, false);
-            
-            var panelRect = panelObj.AddComponent<RectTransform>();
-            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
-            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            panelRect.sizeDelta = new Vector2(600, 900);
-            panelRect.anchoredPosition = Vector2.zero;
-            
-            var panelImage = panelObj.AddComponent<Image>();
-            if (_rectangleSolid != null) panelImage.sprite = _rectangleSolid;
-            panelImage.type = Image.Type.Sliced;
-            panelImage.color = ColorDialogPanel;
-            
-            // Title
-            var titleObj = new GameObject("Title");
-            titleObj.transform.SetParent(panelObj.transform, false);
-            
-            var titleRect = titleObj.AddComponent<RectTransform>();
-            titleRect.anchorMin = new Vector2(0.1f, 0.92f);
-            titleRect.anchorMax = new Vector2(0.9f, 0.98f);
-            titleRect.sizeDelta = Vector2.zero;
-            
-            var titleText = titleObj.AddComponent<Text>();
-            titleText.text = Localization.Instance.Get("start_settings_language");
-            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            titleText.fontSize = 38;
-            titleText.color = ColorTextPrimary;
-            titleText.alignment = TextAnchor.MiddleCenter;
-            titleObj.AddComponent<Framework.FontScaler>();
-            
-            // ScrollView for language list
-            var scrollObj = new GameObject("ScrollView");
-            scrollObj.transform.SetParent(panelObj.transform, false);
-            
-            var scrollRect = scrollObj.AddComponent<RectTransform>();
-            scrollRect.anchorMin = new Vector2(0.05f, 0.1f);
-            scrollRect.anchorMax = new Vector2(0.95f, 0.9f);
-            scrollRect.sizeDelta = Vector2.zero;
-            
-            // Content container
-            var contentObj = new GameObject("Content");
-            contentObj.transform.SetParent(scrollObj.transform, false);
-            
-            var contentRect = contentObj.AddComponent<RectTransform>();
-            contentRect.anchorMin = new Vector2(0, 1);
-            contentRect.anchorMax = new Vector2(1, 1);
-            contentRect.pivot = new Vector2(0.5f, 1);
-            contentRect.sizeDelta = new Vector2(0, 0);
-            
-            // Add VerticalLayoutGroup for auto-layout
-            var layoutGroup = contentObj.AddComponent<VerticalLayoutGroup>();
-            layoutGroup.childAlignment = TextAnchor.UpperCenter;
-            layoutGroup.childControlWidth = true;
-            layoutGroup.childControlHeight = false;
-            layoutGroup.childForceExpandWidth = true;
-            layoutGroup.childForceExpandHeight = false;
-            layoutGroup.spacing = 5;
-            layoutGroup.padding = new RectOffset(0, 0, 5, 5);
-            
-            // Add ContentSizeFitter
-            var sizeFitter = contentObj.AddComponent<ContentSizeFitter>();
-            sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            
-            // Create language buttons
-            float buttonHeight = 60f;
-            foreach (var language in allLanguages)
-            {
-                var langButtonObj = new GameObject($"Lang_{language}");
-                langButtonObj.transform.SetParent(contentObj.transform, false);
-                
-                var langButtonRect = langButtonObj.AddComponent<RectTransform>();
-                langButtonRect.sizeDelta = new Vector2(0, buttonHeight);
-                
-                var langButtonImage = langButtonObj.AddComponent<Image>();
-                if (_rectangleSolid != null) langButtonImage.sprite = _rectangleSolid;
-                langButtonImage.type = Image.Type.Sliced;
-                langButtonImage.color = language == currentLanguage ? ColorButtonEdit : ColorDialogPanel;
-                
-                var langButton = langButtonObj.AddComponent<Button>();
-                langButton.targetGraphic = langButtonImage;
-                var selectedLang = language;
-                langButton.onClick.AddListener(() => {
-                    Data.Instance.Language = selectedLang;
-                    Local.Instance.Save(Data.Instance.User);
-                    BuildUI();
-                    GameObject.Destroy(dialogObj);
-                });
-                ApplyButtonColorBlock(langButton);
-                
-                var langTextObj = new GameObject("Text");
-                langTextObj.transform.SetParent(langButtonObj.transform, false);
-                
-                var langTextRect = langTextObj.AddComponent<RectTransform>();
-                langTextRect.anchorMin = Vector2.zero;
-                langTextRect.anchorMax = Vector2.one;
-                langTextRect.sizeDelta = Vector2.zero;
-                
-                var langText = langTextObj.AddComponent<Text>();
-                langText.text = language.ToString();
-                langText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-                langText.fontSize = 36;
-                langText.color = language == currentLanguage ? Color.white : ColorTextPrimary;
-                langText.alignment = TextAnchor.MiddleCenter;
-                langTextObj.AddComponent<Framework.FontScaler>();
-                
-                var padding = langButtonObj.AddComponent<LayoutElement>();
-                padding.preferredHeight = buttonHeight;
-            }
-            
-            // Force layout rebuild
-            LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
         }
 
         private void ShowConfirmDialog(string message, Action onConfirm)
