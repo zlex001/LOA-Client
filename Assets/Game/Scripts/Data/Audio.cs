@@ -23,6 +23,12 @@ namespace Game
             string name = config.Item2;
             bool isBgm = config.Item3;
             bool loop = config.Item4;
+            
+            if (!isBgm && !Data.Instance.User.UISoundEnabled)
+            {
+                return;
+            }
+            
             var clip = GetClip(path, name);
             if (clip != null)
             {
@@ -50,7 +56,7 @@ namespace Game
                     source.loop = loop;
                     source.Play();
                     sfxPool.Add(source);
-                    Destroy(source.gameObject, clip.length + 0.1f); // ×Ô¶¯Ïú»Ù
+                    Destroy(source.gameObject, clip.length + 0.1f);
                 }
             }
         }

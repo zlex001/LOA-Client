@@ -45,7 +45,7 @@
   "start_settings_cannot_delete_current": "无法删除当前使用的账号",
   "start_settings_id_password_required": "账号ID和密码为必填项",
   "start_settings_language": "语言",
-  "start_settings_ui_sound": "界面音效",
+  "start_settings_ui_sound": "音效",
   "start_settings_sound_on": "开启",
   "start_settings_sound_off": "关闭",
   "start_settings_confirm": "确认",
