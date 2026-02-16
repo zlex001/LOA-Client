@@ -81,7 +81,7 @@ namespace Game
             
             // Load sprites
             _rectangleSolid = AssetManager.Instance.LoadSprite("RawAssets/Texture", "RectangleSolid");
-            _bottomBorderGradient = AssetManager.Instance.LoadSprite("RawAssets/Texture", "BottomBorderGradient");
+            _bottomBorderGradient = AssetManager.Instance.LoadSprite("RawAssets/Texture", "BottomBorderDots");
             _checkmark = AssetManager.Instance.LoadSprite("RawAssets/Texture", "True");
             
             // Cache references
