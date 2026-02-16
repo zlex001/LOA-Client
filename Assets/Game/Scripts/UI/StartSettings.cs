@@ -146,6 +146,9 @@ namespace Game
         {
             Utils.Debug.Log("StartSettings", "OnEnter - starting slide-up animation");
             
+            // Register language change observer
+            Data.Instance.after.Register(Data.Type.Language, OnLanguageChanged);
+            
             if (_panelRect == null || _maskImage == null) return;
             
             float panelHeight = UnitHeight * PanelHeightUnits;
@@ -165,8 +168,32 @@ namespace Game
         public override void OnExit()
         {
             Utils.Debug.Log("StartSettings", "OnExit - closing panel");
+            
+            // Unregister language change observer
+            Data.Instance.after.Remove(Data.Type.Language, OnLanguageChanged);
+            
             if (_panelRect != null) _panelRect.DOKill();
             if (_maskImage != null) _maskImage.DOKill();
+        }
+        
+        private void OnLanguageChanged(params object[] args)
+        {
+            Utils.Debug.Log("StartSettings", $"Language changed, rebuilding UI");
+            
+            // #region agent log
+            var logPath = "/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log";
+            System.IO.File.AppendAllText(logPath, Newtonsoft.Json.JsonConvert.SerializeObject(new {
+                location = "StartSettings.cs:180",
+                message = "OnLanguageChanged triggered",
+                data = new { 
+                    currentLanguage = Data.Instance.Language.ToString()
+                },
+                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                hypothesisId = "H2"
+            }) + "\n");
+            // #endregion
+            
+            BuildUI();
         }
         #endregion
 
@@ -547,7 +574,7 @@ namespace Game
             layoutGroup.childForceExpandHeight = false;
             layoutGroup.spacing = 10;
             
-            // Minus button
+            // Minus button (text only)
             var minusButtonObj = new GameObject("MinusButton");
             minusButtonObj.transform.SetParent(controlObj.transform, false);
             
@@ -555,9 +582,7 @@ namespace Game
             minusButtonRect.sizeDelta = new Vector2(40, 40);
             
             var minusButtonImage = minusButtonObj.AddComponent<Image>();
-            if (_rectangleSolid != null) minusButtonImage.sprite = _rectangleSolid;
-            minusButtonImage.type = Image.Type.Sliced;
-            minusButtonImage.color = Color.white;
+            minusButtonImage.color = ColorTransparent;
             
             var minusButton = minusButtonObj.AddComponent<Button>();
             minusButton.targetGraphic = minusButtonImage;
@@ -575,7 +600,7 @@ namespace Game
             var minusText = minusTextObj.AddComponent<Text>();
             minusText.text = "-";
             minusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            minusText.fontSize = 36;
+            minusText.fontSize = 48;
             minusText.color = ColorTextPrimary;
             minusText.alignment = TextAnchor.MiddleCenter;
             
@@ -584,7 +609,7 @@ namespace Game
             valueTextObj.transform.SetParent(controlObj.transform, false);
             
             var valueTextRect = valueTextObj.AddComponent<RectTransform>();
-            valueTextRect.sizeDelta = new Vector2(80, 40);
+            valueTextRect.sizeDelta = new Vector2(120, 40);
             
             var valueText = valueTextObj.AddComponent<Text>();
             valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
@@ -606,7 +631,26 @@ namespace Game
             if (currentIndex < 0) currentIndex = 1; // Default to medium
             valueText.text = fontLabels[currentIndex];
             
-            // Plus button
+            // #region agent log
+            var logPath = "/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log";
+            System.IO.File.AppendAllText(logPath, Newtonsoft.Json.JsonConvert.SerializeObject(new {
+                location = "StartSettings.cs:540",
+                message = "Font size item created",
+                data = new { 
+                    currentFontSize = currentFontSize,
+                    currentIndex = currentIndex,
+                    labelText = fontLabels[currentIndex],
+                    textRectWidth = valueTextRect.rect.width,
+                    textRectHeight = valueTextRect.rect.height,
+                    preferredWidth = valueText.preferredWidth,
+                    preferredHeight = valueText.preferredHeight
+                },
+                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                hypothesisId = "H3,H4,H5"
+            }) + "\n");
+            // #endregion
+            
+            // Plus button (text only)
             var plusButtonObj = new GameObject("PlusButton");
             plusButtonObj.transform.SetParent(controlObj.transform, false);
             
@@ -614,9 +658,7 @@ namespace Game
             plusButtonRect.sizeDelta = new Vector2(40, 40);
             
             var plusButtonImage = plusButtonObj.AddComponent<Image>();
-            if (_rectangleSolid != null) plusButtonImage.sprite = _rectangleSolid;
-            plusButtonImage.type = Image.Type.Sliced;
-            plusButtonImage.color = Color.white;
+            plusButtonImage.color = ColorTransparent;
             
             var plusButton = plusButtonObj.AddComponent<Button>();
             plusButton.targetGraphic = plusButtonImage;
@@ -634,7 +676,7 @@ namespace Game
             var plusText = plusTextObj.AddComponent<Text>();
             plusText.text = "+";
             plusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            plusText.fontSize = 36;
+            plusText.fontSize = 48;
             plusText.color = ColorTextPrimary;
             plusText.alignment = TextAnchor.MiddleCenter;
             
@@ -842,12 +884,38 @@ namespace Game
             int nextIndex = (currentIndex + 1) % allLanguages.Count;
             var newLanguage = allLanguages[nextIndex];
             
+            // #region agent log
+            var logPath = "/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log";
+            System.IO.File.AppendAllText(logPath, Newtonsoft.Json.JsonConvert.SerializeObject(new {
+                location = "StartSettings.cs:683",
+                message = "Before language change",
+                data = new { 
+                    oldLanguage = Data.Instance.Language.ToString(),
+                    newLanguage = newLanguage.ToString()
+                },
+                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                hypothesisId = "H1,H2"
+            }) + "\n");
+            // #endregion
+            
             // Update language
             Data.Instance.Language = newLanguage;
             Local.Instance.Save(Data.Instance.User);
             
             // Rebuild UI to reflect new language
             BuildUI();
+            
+            // #region agent log
+            System.IO.File.AppendAllText(logPath, Newtonsoft.Json.JsonConvert.SerializeObject(new {
+                location = "StartSettings.cs:695",
+                message = "After BuildUI called",
+                data = new { 
+                    currentLanguage = Data.Instance.Language.ToString()
+                },
+                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                hypothesisId = "H1"
+            }) + "\n");
+            // #endregion
         }
 
         private void OnSoundToggle(bool enabled)

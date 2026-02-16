@@ -1,6 +1,1 @@
-{"location":"StartSettings.cs:991","message":"ScrollView components after adding ScrollRect and Mask","data":{"componentCount":5,"components":"RectTransform,ScrollRect,CanvasRenderer,Image,Mask"},"timestamp":1771260357572,"hypothesisId":"H1,H2,H4","runId":"post-fix"}
-{"location":"StartSettings.cs:1015","message":"Verify ScrollView components","data":{"hasScrollRect":true,"hasMask":true,"scrollRectContentSet":true},"timestamp":1771260357616,"hypothesisId":"H1,H2,H5","runId":"post-fix"}
-{"location":"StartSettings.cs:1065","message":"ScrollView state after setup","data":{"contentHeight":1435.0,"scrollViewHeight":720.0,"needsScroll":true,"canScroll":true,"languageCount":22,"buttonHeight":60.0},"timestamp":1771260357634,"hypothesisId":"H3,H5","runId":"post-fix"}
-{"location":"StartSettings.cs:991","message":"ScrollView components after adding ScrollRect and Mask","data":{"componentCount":5,"components":"RectTransform,ScrollRect,CanvasRenderer,Image,Mask"},"timestamp":1771260361062,"hypothesisId":"H1,H2,H4","runId":"post-fix"}
-{"location":"StartSettings.cs:1015","message":"Verify ScrollView components","data":{"hasScrollRect":true,"hasMask":true,"scrollRectContentSet":true},"timestamp":1771260361063,"hypothesisId":"H1,H2,H5","runId":"post-fix"}
-{"location":"StartSettings.cs:1065","message":"ScrollView state after setup","data":{"contentHeight":1435.0,"scrollViewHeight":720.0,"needsScroll":true,"canScroll":true,"languageCount":22,"buttonHeight":60.0},"timestamp":1771260361069,"hypothesisId":"H3,H5","runId":"post-fix"}
+
