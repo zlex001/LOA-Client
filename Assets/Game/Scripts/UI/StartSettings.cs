@@ -70,6 +70,7 @@ namespace Game
 
         #region Sprite Cache
         private Sprite _rectangleSolid;
+        private Sprite _bottomBorderGradient;
         private Sprite _checkmark;
         #endregion
 
@@ -80,6 +81,7 @@ namespace Game
             
             // Load sprites
             _rectangleSolid = AssetManager.Instance.LoadSprite("RawAssets/Texture", "RectangleSolid");
+            _bottomBorderGradient = AssetManager.Instance.LoadSprite("RawAssets/Texture", "BottomBorderGradient");
             _checkmark = AssetManager.Instance.LoadSprite("RawAssets/Texture", "True");
             
             // Cache references
@@ -296,9 +298,10 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
-            if (_rectangleSolid != null) itemImage.sprite = _rectangleSolid;
-            itemImage.type = Image.Type.Sliced;
-            itemImage.color = ColorItemBackground;
+            if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
+            itemImage.type = Image.Type.Simple;
+            itemImage.preserveAspect = false;
+            itemImage.color = Color.white;
             
             var itemButton = itemObj.AddComponent<Button>();
             itemButton.targetGraphic = itemImage;
@@ -431,9 +434,10 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
-            if (_rectangleSolid != null) itemImage.sprite = _rectangleSolid;
-            itemImage.type = Image.Type.Sliced;
-            itemImage.color = ColorItemBackground;
+            if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
+            itemImage.type = Image.Type.Simple;
+            itemImage.preserveAspect = false;
+            itemImage.color = Color.white;
             
             var itemButton = itemObj.AddComponent<Button>();
             itemButton.targetGraphic = itemImage;
@@ -487,9 +491,10 @@ namespace Game
             itemRect.sizeDelta = new Vector2(0, UnitHeight);
             
             var itemImage = itemObj.AddComponent<Image>();
-            if (_rectangleSolid != null) itemImage.sprite = _rectangleSolid;
-            itemImage.type = Image.Type.Sliced;
-            itemImage.color = ColorItemBackground;
+            if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
+            itemImage.type = Image.Type.Simple;
+            itemImage.preserveAspect = false;
+            itemImage.color = Color.white;
             
             var labelObj = new GameObject("Label");
             labelObj.transform.SetParent(itemObj.transform, false);
