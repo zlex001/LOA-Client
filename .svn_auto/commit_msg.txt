@@ -1,1 +1,1 @@
-[优化] 设置界面交互改进：语言切换响应式更新、字体按钮文本化、文本宽度修正
+[修复] 修正Monitor.Remove为Monitor.Unregister方法调用

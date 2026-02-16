@@ -170,7 +170,7 @@ namespace Game
             Utils.Debug.Log("StartSettings", "OnExit - closing panel");
             
             // Unregister language change observer
-            Data.Instance.after.Remove(Data.Type.Language, OnLanguageChanged);
+            Data.Instance.after.Unregister(Data.Type.Language, OnLanguageChanged);
             
             if (_panelRect != null) _panelRect.DOKill();
             if (_maskImage != null) _maskImage.DOKill();
