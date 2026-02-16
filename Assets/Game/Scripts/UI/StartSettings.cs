@@ -81,7 +81,7 @@ namespace Game
             
             // Load sprites
             _rectangleSolid = AssetManager.Instance.LoadSprite("RawAssets/Texture", "RectangleSolid");
-            _bottomBorderGradient = AssetManager.Instance.LoadSprite("RawAssets/Texture", "BottomBorderDots");
+            _bottomBorderGradient = AssetManager.Instance.LoadSprite("RawAssets/Texture", "BottomBorderGradient");
             _checkmark = AssetManager.Instance.LoadSprite("RawAssets/Texture", "True");
             
             // Cache references
@@ -299,7 +299,7 @@ namespace Game
             
             var itemImage = itemObj.AddComponent<Image>();
             if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
-            itemImage.type = Image.Type.Sliced;
+            itemImage.type = Image.Type.Simple;
             itemImage.preserveAspect = false;
             itemImage.color = Color.white;
             
@@ -435,7 +435,7 @@ namespace Game
             
             var itemImage = itemObj.AddComponent<Image>();
             if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
-            itemImage.type = Image.Type.Sliced;
+            itemImage.type = Image.Type.Simple;
             itemImage.preserveAspect = false;
             itemImage.color = Color.white;
             
@@ -492,7 +492,7 @@ namespace Game
             
             var itemImage = itemObj.AddComponent<Image>();
             if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
-            itemImage.type = Image.Type.Sliced;
+            itemImage.type = Image.Type.Simple;
             itemImage.preserveAspect = false;
             itemImage.color = Color.white;
             
