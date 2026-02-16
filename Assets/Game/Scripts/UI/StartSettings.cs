@@ -262,6 +262,9 @@ namespace Game
             // Language item
             CreateLanguageItem();
             
+            // Font size item
+            CreateFontSizeItem();
+            
             // Sound item
             CreateSoundItem();
             
@@ -482,12 +485,158 @@ namespace Game
             valueRect.anchoredPosition = new Vector2(-15, 0);
             
             var valueText = valueObj.AddComponent<Text>();
-            valueText.text = Data.Instance.Language.ToString();
+            valueText.text = GetLanguageName(Data.Instance.Language);
             valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             valueText.fontSize = 38;
             valueText.color = ColorTextSecondary;
             valueText.alignment = TextAnchor.MiddleRight;
             valueObj.AddComponent<Framework.FontScaler>();
+            
+            var padding = itemObj.AddComponent<LayoutElement>();
+            padding.preferredHeight = UnitHeight;
+        }
+
+        private void CreateFontSizeItem()
+        {
+            var itemObj = new GameObject("FontSizeItem");
+            itemObj.transform.SetParent(_scrollContent.transform, false);
+            
+            var itemRect = itemObj.AddComponent<RectTransform>();
+            itemRect.sizeDelta = new Vector2(0, UnitHeight);
+            
+            var itemImage = itemObj.AddComponent<Image>();
+            if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
+            itemImage.type = Image.Type.Simple;
+            itemImage.preserveAspect = false;
+            itemImage.color = Color.white;
+            
+            // Label (left side)
+            var labelObj = new GameObject("Label");
+            labelObj.transform.SetParent(itemObj.transform, false);
+            
+            var labelRect = labelObj.AddComponent<RectTransform>();
+            labelRect.anchorMin = new Vector2(0, 0);
+            labelRect.anchorMax = new Vector2(0.5f, 1);
+            labelRect.sizeDelta = Vector2.zero;
+            labelRect.anchoredPosition = new Vector2(15, 0);
+            
+            var labelText = labelObj.AddComponent<Text>();
+            labelText.text = Localization.Instance.Get("start_settings_font_size");
+            labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            labelText.fontSize = 38;
+            labelText.color = ColorTextPrimary;
+            labelText.alignment = TextAnchor.MiddleLeft;
+            labelObj.AddComponent<Framework.FontScaler>();
+            
+            // Font size control container (right side)
+            var controlObj = new GameObject("Control");
+            controlObj.transform.SetParent(itemObj.transform, false);
+            
+            var controlRect = controlObj.AddComponent<RectTransform>();
+            controlRect.anchorMin = new Vector2(0.5f, 0.5f);
+            controlRect.anchorMax = new Vector2(1, 0.5f);
+            controlRect.pivot = new Vector2(1, 0.5f);
+            controlRect.sizeDelta = new Vector2(-15, 50);
+            controlRect.anchoredPosition = new Vector2(-15, 0);
+            
+            var layoutGroup = controlObj.AddComponent<HorizontalLayoutGroup>();
+            layoutGroup.childAlignment = TextAnchor.MiddleRight;
+            layoutGroup.childControlWidth = false;
+            layoutGroup.childControlHeight = false;
+            layoutGroup.childForceExpandWidth = false;
+            layoutGroup.childForceExpandHeight = false;
+            layoutGroup.spacing = 10;
+            
+            // Minus button
+            var minusButtonObj = new GameObject("MinusButton");
+            minusButtonObj.transform.SetParent(controlObj.transform, false);
+            
+            var minusButtonRect = minusButtonObj.AddComponent<RectTransform>();
+            minusButtonRect.sizeDelta = new Vector2(40, 40);
+            
+            var minusButtonImage = minusButtonObj.AddComponent<Image>();
+            if (_rectangleSolid != null) minusButtonImage.sprite = _rectangleSolid;
+            minusButtonImage.type = Image.Type.Sliced;
+            minusButtonImage.color = Color.white;
+            
+            var minusButton = minusButtonObj.AddComponent<Button>();
+            minusButton.targetGraphic = minusButtonImage;
+            minusButton.onClick.AddListener(OnFontSizeDecrease);
+            ApplyButtonColorBlock(minusButton);
+            
+            var minusTextObj = new GameObject("Text");
+            minusTextObj.transform.SetParent(minusButtonObj.transform, false);
+            
+            var minusTextRect = minusTextObj.AddComponent<RectTransform>();
+            minusTextRect.anchorMin = Vector2.zero;
+            minusTextRect.anchorMax = Vector2.one;
+            minusTextRect.sizeDelta = Vector2.zero;
+            
+            var minusText = minusTextObj.AddComponent<Text>();
+            minusText.text = "-";
+            minusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            minusText.fontSize = 36;
+            minusText.color = ColorTextPrimary;
+            minusText.alignment = TextAnchor.MiddleCenter;
+            
+            // Value text
+            var valueTextObj = new GameObject("ValueText");
+            valueTextObj.transform.SetParent(controlObj.transform, false);
+            
+            var valueTextRect = valueTextObj.AddComponent<RectTransform>();
+            valueTextRect.sizeDelta = new Vector2(80, 40);
+            
+            var valueText = valueTextObj.AddComponent<Text>();
+            valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            valueText.fontSize = 36;
+            valueText.color = ColorTextSecondary;
+            valueText.alignment = TextAnchor.MiddleCenter;
+            valueTextObj.AddComponent<Framework.FontScaler>();
+            
+            // Set current font size label
+            int[] fontSizes = { 25, 30, 35, 40 };
+            string[] fontLabels = {
+                Localization.Instance.Get("font_size_small"),
+                Localization.Instance.Get("font_size_medium"),
+                Localization.Instance.Get("font_size_large"),
+                Localization.Instance.Get("font_size_extra_large")
+            };
+            int currentFontSize = Data.Instance.FontSize;
+            int currentIndex = System.Array.IndexOf(fontSizes, currentFontSize);
+            if (currentIndex < 0) currentIndex = 1; // Default to medium
+            valueText.text = fontLabels[currentIndex];
+            
+            // Plus button
+            var plusButtonObj = new GameObject("PlusButton");
+            plusButtonObj.transform.SetParent(controlObj.transform, false);
+            
+            var plusButtonRect = plusButtonObj.AddComponent<RectTransform>();
+            plusButtonRect.sizeDelta = new Vector2(40, 40);
+            
+            var plusButtonImage = plusButtonObj.AddComponent<Image>();
+            if (_rectangleSolid != null) plusButtonImage.sprite = _rectangleSolid;
+            plusButtonImage.type = Image.Type.Sliced;
+            plusButtonImage.color = Color.white;
+            
+            var plusButton = plusButtonObj.AddComponent<Button>();
+            plusButton.targetGraphic = plusButtonImage;
+            plusButton.onClick.AddListener(OnFontSizeIncrease);
+            ApplyButtonColorBlock(plusButton);
+            
+            var plusTextObj = new GameObject("Text");
+            plusTextObj.transform.SetParent(plusButtonObj.transform, false);
+            
+            var plusTextRect = plusTextObj.AddComponent<RectTransform>();
+            plusTextRect.anchorMin = Vector2.zero;
+            plusTextRect.anchorMax = Vector2.one;
+            plusTextRect.sizeDelta = Vector2.zero;
+            
+            var plusText = plusTextObj.AddComponent<Text>();
+            plusText.text = "+";
+            plusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            plusText.fontSize = 36;
+            plusText.color = ColorTextPrimary;
+            plusText.alignment = TextAnchor.MiddleCenter;
             
             var padding = itemObj.AddComponent<LayoutElement>();
             padding.preferredHeight = UnitHeight;
@@ -678,6 +827,11 @@ namespace Game
         #endregion
 
         #region Settings Callbacks
+        private string GetLanguageName(Data.Languages language)
+        {
+            return Localization.Instance.Get($"lang_{language}");
+        }
+        
         private void OnLanguageItemClick()
         {
             Utils.Debug.Log("StartSettings", "Language item clicked");
@@ -702,6 +856,40 @@ namespace Game
             
             Data.Instance.User.UISoundEnabled = enabled;
             Local.Instance.Save(Data.Instance.User);
+        }
+        
+        private void OnFontSizeDecrease()
+        {
+            int[] fontSizes = { 25, 30, 35, 40 };
+            int currentFontSize = Data.Instance.FontSize;
+            int currentIndex = System.Array.IndexOf(fontSizes, currentFontSize);
+            if (currentIndex < 0) currentIndex = 1;
+            
+            if (currentIndex > 0)
+            {
+                currentIndex--;
+                Data.Instance.FontSize = fontSizes[currentIndex];
+                Local.Instance.Save(Data.Instance.User);
+                BuildUI();
+                Utils.Debug.Log("StartSettings", $"Font size decreased to {fontSizes[currentIndex]}");
+            }
+        }
+        
+        private void OnFontSizeIncrease()
+        {
+            int[] fontSizes = { 25, 30, 35, 40 };
+            int currentFontSize = Data.Instance.FontSize;
+            int currentIndex = System.Array.IndexOf(fontSizes, currentFontSize);
+            if (currentIndex < 0) currentIndex = 1;
+            
+            if (currentIndex < fontSizes.Length - 1)
+            {
+                currentIndex++;
+                Data.Instance.FontSize = fontSizes[currentIndex];
+                Local.Instance.Save(Data.Instance.User);
+                BuildUI();
+                Utils.Debug.Log("StartSettings", $"Font size increased to {fontSizes[currentIndex]}");
+            }
         }
         #endregion
 
