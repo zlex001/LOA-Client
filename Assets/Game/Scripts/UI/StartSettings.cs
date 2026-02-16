@@ -299,7 +299,7 @@ namespace Game
             
             var itemImage = itemObj.AddComponent<Image>();
             if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
-            itemImage.type = Image.Type.Simple;
+            itemImage.type = Image.Type.Sliced;
             itemImage.preserveAspect = false;
             itemImage.color = Color.white;
             
@@ -435,7 +435,7 @@ namespace Game
             
             var itemImage = itemObj.AddComponent<Image>();
             if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
-            itemImage.type = Image.Type.Simple;
+            itemImage.type = Image.Type.Sliced;
             itemImage.preserveAspect = false;
             itemImage.color = Color.white;
             
@@ -492,7 +492,7 @@ namespace Game
             
             var itemImage = itemObj.AddComponent<Image>();
             if (_bottomBorderGradient != null) itemImage.sprite = _bottomBorderGradient;
-            itemImage.type = Image.Type.Simple;
+            itemImage.type = Image.Type.Sliced;
             itemImage.preserveAspect = false;
             itemImage.color = Color.white;
             
