@@ -213,8 +213,11 @@ public class Main : MonoBehaviour
         try
         {
             SetDescription(_lang.Get("launching_game"));
-            var assembly = LoadHotUpdateAssembly();
-            var gateType = assembly.GetType("Game.Gate");
+            var assemblies = LoadHotUpdateAssemblies();
+            var gateAssembly = assemblies.FirstOrDefault(a => a.GetName().Name == "Start");
+            if (gateAssembly == null) throw new System.Exception("Start assembly not found");
+
+            var gateType = gateAssembly.GetType("Game.Gate");
             if (gateType == null) throw new System.Exception("Game.Gate not found");
             
             var entranceMethod = gateType.GetMethod("Entrance");
@@ -232,21 +235,61 @@ public class Main : MonoBehaviour
         }
     }
 
-    System.Reflection.Assembly LoadHotUpdateAssembly()
+    System.Reflection.Assembly[] LoadHotUpdateAssemblies()
     {
 #if UNITY_EDITOR
-        return AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "Game");
-#else
-        string gameDllPath = $"{FrameworkPath.Scripts}/game.dll.bytes";
-        
-        if (!System.IO.File.Exists(gameDllPath))
+        // Editor模式下直接从当前AppDomain获取所有热更新程序集
+        string[] hotUpdateAssemblyNames = new string[] 
         {
-            Debug.LogError($"[Main] game.dll.bytes not found at: {gameDllPath}");
-            Debug.LogError($"[Main] Runtime dir: {FrameworkPath.Runtime}");
-            throw new System.IO.FileNotFoundException("game.dll.bytes not found");
-        }
+            "Utils", "Basic", "Logic", "Net", "Domain", "Presentation", "Start", "SDK"
+        };
         
-        return System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(gameDllPath));
+        var assemblies = new List<System.Reflection.Assembly>();
+        foreach (var name in hotUpdateAssemblyNames)
+        {
+            var assembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(a => a.GetName().Name == name);
+            if (assembly != null)
+            {
+                assemblies.Add(assembly);
+                Debug.Log($"[Main] Loaded hot update assembly: {name}");
+            }
+            else
+            {
+                Debug.LogWarning($"[Main] Hot update assembly not found: {name}");
+            }
+        }
+        return assemblies.ToArray();
+#else
+        // 运行时模式下从dll.bytes文件加载
+        string[] hotUpdateDlls = new string[] 
+        {
+            "utils.dll.bytes",
+            "basic.dll.bytes",
+            "logic.dll.bytes",
+            "net.dll.bytes",
+            "domain.dll.bytes",
+            "presentation.dll.bytes",
+            "start.dll.bytes",
+            "sdk.dll.bytes"
+        };
+        
+        var assemblies = new List<System.Reflection.Assembly>();
+        foreach (var dllFile in hotUpdateDlls)
+        {
+            string dllPath = $"{FrameworkPath.Scripts}/{dllFile}";
+            
+            if (!System.IO.File.Exists(dllPath))
+            {
+                Debug.LogError($"[Main] {dllFile} not found at: {dllPath}");
+                throw new System.IO.FileNotFoundException($"{dllFile} not found");
+            }
+            
+            var assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(dllPath));
+            assemblies.Add(assembly);
+            Debug.Log($"[Main] Loaded hot update dll: {dllFile}");
+        }
+        return assemblies.ToArray();
 #endif
     }
 }
