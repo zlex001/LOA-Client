@@ -8,9 +8,9 @@ namespace Game
 {
     public class Audio : Singleton<Audio>
     {
-        private Dictionary<string, AudioSource> bgmPool = new(); // ±³¾°ÒôÀÖ³Ø
-        private List<AudioSource> sfxPool = new();               // ÒôÐ§³Ø
-        private Dictionary<string, AudioClip> clipCache = new(); // ÒôÆµ»º´æ
+        private Dictionary<string, AudioSource> bgmPool = new(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö³ï¿½
+        private List<AudioSource> sfxPool = new();               // ï¿½ï¿½Ð§ï¿½ï¿½
+        private Dictionary<string, AudioClip> clipCache = new(); // ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½
 
 
         public void Init()
