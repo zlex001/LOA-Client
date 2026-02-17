@@ -38,20 +38,42 @@ LOA客户端的服务端驱动UI系统（Server-Driven UI，简称**SDUI**），
 | `network_error` | 网络错误 | Gate.OnGatewayResponse（网络异常） |
 | `parse_error` | 数据解析错误 | Gate.OnGatewayResponse（JSON解析失败） |
 
-**使用方式**：
-```csharp
-UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
+---
+
+## 架构总览
+
+### 数据流架构
+
 ```
+服务端推送
+    ↓
+Data.Instance（数据层）
+    ↓
+UI组件.RefreshUI()（表现层）
+```
+
+**核心机制**：
+- 服务端通过Gateway/Login响应推送UI文本至客户端
+- 客户端将UI文本存储在`Data.Instance`的对应属性中（StartTexts、StartSettingsTexts、AccountTexts、ErrorTexts）
+- UI组件仅从`Data.Instance`读取文本，不持有数据副本
+- 语言切换时，服务端推送新语言文本 → `Data.Instance`更新 → 触发事件 → 所有UI自动刷新
 
 ---
 
 ## 数据层（Data）
 
+### 数据结构总览
+
+| 属性名 | 类型 | 用途 | 推送时机 |
+|-------|------|------|---------|
+| **StartTexts** | Dictionary<string, string> | Start界面文本 | Gateway响应 |
+| **StartSettingsTexts** | Dictionary<string, string> | StartSettings界面文本 | Gateway响应 / 语言切换 |
+| **AccountTexts** | Dictionary<string, string> | AccountUI界面文本 | Gateway响应 |
+| **ErrorTexts** | Dictionary<string, string> | 网络错误提示文本 | Login响应 |
+
 ### Data.StartTexts
 
 **定义**：Start界面的UI文本数据
-
-**数据结构**：`Dictionary<string, string>`
 
 **来源**：Gateway响应（`GatewayResponse.UI.Data`）
 
@@ -59,15 +81,6 @@ UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
 - `title`：界面标题文本
 - `tip`：提示文本
 - `footer`：页脚模板（支持格式化参数：设备ID、应用版本、热更新版本）
-
-**示例**：
-```json
-{
-  "title": "Legend of Aurum",
-  "tip": "Tap anywhere to start",
-  "footer": "Device: {0}\\nApp: {1}\\nHot: {2}"
-}
-```
 
 **更新时机**：
 1. Gateway响应时由服务端推送
@@ -78,8 +91,6 @@ UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
 ### Data.StartSettingsTexts
 
 **定义**：StartSettings界面的UI文本数据
-
-**数据结构**：`Dictionary<string, string>`
 
 **来源**：
 - Gateway响应（初始推送）
@@ -108,16 +119,7 @@ UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
 | `font_size_extra_large` | 特大字体选项 | "特大" |
 | `confirm` | 确认按钮 | "确认" |
 | `cancel` | 取消按钮 | "取消" |
-
-**语言名称映射**（22种语言）：
-```csharp
-// 键格式：lang_{LanguageEnum}
-"lang_ChineseSimplified" → "简体中文"
-"lang_ChineseTraditional" → "繁體中文"
-"lang_English" → "English"
-"lang_Japanese" → "日本語"
-// ... 其他18种语言
-```
+| `lang_{LanguageEnum}` | 语言名称（22种） | "简体中文"、"English"、"日本語"等 |
 
 **更新时机**：
 1. Gateway响应时初始推送（使用当前语言）
@@ -128,8 +130,6 @@ UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
 ### Data.AccountTexts
 
 **定义**：AccountUI（账号编辑界面）的UI文本数据
-
-**数据结构**：`Dictionary<string, string>`
 
 **来源**：Gateway响应或服务端推送
 
@@ -148,8 +148,6 @@ UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
 
 **定义**：游戏运行时网络错误文本数据
 
-**数据结构**：`Dictionary<string, string>`
-
 **来源**：Login响应（`LoginResponse.error_texts`）
 
 **键值说明**：
@@ -167,224 +165,68 @@ UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
 | `reconnect_success` | 重连成功 | 无 |
 | `reconnect_cancel` | 重连已取消 | 无 |
 
-**使用示例**：
-```csharp
-// Net.cs
-string errorMessage = string.Format(
-    Data.Instance.ErrorTexts["reconnecting_countdown"],
-    attemptCount,
-    secondsRemaining
-);
-```
-
 **更新时机**：登录成功后由服务端推送
 
 ---
 
 ## 表现层（UI）
 
-### Start.cs
+### UI组件通用模式
 
 **核心方法**：
 
-**OnEnter**（OnEnter）是界面进入时的入口方法，接收服务端推送的UI文本并存储到数据层。
+**OnEnter**（OnEnter）是界面进入时的入口方法，负责接收服务端推送的UI文本并存储到数据层。
 
-```csharp
-public override void OnEnter(params object[] args)
-{
-    var texts = args[0] as Dictionary<string, string>;
-    if (texts != null)
-    {
-        Data.Instance.StartTexts = texts;  // 存储到数据层
-    }
-    
-    RefreshUI();  // 渲染UI
-}
-```
+**实现要点**：
+- 接收`args[0]`作为`Dictionary<string, string>`类型的UI文本数据
+- 存储到`Data.Instance`的对应属性中
+- 调用`RefreshUI()`方法渲染界面
 
-**RefreshUI**（RefreshUI）是UI刷新方法，从数据层读取文本并更新界面元素。
+**RefreshUI**（RefreshUI）是UI刷新方法，负责从数据层读取文本并更新界面元素。
 
-```csharp
-private void RefreshUI()
-{
-    var texts = Data.Instance.StartTexts;
-    if (texts == null) return;
-    
-    if (_titleText != null && texts.ContainsKey("title"))
-    {
-        _titleText.text = texts["title"];
-    }
-    
-    if (_tipText != null && texts.ContainsKey("tip"))
-    {
-        _tipText.text = texts["tip"];
-    }
-    
-    // 格式化页脚文本
-    if (_footerText != null && texts.ContainsKey("footer"))
-    {
-        string footerTemplate = texts["footer"].Replace("\\n", "\n");
-        _footerText.text = string.Format(
-            footerTemplate,
-            Data.Instance.Device.Split("-").Last(),  // 设备ID
-            Data.Instance.AppVersion,                // 应用版本
-            Data.Instance.HotVersion                 // 热更新版本
-        );
-    }
-}
-```
+**实现要点**：
+- 从`Data.Instance`读取UI文本数据
+- 遍历所有需要更新的UI元素，从文本数据中获取对应键的值
+- 支持格式化参数（如`string.Format()`）
 
 **设计原则**：
-1. ✅ UI不持有数据（删除了`_uiTexts`字段）
-2. ✅ 所有文本从`Data.Instance.StartTexts`读取
+1. ✅ UI不持有数据（删除本地`_uiTexts`字段）
+2. ✅ 所有文本从`Data.Instance`读取
 3. ✅ `RefreshUI`方法独立，便于语言切换时调用
 
----
+### UI组件示例
 
-### AccountUI.cs
+**Start.cs**：
+- 接收服务端推送的文本 → 存储到`Data.Instance.StartTexts`
+- `RefreshUI()`从`Data.Instance.StartTexts`读取并更新UI元素（标题、提示、页脚）
 
-**核心方法**：
+**AccountUI.cs**：
+- 接收服务端推送的文本 → 存储到`Data.Instance.AccountTexts`
+- `RefreshUI()`更新输入框占位符文本
+- 输入验证时从`Data.Instance.AccountTexts`读取错误提示
 
-**OnEnter**（OnEnter）接收并存储UI文本到数据层。
-
-```csharp
-public override void OnEnter(params object[] args)
-{
-    if (args.Length > 0)
-    {
-        var texts = args[0] as Dictionary<string, string>;
-        if (texts != null)
-        {
-            Data.Instance.AccountTexts = texts;  // 存储到数据层
-        }
-    }
-    
-    RefreshUI();  // 渲染UI
-    
-    // ... 其他初始化逻辑
-}
-```
-
-**RefreshUI**（RefreshUI）从数据层读取文本并更新占位符文本。
-
-```csharp
-private void RefreshUI()
-{
-    var texts = Data.Instance.AccountTexts;
-    if (texts == null) return;
-    
-    var idPlaceholder = transform.Find("Id/Placeholder")?.GetComponent<Text>();
-    if (idPlaceholder != null && texts.ContainsKey("accountIdPlaceholder"))
-        idPlaceholder.text = texts["accountIdPlaceholder"];
-    
-    var passwordPlaceholder = transform.Find("Password/Placeholder")?.GetComponent<Text>();
-    if (passwordPlaceholder != null && texts.ContainsKey("accountPasswordPlaceholder"))
-        passwordPlaceholder.text = texts["accountPasswordPlaceholder"];
-    
-    var notePlaceholder = transform.Find("Note/Placeholder")?.GetComponent<Text>();
-    if (notePlaceholder != null && texts.ContainsKey("accountNotePlaceholder"))
-        notePlaceholder.text = texts["accountNotePlaceholder"];
-}
-```
-
-**InputCheck**（InputCheck）是输入验证属性，从数据层读取错误提示文本。
-
-```csharp
-private string InputCheck
-{
-    get
-    {
-        string id = transform.Find("Id").GetComponent<InputField>().text;
-        string password = transform.Find("Password").GetComponent<InputField>().text;
-        var texts = Data.Instance.AccountTexts;
-        
-        if (string.IsNullOrEmpty(id))
-            return texts?["errorAccountEmpty"] ?? "";
-        
-        if (!Regex.IsMatch(id, @"^[a-zA-Z0-9]{6,20}$"))
-            return texts?["errorAccountFormat"] ?? "";
-        
-        // ... 其他验证逻辑
-    }
-}
-```
-
----
-
-### StartSettings.cs（待重构）
-
-**当前状态**：使用`Localization.Instance.Get()`从客户端本地化文件读取
-
-**目标架构**：改为从`Data.Instance.StartSettingsTexts`读取
-
-**重构步骤**：
-1. 删除所有`Localization.Instance.Get()`调用
-2. 在`OnEnter`中接收服务端推送的文本
-3. 实现`RefreshUI`方法
-4. 注册`Data.Type.Language`事件监听，语言切换时自动刷新
-
-**预期实现**：
-```csharp
-public override void OnEnter(params object[] args)
-{
-    var texts = args[0] as Dictionary<string, string>;
-    if (texts != null)
-    {
-        Data.Instance.StartSettingsTexts = texts;
-    }
-    
-    // 注册语言切换监听
-    Data.Instance.after.Register(Data.Type.Language, OnLanguageChanged);
-    
-    RefreshUI();
-}
-
-private void RefreshUI()
-{
-    var texts = Data.Instance.StartSettingsTexts;
-    if (texts == null) return;
-    
-    // 更新所有UI文本
-    // ...
-}
-
-private void OnLanguageChanged(params object[] args)
-{
-    // 语言切换时，服务端已推送新文本到Data.Instance.StartSettingsTexts
-    RefreshUI();
-}
-```
+**StartSettings.cs**：
+- 接收服务端推送的文本 → 存储到`Data.Instance.StartSettingsTexts`
+- 注册`Data.Type.Language`事件监听，语言切换时自动调用`RefreshUI()`
 
 ---
 
 ## 网络层（Net）
 
-### 错误文本使用
+### 错误文本使用模式
 
-**当前实现**：`Net.cs`使用`Localization.Instance.Get()`获取错误文本
+**实现要点**：
+- 所有网络错误提示从`Data.Instance.ErrorTexts`读取
+- 支持格式化参数（如重连倒计时、尝试次数）
+- 提供辅助方法`GetErrorText(key, args)`安全获取文本
 
-**目标架构**：改为从`Data.Instance.ErrorTexts`读取
-
-**重构方案**：
-
-```csharp
-// 修改前
-UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connection_failed"));
-
-// 修改后
-UI.Instance.Open(Config.UI.Dark, Data.Instance.ErrorTexts?["connection_failed"] ?? "");
-```
-
-**格式化示例**：
-
-```csharp
-// 重连倒计时
-string message = string.Format(
-    Data.Instance.ErrorTexts["reconnecting_countdown"],
-    attemptCount,    // {0}
-    secondsLeft      // {1}
-);
-```
+**使用场景**：
+- 连接失败/被拒绝
+- 服务器断开连接
+- 网络通信异常
+- 发送数据失败
+- 操作频率限制
+- 重连倒计时/尝试/成功/取消
 
 ---
 
@@ -484,25 +326,10 @@ sequenceDiagram
     UI->>UI: RefreshUI()
 ```
 
-**实现细节**：
-
-1. **注册监听**（在OnEnter中）：
-```csharp
-Data.Instance.after.Register(Data.Type.Language, OnLanguageChanged);
-```
-
-2. **取消监听**（在OnExit中）：
-```csharp
-Data.Instance.after.Unregister(Data.Type.Language, OnLanguageChanged);
-```
-
-3. **响应回调**：
-```csharp
-private void OnLanguageChanged(params object[] args)
-{
-    RefreshUI();  // 自动刷新UI
-}
-```
+**实现机制**：
+- **注册监听**：UI组件在`OnEnter`中调用`Data.Instance.after.Register(Data.Type.Language, OnLanguageChanged)`
+- **取消监听**：UI组件在`OnExit`中调用`Data.Instance.after.Unregister(Data.Type.Language, OnLanguageChanged)`
+- **响应回调**：`OnLanguageChanged`方法中调用`RefreshUI()`自动刷新UI
 
 ---
 
@@ -554,65 +381,22 @@ private void OnLanguageChanged(params object[] args)
 ### UI组件开发规范
 
 1. **禁止硬编码文本**
-   ```csharp
-   // ❌ 错误
-   titleText.text = "标题";
-   titleText.text = "Title";
-   
-   // ✅ 正确
-   titleText.text = Data.Instance.StartTexts["title"];
-   ```
+   - ❌ 错误：`titleText.text = "标题";` 或 `titleText.text = "Title";`
+   - ✅ 正确：`titleText.text = Data.Instance.StartTexts["title"];`
 
 2. **禁止使用Localization（除5个必需键外）**
-   ```csharp
-   // ❌ 错误
-   text.text = Localization.Instance.Get("start_settings_language");
-   
-   // ✅ 正确（必需键）
-   UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
-   
-   // ✅ 正确（SDUI）
-   text.text = Data.Instance.StartSettingsTexts["language"];
-   ```
+   - ❌ 错误：`Localization.Instance.Get("start_settings_language")`
+   - ✅ 正确（必需键）：`Localization.Instance.Get("loading")`
+   - ✅ 正确（SDUI）：`Data.Instance.StartSettingsTexts["language"]`
 
 3. **必须实现RefreshUI方法**
-   ```csharp
-   public override void OnEnter(params object[] args)
-   {
-       // 存储到数据层
-       Data.Instance.XXXTexts = args[0] as Dictionary<string, string>;
-       
-       // 渲染UI
-       RefreshUI();
-   }
-   
-   private void RefreshUI()
-   {
-       var texts = Data.Instance.XXXTexts;
-       if (texts == null) return;
-       
-       // 更新所有UI元素
-   }
-   ```
+   - `OnEnter`中接收服务端推送的文本并存储到`Data.Instance.XXXTexts`
+   - `RefreshUI`中从`Data.Instance.XXXTexts`读取文本并更新UI元素
 
 4. **注册语言切换监听（如需要）**
-   ```csharp
-   public override void OnEnter(params object[] args)
-   {
-       Data.Instance.after.Register(Data.Type.Language, OnLanguageChanged);
-       RefreshUI();
-   }
-   
-   public override void OnExit(params object[] args)
-   {
-       Data.Instance.after.Unregister(Data.Type.Language, OnLanguageChanged);
-   }
-   
-   private void OnLanguageChanged(params object[] args)
-   {
-       RefreshUI();
-   }
-   ```
+   - `OnEnter`中注册：`Data.Instance.after.Register(Data.Type.Language, OnLanguageChanged)`
+   - `OnExit`中取消：`Data.Instance.after.Unregister(Data.Type.Language, OnLanguageChanged)`
+   - `OnLanguageChanged`中调用`RefreshUI()`
 
 ---
 
@@ -620,8 +404,8 @@ private void OnLanguageChanged(params object[] args)
 
 ### 客户端
 
-- [ ] 重构StartSettings.cs为SDUI架构
-- [ ] 重构Net.cs使用`Data.Instance.ErrorTexts`
+- [x] 重构StartSettings.cs为SDUI架构
+- [x] 重构Net.cs使用`Data.Instance.ErrorTexts`
 - [ ] 实现语言切换协议处理（`ChangeLanguageRequest/Response`）
 - [ ] 添加fallback机制（服务端未就绪时的降级方案）
 - [ ] 添加UI文本缓存机制（减少重复请求）
