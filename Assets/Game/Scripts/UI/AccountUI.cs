@@ -9,8 +9,6 @@ namespace Game
         private const float UnitHeight = 83f;
         private const float GoldenRatio = 0.618f;
 
-        private Dictionary<string, string> _uiTexts;
-
         public override void OnCreate(params object[] args)
         {
             transform.Find("Id").GetComponent<InputField>().onEndEdit.AddListener(OnIdEndEdit);
@@ -23,23 +21,14 @@ namespace Game
         {
             if (args.Length > 0)
             {
-                _uiTexts = args[0] as Dictionary<string, string>;
-                
-                if (_uiTexts != null)
+                var texts = args[0] as Dictionary<string, string>;
+                if (texts != null)
                 {
-                    var idPlaceholder = transform.Find("Id/Placeholder")?.GetComponent<Text>();
-                    if (idPlaceholder != null && _uiTexts.ContainsKey("accountIdPlaceholder"))
-                        idPlaceholder.text = _uiTexts["accountIdPlaceholder"];
-                    
-                    var passwordPlaceholder = transform.Find("Password/Placeholder")?.GetComponent<Text>();
-                    if (passwordPlaceholder != null && _uiTexts.ContainsKey("accountPasswordPlaceholder"))
-                        passwordPlaceholder.text = _uiTexts["accountPasswordPlaceholder"];
-                    
-                    var notePlaceholder = transform.Find("Note/Placeholder")?.GetComponent<Text>();
-                    if (notePlaceholder != null && _uiTexts.ContainsKey("accountNotePlaceholder"))
-                        notePlaceholder.text = _uiTexts["accountNotePlaceholder"];
+                    Data.Instance.AccountTexts = texts;
                 }
             }
+
+            RefreshUI();
 
             if (args.Length > 1)
             {
@@ -53,6 +42,24 @@ namespace Game
             transform.Find("Check").GetComponent<Text>().text = "";
 
             ApplyAbsoluteLayout();
+        }
+        
+        private void RefreshUI()
+        {
+            var texts = Data.Instance.AccountTexts;
+            if (texts == null) return;
+            
+            var idPlaceholder = transform.Find("Id/Placeholder")?.GetComponent<Text>();
+            if (idPlaceholder != null && texts.ContainsKey("accountIdPlaceholder"))
+                idPlaceholder.text = texts["accountIdPlaceholder"];
+            
+            var passwordPlaceholder = transform.Find("Password/Placeholder")?.GetComponent<Text>();
+            if (passwordPlaceholder != null && texts.ContainsKey("accountPasswordPlaceholder"))
+                passwordPlaceholder.text = texts["accountPasswordPlaceholder"];
+            
+            var notePlaceholder = transform.Find("Note/Placeholder")?.GetComponent<Text>();
+            if (notePlaceholder != null && texts.ContainsKey("accountNotePlaceholder"))
+                notePlaceholder.text = texts["accountNotePlaceholder"];
         }
 
         public override void OnScreenAdaptationChanged()
@@ -129,18 +136,19 @@ namespace Game
             {
                 string id = transform.Find("Id").GetComponent<InputField>().text;
                 string password = transform.Find("Password").GetComponent<InputField>().text;
+                var texts = Data.Instance.AccountTexts;
                 
                 if (string.IsNullOrEmpty(id))
-                    return _uiTexts != null && _uiTexts.ContainsKey("errorAccountEmpty") ? _uiTexts["errorAccountEmpty"] : "";
+                    return texts != null && texts.ContainsKey("errorAccountEmpty") ? texts["errorAccountEmpty"] : "";
                 
                 if (!System.Text.RegularExpressions.Regex.IsMatch(id, @"^[a-zA-Z0-9]{6,20}$"))
-                    return _uiTexts != null && _uiTexts.ContainsKey("errorAccountFormat") ? _uiTexts["errorAccountFormat"] : "";
+                    return texts != null && texts.ContainsKey("errorAccountFormat") ? texts["errorAccountFormat"] : "";
                 
                 if (string.IsNullOrEmpty(password))
-                    return _uiTexts != null && _uiTexts.ContainsKey("errorPasswordEmpty") ? _uiTexts["errorPasswordEmpty"] : "";
+                    return texts != null && texts.ContainsKey("errorPasswordEmpty") ? texts["errorPasswordEmpty"] : "";
                 
                 if (!System.Text.RegularExpressions.Regex.IsMatch(password, @"^[a-zA-Z0-9]{6,20}$"))
-                    return _uiTexts != null && _uiTexts.ContainsKey("errorPasswordFormat") ? _uiTexts["errorPasswordFormat"] : "";
+                    return texts != null && texts.ContainsKey("errorPasswordFormat") ? texts["errorPasswordFormat"] : "";
                 
                 return "";
             }
@@ -175,7 +183,7 @@ namespace Game
         private void OnCancelClick()
         {
             Close();
-            UI.Instance.Open(Config.UI.Start, _uiTexts);
+            UI.Instance.Open(Config.UI.Start, Data.Instance.StartTexts);
         }
     }
 }

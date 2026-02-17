@@ -130,6 +130,11 @@ namespace Game
             Dark,
             FontSize,
             UILock,
+            
+            StartTexts,
+            StartSettingsTexts,
+            AccountTexts,
+            ErrorTexts,
         }
         #endregion
 
@@ -252,6 +257,11 @@ namespace Game
         public Dictionary<string, bool> HomeChannelToggle { get; set; } = new Dictionary<string, bool>();
         public Dictionary<string, Protocol.Scene> SceneCache { get; set; } = new Dictionary<string, Protocol.Scene>();
         public float SceneScaleBeforeWorldMap { get; set; } = 1.0f;
+        
+        public Dictionary<string, string> StartTexts { get => Get<Dictionary<string, string>>(Type.StartTexts); set => Change(Type.StartTexts, value); }
+        public Dictionary<string, string> StartSettingsTexts { get => Get<Dictionary<string, string>>(Type.StartSettingsTexts); set => Change(Type.StartSettingsTexts, value); }
+        public Dictionary<string, string> AccountTexts { get => Get<Dictionary<string, string>>(Type.AccountTexts); set => Change(Type.AccountTexts, value); }
+        public Dictionary<string, string> ErrorTexts { get => Get<Dictionary<string, string>>(Type.ErrorTexts); set => Change(Type.ErrorTexts, value); }
         #endregion
 
         #region Public Methods

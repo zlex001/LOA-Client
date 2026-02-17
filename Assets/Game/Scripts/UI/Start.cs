@@ -33,7 +33,6 @@ namespace Game
         #endregion
 
         #region Fields
-        private Dictionary<string, string> _uiTexts;
         private Text _titleText;
         private Text _footerText;
         private GameObject _tipContainer;
@@ -47,36 +46,39 @@ namespace Game
             var texts = args[0] as Dictionary<string, string>;
             if (texts != null)
             {
-                _uiTexts = texts;
+                Data.Instance.StartTexts = texts;
+            }
+            
+            RefreshUI();
+        }
+        
+        private void RefreshUI()
+        {
+            var texts = Data.Instance.StartTexts;
+            if (texts == null) return;
+            
+            if (_titleText != null && texts.ContainsKey("title"))
+            {
+                _titleText.text = texts["title"];
+            }
+            
+            if (_tipText != null && texts.ContainsKey("tip"))
+            {
+                _tipText.text = texts["tip"];
                 
-                // Set title text
-                if (_titleText != null && texts.ContainsKey("title"))
-                {
-                    _titleText.text = texts["title"];
-                }
-                
-                // Set tip text
-                if (_tipText != null && texts.ContainsKey("tip"))
-                {
-                    _tipText.text = texts["tip"];
-                    
-                    // Update text rect size to fit content
-                    var textRect = _tipText.GetComponent<RectTransform>();
-                    textRect.sizeDelta = new Vector2(_tipText.preferredWidth, _tipText.preferredHeight);
-                }
-                
-                // Set footer text
-                if (_footerText != null && texts.ContainsKey("footer"))
-                {
-                    string footerTemplate = texts["footer"].Replace("\\n", "\n");
-                    _footerText.text = string.Format(
-                        footerTemplate,
-                        Data.Instance.Device.Split("-").Last(),
-                        Data.Instance.AppVersion,
-                        Data.Instance.HotVersion
-                    );
-                }
-                
+                var textRect = _tipText.GetComponent<RectTransform>();
+                textRect.sizeDelta = new Vector2(_tipText.preferredWidth, _tipText.preferredHeight);
+            }
+            
+            if (_footerText != null && texts.ContainsKey("footer"))
+            {
+                string footerTemplate = texts["footer"].Replace("\\n", "\n");
+                _footerText.text = string.Format(
+                    footerTemplate,
+                    Data.Instance.Device.Split("-").Last(),
+                    Data.Instance.AppVersion,
+                    Data.Instance.HotVersion
+                );
             }
         }
 

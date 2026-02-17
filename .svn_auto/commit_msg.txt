@@ -1,5 +1,7 @@
-[重构] 简化客户端本地化文件并创建服务端SDUI需求文档
+[重构] 实施SDUI数据层集中管理架构
 
-- 精简22个本地化文件，仅保留5个技术必需键（loading, connecting, connection_timeout, network_error, parse_error）
-- 删除79个将迁移至服务端SDUI的本地化键
-- 创建详细的服务端SDUI需求文档（.cursor/server_sdui_requirements.md）
+- 在Data.cs中添加UI文本集中存储字段（StartTexts、StartSettingsTexts、AccountTexts、ErrorTexts）
+- 重构Start.cs：从内部_uiTexts字段改为从Data.Instance.StartTexts读取，新增RefreshUI方法
+- 重构AccountUI.cs：从内部_uiTexts字段改为从Data.Instance.AccountTexts读取，新增RefreshUI方法
+- 符合"数据驱动"架构原则：表现层（UI）← 数据层（Data）
+- 为后续语言切换和SDUI扩展奠定基础
