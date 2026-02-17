@@ -2,9 +2,9 @@
 
 LOA客户端的服务端驱动UI系统（Server-Driven UI，简称**SDUI**），通过将UI文本和配置数据从服务端推送到客户端，实现了零客户端更新的内容迭代能力，同时确保多语言文本的统一管理和实时更新。
 
-## 设计理念
+## 一、设计理念
 
-### 核心原则
+### 1. 核心原则
 
 1. **数据驱动**
    - UI表现层从数据层读取文本，不持有数据
@@ -26,7 +26,7 @@ LOA客户端的服务端驱动UI系统（Server-Driven UI，简称**SDUI**），
    - 数据层触发事件，所有UI自动刷新
    - 无需重启应用或重新打开界面
 
-### 技术必需的客户端本地化
+### 2. 技术必需的客户端本地化
 
 **定义标准**：只有在"完全无法建立网络连接"时必须显示的文本，才保留在客户端。
 
@@ -40,9 +40,9 @@ LOA客户端的服务端驱动UI系统（Server-Driven UI，简称**SDUI**），
 
 ---
 
-## 架构总览
+## 二、架构总览
 
-### 数据流架构
+### 1. 数据流架构
 
 ```
 服务端推送
@@ -60,9 +60,9 @@ UI组件.RefreshUI()（表现层）
 
 ---
 
-## 数据层（Data）
+## 三、数据层（Data）
 
-### 数据结构总览
+### 1. 数据结构总览
 
 | 属性名 | 类型 | 用途 | 推送时机 |
 |-------|------|------|---------|
@@ -71,7 +71,7 @@ UI组件.RefreshUI()（表现层）
 | **AccountTexts** | Dictionary<string, string> | AccountUI界面文本 | Gateway响应 |
 | **ErrorTexts** | Dictionary<string, string> | 网络错误提示文本 | Login响应 |
 
-### Data.StartTexts
+### 2. Data.StartTexts
 
 **定义**：Start界面的UI文本数据
 
@@ -88,7 +88,7 @@ UI组件.RefreshUI()（表现层）
 
 ---
 
-### Data.StartSettingsTexts
+### 3. Data.StartSettingsTexts
 
 **定义**：StartSettings界面的UI文本数据
 
@@ -127,7 +127,7 @@ UI组件.RefreshUI()（表现层）
 
 ---
 
-### Data.AccountTexts
+### 4. Data.AccountTexts
 
 **定义**：AccountUI（账号编辑界面）的UI文本数据
 
@@ -144,7 +144,7 @@ UI组件.RefreshUI()（表现层）
 
 ---
 
-### Data.ErrorTexts
+### 5. Data.ErrorTexts
 
 **定义**：游戏运行时网络错误文本数据
 
@@ -169,9 +169,9 @@ UI组件.RefreshUI()（表现层）
 
 ---
 
-## 表现层（UI）
+## 四、表现层（UI）
 
-### UI组件通用模式
+### 1. UI组件通用模式
 
 **核心方法**：
 
@@ -194,7 +194,7 @@ UI组件.RefreshUI()（表现层）
 2. ✅ 所有文本从`Data.Instance`读取
 3. ✅ `RefreshUI`方法独立，便于语言切换时调用
 
-### UI组件示例
+### 2. UI组件示例
 
 **Start.cs**：
 - 接收服务端推送的文本 → 存储到`Data.Instance.StartTexts`
@@ -211,9 +211,9 @@ UI组件.RefreshUI()（表现层）
 
 ---
 
-## 网络层（Net）
+## 五、网络层（Net）
 
-### 错误文本使用模式
+### 1. 错误文本使用模式
 
 **实现要点**：
 - 所有网络错误提示从`Data.Instance.ErrorTexts`读取
@@ -230,9 +230,9 @@ UI组件.RefreshUI()（表现层）
 
 ---
 
-## 服务端协议
+## 六、服务端协议
 
-### Gateway响应
+### 1. Gateway响应
 
 **协议**：`GatewayResponse`
 
