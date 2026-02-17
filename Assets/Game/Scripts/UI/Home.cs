@@ -24,7 +24,7 @@ namespace Game
         private float previousScale = 1.0f;
         private MapTransition mapTransition;
 
-        public List<Map> Maps
+        public List<MapData> Maps
         {
             get
             {
@@ -32,14 +32,14 @@ namespace Game
                 {
                     var scenes = Data.Instance.WorldMap.scenes;
                     if (scenes == null || scenes.Count == 0)
-                        return new List<Map>();
+                        return new List<MapData>();
 
                     int minX = scenes.Select(s => s.pos[0]).Min();
                     int maxX = scenes.Select(s => s.pos[0]).Max();
                     int minY = scenes.Select(s => s.pos[1]).Min();
                     int maxY = scenes.Select(s => s.pos[1]).Max();
 
-                    List<Map> result = new List<Map>();
+                    List<MapData> result = new List<MapData>();
                     for (int y = maxY; y >= minY; y--)
                     {
                         for (int x = minX; x <= maxX; x++)
@@ -47,7 +47,7 @@ namespace Game
                             var scene = scenes.Find(s => s.pos[0] == x && s.pos[1] == y);
                             if (scene != null)
                             {
-                                result.Add(new Map
+                                result.Add(new MapData
                                 {
                                     pos = scene.pos,
                                     name = scene.sceneName,
@@ -66,7 +66,7 @@ namespace Game
             }
         }
 
-        public List<Protocol.Characters.CharacterData> Characters => Data.Instance.Characters ?? Data.Instance.Home.characters.content;
+        public List<CharacterData> Characters => Data.Instance.Characters ?? Data.Instance.Home.characters;
 
         private int MinX => Maps != null && Maps.Count > 0 && Maps.Any(m => m != null) ? Maps.Where(m => m != null).Select(m => m.pos[0]).Min() : 0;
         private int MaxX => Maps != null && Maps.Count > 0 && Maps.Any(m => m != null) ? Maps.Where(m => m != null).Select(m => m.pos[0]).Max() : 0;
@@ -116,14 +116,14 @@ namespace Game
             {
                 if (resouse.Key == "Pp") continue;
 
-                float per = (float)resouse.Value.CurrentValue / resouse.Value.MaxValue;
+                float per = (float)resouse.Value.currentValue / resouse.Value.maxValue;
                 transform.Find($"Resource/{resouse.Key}/Progress").GetComponent<Image>().fillAmount = per;
-                transform.Find($"Resource/{resouse.Key}/Progress/Value").GetComponent<Text>().text = $"{resouse.Value.CurrentValue}/{resouse.Value.MaxValue}";
+                transform.Find($"Resource/{resouse.Key}/Progress/Value").GetComponent<Text>().text = $"{resouse.Value.currentValue}/{resouse.Value.maxValue}";
 
                 // 使用服务端发送的颜色
-                if (!string.IsNullOrEmpty(resouse.Value.Color))
+                if (!string.IsNullOrEmpty(resouse.Value.color))
                 {
-                    if (ColorUtility.TryParseHtmlString($"#{resouse.Value.Color.TrimStart('#')}", out Color color))
+                    if (ColorUtility.TryParseHtmlString($"#{resouse.Value.color.TrimStart('#')}", out Color color))
                     {
                         transform.Find($"Resource/{resouse.Key}/Progress").GetComponent<Image>().color = color;
                     }
@@ -309,7 +309,7 @@ namespace Game
         private LoopGridViewItem OnGetMapByIndex(LoopGridView loop, int index, int row, int column)
         {
             if (index < 0 || index >= Maps.Count) { return null; }
-            Map map = Maps[index];
+            MapData map = Maps[index];
             LoopGridViewItem item = loop.NewListViewItem("Item");
             Vector2 itemSize = CalculateFillLayout();
             item.GetComponent<RectTransform>().sizeDelta = itemSize;
@@ -412,7 +412,7 @@ namespace Game
         }
         private LoopListViewItem2 OnGetMessageByIndex(LoopListView2 listView, int index)
         {
-            List<Protocol.Information> informationDataList = Data.Instance.Informations;
+            List<InformationData> informationDataList = Data.Instance.Informations;
             if (index < 0 || index >= informationDataList.Count) { return null; }
             LoopListViewItem2 item = listView.NewListViewItem("Item");
             item.transform.Find("Text").GetComponent<Text>().text = informationDataList[index].message;

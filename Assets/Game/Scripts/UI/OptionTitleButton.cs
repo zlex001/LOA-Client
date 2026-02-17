@@ -7,7 +7,7 @@ namespace Game
     {
         private bool isListenerAdded = false;
 
-        public void Refresh(int index, Protocol.Option.Item item)
+        public void Refresh(int index, OptionItemData item)
         {
             this.index = index;
             

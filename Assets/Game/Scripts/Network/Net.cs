@@ -7,7 +7,6 @@ using Game.Protocol;
 using Newtonsoft.Json;
 using UnityTimer;
 using System.Collections;
-using Game.Flow;
 
 
 namespace Game
@@ -160,7 +159,7 @@ namespace Game
                 Socket.Close();
                 
                 Data.Instance.Dark = null;
-                Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("connection_timeout"));
+                Data.Instance.Tip = (TipType.Fly, GetErrorText("connection_timeout"));
                 Data.Instance.Online = false;
                 yield break;
             }
@@ -187,7 +186,7 @@ namespace Game
             {
                 errorKey = "connection_refused";
             }
-            Data.Instance.Tip = (UI.Tips.Fly, GetErrorText(errorKey));
+            Data.Instance.Tip = (TipType.Fly, GetErrorText(errorKey));
             Data.Instance.Online = false;
         }
         catch (Exception e)
@@ -196,7 +195,7 @@ namespace Game
             Socket.Close();
             
             Data.Instance.Dark = null;
-            Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("connection_failed"));
+            Data.Instance.Tip = (TipType.Fly, GetErrorText("connection_failed"));
             Data.Instance.Online = false;
         }
         }
@@ -248,7 +247,7 @@ namespace Game
                         {
                             Utils.Debug.LogWarning("Socket", "Server disconnected (Receive == 0)");
                             Socket.Close();
-                            Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("server_disconnected"));
+                            Data.Instance.Tip = (TipType.Fly, GetErrorText("server_disconnected"));
                             Data.Instance.Online = false;
                             return;
                         }
@@ -280,13 +279,13 @@ namespace Game
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Net", $"Receive data exception: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("network_communication_error"));
+                    Data.Instance.Tip = (TipType.Fly, GetErrorText("network_communication_error"));
                     Data.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Net", $"Receive data unexpected exception: {e.Message}\nStackTrace: {e.StackTrace}");
-                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("network_communication_error"));
+                    Data.Instance.Tip = (TipType.Fly, GetErrorText("network_communication_error"));
                     Data.Instance.Online = false;
                 }
                 }
@@ -329,13 +328,13 @@ namespace Game
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Socket", $"SocketException during send: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("send_failed"));
+                    Data.Instance.Tip = (TipType.Fly, GetErrorText("send_failed"));
                     Data.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Socket", $"Unexpected exception during send: {e.Message}\nStackTrace: {e.StackTrace}");
-                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("send_failed"));
+                    Data.Instance.Tip = (TipType.Fly, GetErrorText("send_failed"));
                     Data.Instance.Online = false;
                 }
             }
@@ -442,7 +441,7 @@ namespace Game
             if (type != null)
             {
                 object obj = JsonConvert.DeserializeObject(packet.Json, type);
-                if (obj is Base protocol)
+                if (obj is Protocol.Base protocol)
                 {
                     PrintReceiveMessage(protocol);
                     protocol.Processed();
@@ -450,12 +449,12 @@ namespace Game
             }
         }
 
-        private Base Decode(string name, byte[] bytes)
+        private Protocol.Base Decode(string name, byte[] bytes)
         {
             try
             {
                 string content = Encoding.UTF8.GetString(bytes);
-                return (Base)JsonConvert.DeserializeObject(content, Type.GetType($"Game.Protocol.{name}"));
+                return (Protocol.Base)JsonConvert.DeserializeObject(content, Type.GetType($"Game.Protocol.{name}"));
             }
             catch (Exception)
             {
@@ -519,7 +518,7 @@ namespace Game
                 
                 if (Data.Instance.Online)
                 {
-                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("server_disconnected"));
+                    Data.Instance.Tip = (TipType.Fly, GetErrorText("server_disconnected"));
                 }
                 
                 Data.Instance.Online = false;
@@ -618,7 +617,7 @@ namespace Game
             }
             else
             {
-                Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("rate_limit"));
+                Data.Instance.Tip = (TipType.Fly, GetErrorText("rate_limit"));
             }
         }
 
@@ -631,7 +630,7 @@ namespace Game
             Utils.Debug.Log("Socket", $"[SEND] Protocol: {name}, Json: {json}");
         }
 
-        private void PrintReceiveMessage(Base protocol)
+        private void PrintReceiveMessage(Protocol.Base protocol)
         {
             string json = JsonUtility.ToJson(protocol);
             Utils.Debug.Log("Socket", $"[RECEIVE] Protocol: {protocol.GetType().Name}, Json: {json}");
@@ -649,11 +648,14 @@ namespace Game
                 return;
             }
 
-            if (UI.Instance.Current == Config.UI.Start)
-            {
-                Utils.Debug.Log("Reconnect", "First connection failed in Start UI, not auto-reconnecting");
-                return;
-            }
+            // Check if in Start UI (through Data instead of UI)
+            // TODO: Add a flag in Data to track current UI state
+            // For now, always attempt reconnect
+            // if (Data.Instance.CurrentUI == "Start")
+            // {
+            //     Utils.Debug.Log("Reconnect", "First connection failed in Start UI, not auto-reconnecting");
+            //     return;
+            // }
 
             if (isReconnecting)
             {
@@ -703,11 +705,12 @@ namespace Game
                 if (Data.Instance.Online)
                 {
                     Utils.Debug.LogSuccess("Reconnect", $"Reconnect successful after {reconnectAttempts} attempts");
-                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("reconnect_success"));
+                    Data.Instance.Tip = (TipType.Fly, GetErrorText("reconnect_success"));
                     ResetReconnectState();
                     
-                    // Restart the startup flow to show Start UI for user to re-login
-                    StartupFlowManager.Start();
+                    // TODO: Use event to notify upper layer to restart startup flow
+                    // Net layer should not directly call StartupFlowManager (violates layering)
+                    // StartupFlowManager.Start();
                     yield break;
                 }
             }

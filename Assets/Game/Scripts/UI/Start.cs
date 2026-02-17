@@ -8,7 +8,6 @@ using Game.Protocol;
 using UnityTimer;
 using System.Collections.Generic;
 using System;
-using Game.Flow;
 
 namespace Game
 {
@@ -544,7 +543,7 @@ namespace Game
                 if (!string.IsNullOrEmpty(message))
                 {
                     Utils.Debug.Log("Start", "Setting FlyTip");
-                    Data.Instance.Tip = (UI.Tips.Fly, message);
+                    Data.Instance.Tip = (TipType.Fly, message);
                 }
             }
         }

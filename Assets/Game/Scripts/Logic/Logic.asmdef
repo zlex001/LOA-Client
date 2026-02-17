@@ -1,0 +1,23 @@
+{
+    "name": "Logic",
+    "rootNamespace": "Game",
+    "references": [
+        "Utils",
+        "Basic",
+        "Framework",
+        "LitJson",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

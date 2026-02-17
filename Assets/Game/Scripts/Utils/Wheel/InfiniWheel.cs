@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections;
@@ -20,7 +20,8 @@ namespace Game
 		{
 			if (click != null && !click.isPlaying && sound)
 				click.Play();
-            Audio.Instance.Play(Config.Audio.Click);
+            // TODO: Audio call moved to upper layer
+            // Audio.Instance.Play(Config.Audio.Click);
 
             if (ValueChange != null)
 				ValueChange(id, t);

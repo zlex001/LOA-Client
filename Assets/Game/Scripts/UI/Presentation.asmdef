@@ -1,0 +1,31 @@
+{
+    "name": "Presentation",
+    "rootNamespace": "Game",
+    "references": [
+        "Domain",
+        "Logic",
+        "Utils",
+        "Basic",
+        "Framework",
+        "Net",
+        "LitJson",
+        "DOTweenModules",
+        "SuperScrollView",
+        "Unity.TextMeshPro",
+        "Unity.Addressables",
+        "UnityEngine.Purchasing"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "DOTween.dll",
+        "Newtonsoft.Json.dll",
+        "Google.Protobuf.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

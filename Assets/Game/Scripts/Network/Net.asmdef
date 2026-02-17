@@ -1,0 +1,23 @@
+{
+    "name": "Net",
+    "rootNamespace": "Game",
+    "references": [
+        "Protocol",
+        "Logic",
+        "Basic",
+        "Framework",
+        "Utils"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

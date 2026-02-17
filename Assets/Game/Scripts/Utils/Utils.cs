@@ -292,7 +292,8 @@ namespace Game.Utils
 
             if (sfx != null)
             {
-                Audio.Instance.Play(sfx.Value);
+                // TODO: Audio call moved to upper layer
+                // Audio.Instance.Play(sfx.Value);
             }
         }
         public static void TextEcho(

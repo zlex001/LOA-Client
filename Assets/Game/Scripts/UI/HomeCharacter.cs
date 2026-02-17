@@ -14,7 +14,7 @@ namespace Game
             Net.Instance.Send(new Protocol.ClickCharacter(hash));
         }
 
-        public void Refresh(Protocol.Characters.CharacterData data)
+        public void Refresh(CharacterData data)
         {
             this.hash = data.hash;
             

@@ -19,12 +19,12 @@ namespace Game
         private const float GoldenRatioSmall = 0.382f;
         private const float PanelHeightUnits = 10f;
 
-        private Protocol.Option lastOption;
+        private OptionData lastOption;
 
         private const float PanelGap = UnitHeight * 0.25f;
         private const float AnimDuration = 0.1f;
         
-        private void Animate(Protocol.Option option)
+        private void Animate(OptionData option)
         {
             int count = (option.lefts != null ? 1 : 0) + (option.rights != null ? 1 : 0);
             bool hasLeft = option.lefts != null;
@@ -133,7 +133,7 @@ namespace Game
 
 
 
-        private Dictionary<Protocol.Option.Item.Type, Func<GameObject, string, Protocol.Option.Item, GameObject>> creators;
+        private Dictionary<OptionItemType, Func<GameObject, string, OptionItemData, GameObject>> creators;
 
 
 
@@ -155,20 +155,20 @@ namespace Game
         {
             creators = new()
             {
-                { Protocol.Option.Item.Type.Text,     (obj, path, item) => Text(obj, indices.text++, path, item) },
-                { Protocol.Option.Item.Type.Progress, (obj, path, item) => Progress(obj, indices.progress++, path, item) },
-                { Protocol.Option.Item.Type.ProgressWithValue, (obj, path, item) => ProgressWithValue(obj, indices.progressWithValue++, path, item) },
-                { Protocol.Option.Item.Type.Radar,    (obj, path, item) => Radar(obj, indices.radar++, path, item) }, // 保留 width
-                { Protocol.Option.Item.Type.Button,   (obj, path, item) => Button(obj, indices.button++, path, item) },
-                { Protocol.Option.Item.Type.TitleButton,   (obj, path, item) => TitleButton(obj, indices.titleButton++, path, item) },
-                { Protocol.Option.Item.Type.TitleButtonWithProgress,   (obj, path, item) => TitleButtonWithProgress(obj, indices.titleButtonWithProgress++, path, item) },
-                { Protocol.Option.Item.Type.IAPButton,(obj, path, item) => IAPButton(obj, indices.iapButton++, path, item) },
-                { Protocol.Option.Item.Type.Slider,   (obj, path, item) => Slider(obj, indices.slider++, path, item) },
-                { Protocol.Option.Item.Type.Input,    (obj, path, item) => Input(obj, indices.input++, path, item) },
-                { Protocol.Option.Item.Type.Filter,   (obj, path, item) => Filter(obj, indices.filter++, path, item) },
-                { Protocol.Option.Item.Type.ToggleGroup,(obj, path, item) => ToggleGroup(obj, indices.toggleGroup++, path, item) },
-                { Protocol.Option.Item.Type.Confirm,  (obj, path, item) => Confirm(obj, indices.confirm++, path, item) },
-                { Protocol.Option.Item.Type.Amount,   (obj, path, item) => Amount(obj, indices.amount++, path, item) },
+                { OptionItemType.Text,     (obj, path, item) => Text(obj, indices.text++, path, item) },
+                { OptionItemType.Progress, (obj, path, item) => Progress(obj, indices.progress++, path, item) },
+                { OptionItemType.ProgressWithValue, (obj, path, item) => ProgressWithValue(obj, indices.progressWithValue++, path, item) },
+                { OptionItemType.Radar,    (obj, path, item) => Radar(obj, indices.radar++, path, item) }, // 保留 width
+                { OptionItemType.Button,   (obj, path, item) => Button(obj, indices.button++, path, item) },
+                { OptionItemType.TitleButton,   (obj, path, item) => TitleButton(obj, indices.titleButton++, path, item) },
+                { OptionItemType.TitleButtonWithProgress,   (obj, path, item) => TitleButtonWithProgress(obj, indices.titleButtonWithProgress++, path, item) },
+                { OptionItemType.IAPButton,(obj, path, item) => IAPButton(obj, indices.iapButton++, path, item) },
+                { OptionItemType.Slider,   (obj, path, item) => Slider(obj, indices.slider++, path, item) },
+                { OptionItemType.Input,    (obj, path, item) => Input(obj, indices.input++, path, item) },
+                { OptionItemType.Filter,   (obj, path, item) => Filter(obj, indices.filter++, path, item) },
+                { OptionItemType.ToggleGroup,(obj, path, item) => ToggleGroup(obj, indices.toggleGroup++, path, item) },
+                { OptionItemType.Confirm,  (obj, path, item) => Confirm(obj, indices.confirm++, path, item) },
+                { OptionItemType.Amount,   (obj, path, item) => Amount(obj, indices.amount++, path, item) },
             };
             lastOption = Data.Instance.Option;
             Refresh(transform.Find("Left/Viewport/Content").gameObject, Data.Instance.Option.lefts, 0);  // side = 0
@@ -214,7 +214,7 @@ namespace Game
         }
 
         #region Core Methods
-        private void Refresh(GameObject content, List<Protocol.Option.Item> items, int side)
+        private void Refresh(GameObject content, List<OptionItemData> items, int side)
         {
             indices.Reset();
             if (items != null)
@@ -252,7 +252,7 @@ namespace Game
         }
 
 
-        private GameObject Create(GameObject obj, string path, Protocol.Option.Item item, int side, int index)
+        private GameObject Create(GameObject obj, string path, OptionItemData item, int side, int index)
         {
             var go = creators.TryGetValue(item.type, out var creator) ? creator(obj, path, item) : null;
 
@@ -266,7 +266,7 @@ namespace Game
         }
         #endregion
 
-        private GameObject Text(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Text(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject text = obj.AddPrefab(path, "OptionText");
             var textComp = text.GetComponent<Text>();
@@ -279,7 +279,7 @@ namespace Game
             return text;
         }
 
-        private GameObject Progress(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Progress(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject progress = obj.AddPrefab(path, "OptionProgress");
             progress.transform.Find("Title").GetComponent<Text>().text = item.data["Text"];
@@ -299,7 +299,7 @@ namespace Game
             return progress;
         }
 
-        private GameObject ProgressWithValue(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject ProgressWithValue(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject progress = obj.AddPrefab(path, "OptionProgressWithValue");
             progress.transform.Find("Title").GetComponent<Text>().text = item.data["Text"];
@@ -319,7 +319,7 @@ namespace Game
             return progress;
         }
 
-        private GameObject Radar(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Radar(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject radar = obj.AddPrefab(path, "OptionRadar");
             OptionRadar option = radar.GetComponent<OptionRadar>();
@@ -329,7 +329,7 @@ namespace Game
             return radar;
         }
 
-        private GameObject Slider(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Slider(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject slider = obj.AddPrefab(path, "OptionSlider");
             OptionSlider option = slider.GetComponent<OptionSlider>();
@@ -349,7 +349,7 @@ namespace Game
             return slider;
         }
 
-        private GameObject Button(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Button(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject button = obj.AddPrefab(path, "OptionButton");
             OptionButton option = button.GetComponent<OptionButton>();
@@ -357,7 +357,7 @@ namespace Game
             button.GetComponent<RectTransform>().sizeDelta = new Vector2(0, PerButtonHeight);
             return button;
         }
-        private GameObject TitleButton(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject TitleButton(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject button = obj.AddPrefab(path, "OptionTitleButton");
             OptionTitleButton option = button.GetComponent<OptionTitleButton>();
@@ -366,7 +366,7 @@ namespace Game
             return button;
         }
 
-        private GameObject TitleButtonWithProgress(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject TitleButtonWithProgress(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject button = obj.AddPrefab(path, "OptionTitleButtonWithProgress");
             if (button == null)
@@ -387,7 +387,7 @@ namespace Game
             return button;
         }
 
-        private GameObject IAPButton(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject IAPButton(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject iap = obj.AddPrefab(path, "OptionIAPButton");
             OptionIAP option = iap.GetComponent<OptionIAP>();
@@ -398,14 +398,14 @@ namespace Game
             return iap;
         }
 
-        private GameObject Confirm(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Confirm(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject confirm = obj.AddPrefab(path, "OptionConfirm");
             confirm.GetComponent<RectTransform>().sizeDelta = new Vector2(0, PerButtonHeight);
             return confirm;
         }
 
-        private GameObject Input(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Input(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject input = obj.AddPrefab(path, "OptionInput");
             OptionInput option = input.GetComponent<OptionInput>();
@@ -414,7 +414,7 @@ namespace Game
             return input;
         }
 
-        private GameObject Filter(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Filter(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject filter = obj.AddPrefab(path, "OptionFilter");
             OptionFilter option = filter.GetComponent<OptionFilter>();
@@ -423,7 +423,7 @@ namespace Game
             return filter;
         }
 
-        private GameObject ToggleGroup(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject ToggleGroup(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject toggleGroup = obj.AddPrefab(path, "OptionToggleGroup");
             List<string> toggles = item.data["Text"].Split('、').ToList();
@@ -454,7 +454,7 @@ namespace Game
             return toggleGroup;
         }
 
-        private GameObject Amount(GameObject obj, int index, string path, Protocol.Option.Item item)
+        private GameObject Amount(GameObject obj, int index, string path, OptionItemData item)
         {
             GameObject amount = obj.AddPrefab(path, "OptionAmount");
             OptionAmount option = amount.GetComponent<OptionAmount>();

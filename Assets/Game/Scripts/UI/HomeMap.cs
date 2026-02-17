@@ -8,7 +8,7 @@ namespace Game
 {
     public class HomeMap : MonoBehaviour
     {
-        private Map map;
+        private MapData map;
         
         private Image tileImage;
         private Image borderImage;
@@ -46,7 +46,7 @@ namespace Game
                 nameText = transform.Find("Name").GetComponent<Text>();
         }
 
-        public void Refresh(Map map)
+        public void Refresh(MapData map)
         {
             this.map = map;
             

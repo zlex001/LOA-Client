@@ -184,7 +184,7 @@ namespace Game
             }
             else
             {
-                Data.Instance.Tip = (UI.Tips.Fly, checkResult);
+                Data.Instance.Tip = (TipType.Fly, checkResult);
             }
         }
 
@@ -310,7 +310,7 @@ namespace Game
                 string message = Data.Instance.InitialResponseMessage;
                 if (!string.IsNullOrEmpty(message))
                 {
-                    Data.Instance.Tip = (UI.Tips.Fly, message);
+                    Data.Instance.Tip = (TipType.Fly, message);
                 }
             }
         }

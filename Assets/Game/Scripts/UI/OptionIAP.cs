@@ -33,9 +33,10 @@ namespace Game
 
         public void SetProdut(string text)
         {
-            GetComponent<CodelessIAPButton>().productId = text;
-            GetComponent<CodelessIAPButton>().onPurchaseComplete.AddListener(OnPurchaseComplete);
-            GetComponent<CodelessIAPButton>().onPurchaseFailed.AddListener(OnPurchaseFail);
+            // TODO: CodelessIAPButton may not exist in Unity IAP 4.9.4, needs investigation
+            // GetComponent<CodelessIAPButton>().productId = text;
+            // GetComponent<CodelessIAPButton>().onPurchaseComplete.AddListener(OnPurchaseComplete);
+            // GetComponent<CodelessIAPButton>().onPurchaseFailed.AddListener(OnPurchaseFail);
         }
         public void SetText(string text)
         {

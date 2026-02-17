@@ -15,7 +15,7 @@ namespace Game
     public class Tutorial : UI.Core
     {
         #region Fields
-        private Protocol.Tutorial currentStep;
+        private TutorialData currentStep;
         private Transform highlightedTarget;
         private Coroutine rippleCoroutine;
         #endregion
@@ -55,7 +55,7 @@ namespace Game
             // Avoid accessing singleton during application quit to prevent recreation
             if (!isQuitting)
             {
-                Data.Instance.Tip = (UI.Tips.Attach, null);
+                Data.Instance.Tip = (TipType.Attach, null);
             }
         }
 
@@ -159,7 +159,7 @@ namespace Game
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, target.position);
                 Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint} at screen pos: {screen}");
-                Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+                Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
         }
         #endregion
@@ -187,7 +187,7 @@ namespace Game
                 var mapField = map.GetType().GetField("map", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 if (mapField != null)
                 {
-                    var mapData = mapField.GetValue(map) as Map;
+                    var mapData = mapField.GetValue(map) as MapData;
                     if (mapData != null && mapData.pos != null && mapData.pos.Length >= 3)
                     {
                         if (mapData.pos[0] == currentStep.targetPos[0] &&
@@ -229,7 +229,7 @@ namespace Game
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetMap.transform.position);
                 Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint} at screen pos: {screen}");
-                Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+                Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
         }
         #endregion
@@ -275,7 +275,7 @@ namespace Game
                 Utils.Debug.LogWarning("Tutorial", $"Unknown target area: {targetArea}");
                 if (!string.IsNullOrEmpty(currentStep.hint))
                 {
-                    Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
+                    Data.Instance.Tip = (TipType.Fly, currentStep.hint);
                 }
             }
         }
@@ -294,7 +294,7 @@ namespace Game
             }
 
             // Find character index by configId in Data.Instance.Characters
-            var characters = Data.Instance.Characters ?? Data.Instance.Home?.characters?.content;
+            var characters = Data.Instance.Characters ?? Data.Instance.Home?.characters;
             if (characters == null)
             {
                 Utils.Debug.LogWarning("Tutorial", "Characters list is null. Data.Instance.Characters=" + 
@@ -304,14 +304,14 @@ namespace Game
             }
 
             // Debug: log all characters for troubleshooting
-            Utils.Debug.Log("Tutorial", $"Searching for targetId={currentStep.targetId} in {characters.Count} characters:");
-            for (int i = 0; i < characters.Count; i++)
+            Utils.Debug.Log("Tutorial", $"Searching for targetId={currentStep.targetId} in {characters.Count()} characters:");
+            for (int i = 0; i < characters.Count(); i++)
             {
                 Utils.Debug.Log("Tutorial", $"  [{i}] name={characters[i].name}, configId={characters[i].configId}, hash={characters[i].hash}");
             }
 
             int targetIndex = -1;
-            for (int i = 0; i < characters.Count; i++)
+            for (int i = 0; i < characters.Count(); i++)
             {
                 // Match by configId first, fallback to hash if configId is 0
                 if (characters[i].configId == currentStep.targetId || 
@@ -328,7 +328,7 @@ namespace Game
                 Utils.Debug.LogWarning("Tutorial", $"Character with targetId {currentStep.targetId} not found in list");
                 if (!string.IsNullOrEmpty(currentStep.hint))
                 {
-                    Data.Instance.Tip = (UI.Tips.Fly, currentStep.hint);
+                    Data.Instance.Tip = (TipType.Fly, currentStep.hint);
                 }
                 yield break;
             }
@@ -392,7 +392,7 @@ namespace Game
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetItem.position);
                 Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint}");
-                Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+                Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
 
             // If there's a button name to wait for in Option menu, register listener
@@ -531,7 +531,7 @@ namespace Game
             if (!string.IsNullOrEmpty(currentStep.hint))
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetButton.position);
-                Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+                Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
         }
 
@@ -657,7 +657,7 @@ namespace Game
             Utils.Ring.Loop(gameObject, localPos, this);
 
             Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, target.position);
-            Data.Instance.Tip = (UI.Tips.Attach, JsonMapper.ToJson(new { text, screen = new[] { screen.x, screen.y } }));
+            Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text, screen = new[] { screen.x, screen.y } }));
         }
         #endregion
     }

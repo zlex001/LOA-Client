@@ -12,7 +12,7 @@ namespace Game
             transform.Find("Button").GetComponent<Button>().onClick.AddListener(OnClick);
         }
         
-        public void Refresh(int index, Protocol.Option.Item item)
+        public void Refresh(int index, OptionItemData item)
         {
             this.index = index;
             transform.Find("Button/Text").GetComponent<Text>().text = item.data["Button"];

@@ -10,7 +10,7 @@ namespace Game
         {
             GetComponent<InputField>().onEndEdit.AddListener((text) => Net.Instance.Send(new Protocol.OptionInput(text)));
         }
-        public void Refresh(int index, Protocol.Option.Item item)
+        public void Refresh(int index, OptionItemData item)
         {
             this.index = index;
             transform.Find("Text").GetComponent<Text>().text = item.data["Text"];

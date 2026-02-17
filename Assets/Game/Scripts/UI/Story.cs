@@ -17,7 +17,7 @@ namespace Game
         private Transform contentRoot;
         private ScrollRect scrollRect;
 
-        private List<Protocol.Story.Dialogue> dialogues;
+        private List<DialogueData> dialogues;
         private int currentIndex = 0;
         private bool isTyping = false;
         private Coroutine typingCoroutine;
@@ -226,15 +226,15 @@ namespace Game
         [System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void Test()
         {
-            var testDialogues = new List<Protocol.Story.Dialogue>
+            var testDialogues = new List<DialogueData>
             {
-                new Protocol.Story.Dialogue { character = "", words = "The wind whispered through the ancient forest, carrying tales of forgotten heroes..." },
-                new Protocol.Story.Dialogue { character = "Guardian", words = "You have come a long way, traveler. What is it that you seek?" },
-                new Protocol.Story.Dialogue { character = "Player", words = "I seek the truth. The truth about the gods who once walked among us." },
-                new Protocol.Story.Dialogue { character = "Guardian", words = "The truth... is a burden few can bear. Are you prepared for what you may find?" },
-                new Protocol.Story.Dialogue { character = "", words = "A cold breeze swept across the clearing, as if the very air held its breath..." },
-                new Protocol.Story.Dialogue { character = "Player", words = "I am ready. Whatever the cost may be." },
-                new Protocol.Story.Dialogue { character = "Guardian", words = "Then listen well, for I shall tell you the story of the Atlanteans..." },
+                new DialogueData { character = "", words = "The wind whispered through the ancient forest, carrying tales of forgotten heroes..." },
+                new DialogueData { character = "Guardian", words = "You have come a long way, traveler. What is it that you seek?" },
+                new DialogueData { character = "Player", words = "I seek the truth. The truth about the gods who once walked among us." },
+                new DialogueData { character = "Guardian", words = "The truth... is a burden few can bear. Are you prepared for what you may find?" },
+                new DialogueData { character = "", words = "A cold breeze swept across the clearing, as if the very air held its breath..." },
+                new DialogueData { character = "Player", words = "I am ready. Whatever the cost may be." },
+                new DialogueData { character = "Guardian", words = "Then listen well, for I shall tell you the story of the Atlanteans..." },
             };
             Data.Instance.StoryDialogues = testDialogues;
         }
