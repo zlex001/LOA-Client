@@ -1,7 +1,6 @@
-[重构] StartSettings.cs迁移至SDUI架构
+[重构] Net.cs迁移至SDUI架构
 
-- 修改OnEnter方法接收服务端推送的UI文本并存储到Data.Instance.StartSettingsTexts
-- 添加GetText辅助方法从Data层安全获取文本
-- 替换所有30处Localization.Instance.Get()调用为GetText()
-- 保留Localization.Instance.Init()用于重新加载5个技术必需键
-- UI文本现已完全由服务端驱动，支持零客户端更新
+- 添加GetErrorText辅助方法从Data.Instance.ErrorTexts安全获取错误文本
+- 替换所有13处Localization.Instance.Get()调用为GetErrorText()
+- 支持格式化参数（如重连倒计时、尝试次数等）
+- 网络错误文本现已完全由服务端驱动，支持零客户端更新

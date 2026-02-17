@@ -37,6 +37,23 @@ namespace Game
 
         #endregion
 
+        #region Helper Methods
+        
+        /// <summary>
+        /// Get error text from SDUI data layer
+        /// </summary>
+        private string GetErrorText(string key, params object[] args)
+        {
+            var texts = Data.Instance.ErrorTexts;
+            if (texts != null && texts.ContainsKey(key))
+            {
+                return args.Length > 0 ? string.Format(texts[key], args) : texts[key];
+            }
+            return key;
+        }
+        
+        #endregion
+
         #region Fields and Properties
 
         private byte[] buffer = new byte[Config.Net.SocketBufferSize];
@@ -143,7 +160,7 @@ namespace Game
                 Socket.Close();
                 
                 Data.Instance.Dark = null;
-                Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("connection_timeout"));
+                Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("connection_timeout"));
                 Data.Instance.Online = false;
                 yield break;
             }
@@ -170,7 +187,7 @@ namespace Game
             {
                 errorKey = "connection_refused";
             }
-            Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get(errorKey));
+            Data.Instance.Tip = (UI.Tips.Fly, GetErrorText(errorKey));
             Data.Instance.Online = false;
         }
         catch (Exception e)
@@ -179,7 +196,7 @@ namespace Game
             Socket.Close();
             
             Data.Instance.Dark = null;
-            Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("connection_failed"));
+            Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("connection_failed"));
             Data.Instance.Online = false;
         }
         }
@@ -231,7 +248,7 @@ namespace Game
                         {
                             Utils.Debug.LogWarning("Socket", "Server disconnected (Receive == 0)");
                             Socket.Close();
-                            Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("server_disconnected"));
+                            Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("server_disconnected"));
                             Data.Instance.Online = false;
                             return;
                         }
@@ -263,13 +280,13 @@ namespace Game
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Net", $"Receive data exception: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("network_communication_error"));
+                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("network_communication_error"));
                     Data.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Net", $"Receive data unexpected exception: {e.Message}\nStackTrace: {e.StackTrace}");
-                    Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("network_communication_error"));
+                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("network_communication_error"));
                     Data.Instance.Online = false;
                 }
                 }
@@ -312,13 +329,13 @@ namespace Game
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Socket", $"SocketException during send: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("send_failed"));
+                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("send_failed"));
                     Data.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Socket", $"Unexpected exception during send: {e.Message}\nStackTrace: {e.StackTrace}");
-                    Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("send_failed"));
+                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("send_failed"));
                     Data.Instance.Online = false;
                 }
             }
@@ -502,7 +519,7 @@ namespace Game
                 
                 if (Data.Instance.Online)
                 {
-                    Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("server_disconnected"));
+                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("server_disconnected"));
                 }
                 
                 Data.Instance.Online = false;
@@ -601,7 +618,7 @@ namespace Game
             }
             else
             {
-                Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("rate_limit"));
+                Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("rate_limit"));
             }
         }
 
@@ -667,7 +684,7 @@ namespace Game
                     Config.Net.MaxReconnectDelay
                 );
 
-                Data.Instance.Dark = Localization.Instance.Get(
+                Data.Instance.Dark = GetErrorText(
                     "reconnecting_countdown",
                     reconnectAttempts.ToString(),
                     Mathf.CeilToInt(delay).ToString()
@@ -676,7 +693,7 @@ namespace Game
                 Utils.Debug.Log("Reconnect", $"Attempt #{reconnectAttempts}, waiting {delay}s");
                 yield return new WaitForSeconds(delay);
 
-                Data.Instance.Dark = Localization.Instance.Get("reconnecting_attempt", reconnectAttempts.ToString());
+                Data.Instance.Dark = GetErrorText("reconnecting_attempt", reconnectAttempts.ToString());
 
                 yield return ConnectCoroutine(
                     Data.Instance.SelectedServer.Ip,
@@ -686,7 +703,7 @@ namespace Game
                 if (Data.Instance.Online)
                 {
                     Utils.Debug.LogSuccess("Reconnect", $"Reconnect successful after {reconnectAttempts} attempts");
-                    Data.Instance.Tip = (UI.Tips.Fly, Localization.Instance.Get("reconnect_success"));
+                    Data.Instance.Tip = (UI.Tips.Fly, GetErrorText("reconnect_success"));
                     ResetReconnectState();
                     
                     // Restart the startup flow to show Start UI for user to re-login
