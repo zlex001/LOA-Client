@@ -1,5 +1,5 @@
-[优化] 清理调试日志并更新本地化架构文档
+[重构] 简化客户端本地化文件并创建服务端SDUI需求文档
 
-- 清理Data.cs和StartSettings.cs中的所有agent log调试代码
-- 更新登录与启动系统文档，添加客户端本地化章节
-- 明确定义技术必需的5个客户端本地化键
+- 精简22个本地化文件，仅保留5个技术必需键（loading, connecting, connection_timeout, network_error, parse_error）
+- 删除79个将迁移至服务端SDUI的本地化键
+- 创建详细的服务端SDUI需求文档（.cursor/server_sdui_requirements.md）
