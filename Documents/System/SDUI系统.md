@@ -1,32 +1,8 @@
 # 服务端驱动UI系统（SDUI）
 
-LOA客户端的服务端驱动UI系统（Server-Driven UI，简称**SDUI**），通过将UI文本和配置数据从服务端推送到客户端，实现了零客户端更新的内容迭代能力，同时确保多语言文本的统一管理和实时更新。
+LOA客户端的服务端驱动UI系统（Server-Driven UI，简称**SDUI**），采用数据驱动架构，UI表现层从数据层读取文本而不持有数据副本，数据层（Data）作为唯一数据源（Single Source of Truth）。所有UI文本由服务端推送至客户端，实现零客户端更新的内容迭代能力：UI文本修改、多语言内容更新无需重新打包，服务端修改后立即生效，支持A/B测试和灰度发布。语言切换时，客户端请求服务端推送新语言文本，数据层触发事件，所有UI自动刷新，无需重启应用。客户端本地化仅保留5个技术必需键（`loading`、`connecting`、`connection_timeout`、`network_error`、`parse_error`），其余文本均由服务端管理，减少客户端包体积，提升热更新效率。
 
-## 一、设计理念
-
-### 1. 核心原则
-
-1. **数据驱动**
-   - UI表现层从数据层读取文本，不持有数据
-   - 数据层（Data）作为唯一数据源（Single Source of Truth）
-   - 符合项目的"管理器协作架构"原则
-
-2. **最小化客户端本地化**
-   - 客户端本地化仅保留5个技术必需键：`loading`、`connecting`、`connection_timeout`、`network_error`、`parse_error`
-   - 所有其他UI文本由服务端推送
-   - 减少客户端包体积，提升热更新效率
-
-3. **0强更迭代**
-   - UI文本修改、多语言内容更新无需客户端重新打包
-   - 服务端修改后立即生效
-   - 支持A/B测试和灰度发布
-
-4. **语言切换响应式**
-   - 用户切换语言时，客户端请求服务端推送新语言文本
-   - 数据层触发事件，所有UI自动刷新
-   - 无需重启应用或重新打开界面
-
-### 2. 技术必需的客户端本地化
+## 一、技术必需的客户端本地化
 
 **定义标准**：只有在"完全无法建立网络连接"时必须显示的文本，才保留在客户端。
 
@@ -251,7 +227,7 @@ message GatewayResponse {
 
 ---
 
-### Login响应
+### 2. Login响应
 
 **协议**：`LoginResponse`
 
@@ -267,7 +243,7 @@ message LoginResponse {
 
 ---
 
-### 语言切换协议
+### 3. 语言切换协议
 
 **请求**：`ChangeLanguageRequest`
 
@@ -297,9 +273,9 @@ message ChangeLanguageResponse {
 
 ---
 
-## 语言切换机制
+## 七、语言切换机制
 
-### 事件驱动更新
+### 1. 事件驱动更新
 
 **架构**：观察者模式（Observer Pattern）
 
@@ -333,9 +309,9 @@ sequenceDiagram
 
 ---
 
-## 优势与限制
+## 八、优势与限制
 
-### 优势
+### 1. 优势
 
 1. **零客户端更新**
    - UI文本修改无需重新打包
@@ -357,7 +333,7 @@ sequenceDiagram
    - 所有界面自动刷新
    - 用户体验流畅
 
-### 限制
+### 2. 限制
 
 1. **依赖网络连接**
    - 首次启动必须联网才能显示完整UI
@@ -376,9 +352,9 @@ sequenceDiagram
 
 ---
 
-## 开发规范
+## 九、开发规范
 
-### UI组件开发规范
+### 1. UI组件开发规范
 
 1. **禁止硬编码文本**
    - ❌ 错误：`titleText.text = "标题";` 或 `titleText.text = "Title";`
@@ -400,9 +376,9 @@ sequenceDiagram
 
 ---
 
-## 待完成工作
+## 十、待完成工作
 
-### 客户端
+### 1. 客户端
 
 - [x] 重构StartSettings.cs为SDUI架构
 - [x] 重构Net.cs使用`Data.Instance.ErrorTexts`
@@ -410,7 +386,7 @@ sequenceDiagram
 - [ ] 添加fallback机制（服务端未就绪时的降级方案）
 - [ ] 添加UI文本缓存机制（减少重复请求）
 
-### 服务端
+### 2. 服务端
 
 - [ ] 创建22种语言的文本资源文件
 - [ ] 实现`StartSettingsUI` Protocol
@@ -421,7 +397,7 @@ sequenceDiagram
 
 ---
 
-## 相关文档
+## 十一、相关文档
 
 - [服务端SDUI需求文档](../../.cursor/server_sdui_requirements.md)
 - [登录与启动系统](./登录与启动系统.md)
