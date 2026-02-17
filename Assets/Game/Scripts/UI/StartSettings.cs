@@ -41,6 +41,19 @@ namespace Game
         
         #region Helper Methods
         /// <summary>
+        /// Get text from SDUI data layer
+        /// </summary>
+        private string GetText(string key)
+        {
+            var texts = Data.Instance.StartSettingsTexts;
+            if (texts != null && texts.ContainsKey(key))
+            {
+                return texts[key];
+            }
+            return key;
+        }
+        
+        /// <summary>
         /// Apply interactive color feedback to button
         /// </summary>
         private void ApplyButtonColorBlock(Button button, bool transparent = false)
@@ -158,6 +171,12 @@ namespace Game
         {
             Utils.Debug.Log("StartSettings", "OnEnter - starting slide-up animation");
             
+            // Receive and store UI texts from server
+            if (args.Length > 0 && args[0] is Dictionary<string, string> texts)
+            {
+                Data.Instance.StartSettingsTexts = texts;
+            }
+            
             // Register language change observer
             Data.Instance.after.Register(Data.Type.Language, OnLanguageChanged);
             
@@ -266,7 +285,7 @@ namespace Game
         private void BuildAccountSection()
         {
             // Section header
-            CreateSectionHeader(Localization.Instance.Get("start_settings_accounts"));
+            CreateSectionHeader(GetText("accounts"));
             
             // Account items
             _accountItemObjects.Clear();
@@ -286,7 +305,7 @@ namespace Game
         private void BuildSettingsSection()
         {
             // Section header
-            CreateSectionHeader(Localization.Instance.Get("start_settings_general"));
+            CreateSectionHeader(GetText("general"));
             
             // Language item
             CreateLanguageItem();
@@ -385,7 +404,7 @@ namespace Game
             editTextRect.sizeDelta = Vector2.zero;
             
             var editText = editTextObj.AddComponent<Text>();
-            editText.text = Localization.Instance.Get("start_settings_edit");
+            editText.text = GetText("edit");
             editText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             editText.fontSize = 38;
             editText.color = ColorButtonEdit;
@@ -418,7 +437,7 @@ namespace Game
             deleteTextRect.sizeDelta = Vector2.zero;
             
             var deleteText = deleteTextObj.AddComponent<Text>();
-            deleteText.text = Localization.Instance.Get("start_settings_delete");
+            deleteText.text = GetText("delete");
             deleteText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             deleteText.fontSize = 38;
             deleteText.color = ColorButtonDelete;
@@ -457,7 +476,7 @@ namespace Game
             textRect.anchoredPosition = Vector2.zero;
             
             var text = textObj.AddComponent<Text>();
-            text.text = Localization.Instance.Get("start_settings_add_account");
+            text.text = GetText("add_account");
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 38;
             text.color = ColorTextAccent;
@@ -497,7 +516,7 @@ namespace Game
             labelRect.anchoredPosition = new Vector2(15, 0);
             
             var labelText = labelObj.AddComponent<Text>();
-            labelText.text = Localization.Instance.Get("start_settings_language");
+            labelText.text = GetText("language");
             labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             labelText.fontSize = 38;
             labelText.color = ColorTextPrimary;
@@ -550,7 +569,7 @@ namespace Game
             labelRect.anchoredPosition = new Vector2(15, 0);
             
             var labelText = labelObj.AddComponent<Text>();
-            labelText.text = Localization.Instance.Get("start_settings_font_size");
+            labelText.text = GetText("font_size");
             labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             labelText.fontSize = 38;
             labelText.color = ColorTextPrimary;
@@ -623,10 +642,10 @@ namespace Game
             // Set current font size label
             int[] fontSizes = { 25, 30, 35, 40 };
             string[] fontLabels = {
-                Localization.Instance.Get("font_size_small"),
-                Localization.Instance.Get("font_size_medium"),
-                Localization.Instance.Get("font_size_large"),
-                Localization.Instance.Get("font_size_extra_large")
+                GetText("font_size_small"),
+                GetText("font_size_medium"),
+                GetText("font_size_large"),
+                GetText("font_size_extra_large")
             };
             int currentFontSize = Data.Instance.FontSize;
             int currentIndex = System.Array.IndexOf(fontSizes, currentFontSize);
@@ -691,7 +710,7 @@ namespace Game
             labelRect.anchoredPosition = new Vector2(15, 0);
             
             var labelText = labelObj.AddComponent<Text>();
-            labelText.text = Localization.Instance.Get("start_settings_ui_sound");
+            labelText.text = GetText("ui_sound");
             labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             labelText.fontSize = 38;
             labelText.color = ColorTextPrimary;
@@ -794,7 +813,7 @@ namespace Game
             }
             
             string message = string.Format(
-                Localization.Instance.Get("start_settings_delete_confirm"),
+                GetText("delete_confirm"),
                 account.Id
             );
             
@@ -854,7 +873,7 @@ namespace Game
         #region Settings Callbacks
         private string GetLanguageName(Data.Languages language)
         {
-            return Localization.Instance.Get($"lang_{language}");
+            return GetText($"lang_{language}");
         }
         
         private void OnLanguageItemClick()
@@ -966,7 +985,7 @@ namespace Game
             titleRect.sizeDelta = Vector2.zero;
             
             var titleText = titleObj.AddComponent<Text>();
-            titleText.text = Localization.Instance.Get("start_settings_add_account");
+            titleText.text = GetText("edit_account");
             titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             titleText.fontSize = 38;
             titleText.color = ColorTextPrimary;
@@ -976,27 +995,27 @@ namespace Game
             // Account ID input
             var accountField = CreateInputField(panelObj.transform, "AccountField", 
                 new Vector2(0.1f, 0.65f), new Vector2(0.9f, 0.8f),
-                Localization.Instance.Get("start_settings_account_id"), "");
+                GetText("account_id"), "");
             
             // Password input
             var passwordField = CreateInputField(panelObj.transform, "PasswordField",
                 new Vector2(0.1f, 0.48f), new Vector2(0.9f, 0.63f),
-                Localization.Instance.Get("start_settings_password"), "");
+                GetText("password"), "");
             passwordField.inputType = InputField.InputType.Password;
             
             // Note input
             var noteField = CreateInputField(panelObj.transform, "NoteField",
                 new Vector2(0.1f, 0.31f), new Vector2(0.9f, 0.46f),
-                Localization.Instance.Get("start_settings_note_optional"), "");
+                GetText("note_optional"), "");
             
             // Cancel button
             CreateDialogButton(panelObj.transform, "Cancel", new Vector2(0.15f, 0.1f), new Vector2(0.45f, 0.25f),
-                Localization.Instance.Get("start_settings_cancel"),
+                GetText("cancel"),
                 () => GameObject.Destroy(dialogObj));
             
             // Confirm button
             CreateDialogButton(panelObj.transform, "Confirm", new Vector2(0.55f, 0.1f), new Vector2(0.85f, 0.25f),
-                Localization.Instance.Get("start_settings_confirm"),
+                GetText("confirm"),
                 () => {
                     onConfirm?.Invoke(accountField.text, passwordField.text, noteField.text);
                     GameObject.Destroy(dialogObj);
@@ -1050,7 +1069,7 @@ namespace Game
             titleRect.sizeDelta = Vector2.zero;
             
             var titleText = titleObj.AddComponent<Text>();
-            titleText.text = Localization.Instance.Get("start_settings_edit_account");
+            titleText.text = GetText("edit_account");
             titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             titleText.fontSize = 38;
             titleText.color = ColorTextPrimary;
@@ -1060,27 +1079,27 @@ namespace Game
             // Account ID input
             var idField = CreateInputField(panelObj.transform, "AccountIdField",
                 new Vector2(0.1f, 0.63f), new Vector2(0.9f, 0.78f),
-                Localization.Instance.Get("start_settings_account_id"), defaultId);
+                GetText("account_id"), defaultId);
             
             // Password input
             var passwordField = CreateInputField(panelObj.transform, "PasswordField",
                 new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.6f),
-                Localization.Instance.Get("start_settings_password"), defaultPassword);
+                GetText("password"), defaultPassword);
             passwordField.inputType = InputField.InputType.Password;
             
             // Note input
             var noteField = CreateInputField(panelObj.transform, "NoteField",
                 new Vector2(0.1f, 0.27f), new Vector2(0.9f, 0.42f),
-                Localization.Instance.Get("start_settings_note_optional"), defaultNote);
+                GetText("note_optional"), defaultNote);
             
             // Cancel button
             CreateDialogButton(panelObj.transform, "Cancel", new Vector2(0.15f, 0.1f), new Vector2(0.45f, 0.25f),
-                Localization.Instance.Get("start_settings_cancel"),
+                GetText("cancel"),
                 () => GameObject.Destroy(dialogObj));
             
             // Confirm button
             CreateDialogButton(panelObj.transform, "Confirm", new Vector2(0.55f, 0.1f), new Vector2(0.85f, 0.25f),
-                Localization.Instance.Get("start_settings_confirm"),
+                GetText("confirm"),
                 () => {
                     onConfirm?.Invoke(idField.text, passwordField.text, noteField.text);
                     GameObject.Destroy(dialogObj);
@@ -1205,12 +1224,12 @@ namespace Game
             
             // Cancel button
             CreateDialogButton(panelObj.transform, "Cancel", new Vector2(0.15f, 0.15f), new Vector2(0.45f, 0.35f),
-                Localization.Instance.Get("start_settings_cancel"), 
+                GetText("cancel"), 
                 () => GameObject.Destroy(dialogObj));
             
             // Confirm button
             CreateDialogButton(panelObj.transform, "Confirm", new Vector2(0.55f, 0.15f), new Vector2(0.85f, 0.35f),
-                Localization.Instance.Get("start_settings_confirm"),
+                GetText("confirm"),
                 () => {
                     onConfirm?.Invoke();
                     GameObject.Destroy(dialogObj);
@@ -1330,12 +1349,12 @@ namespace Game
             
             // Cancel button
             CreateDialogButton(panelObj.transform, "Cancel", new Vector2(0.15f, 0.1f), new Vector2(0.45f, 0.3f),
-                Localization.Instance.Get("start_settings_cancel"),
+                GetText("cancel"),
                 () => GameObject.Destroy(dialogObj));
             
             // Confirm button
             CreateDialogButton(panelObj.transform, "Confirm", new Vector2(0.55f, 0.1f), new Vector2(0.85f, 0.3f),
-                Localization.Instance.Get("start_settings_confirm"),
+                GetText("confirm"),
                 () => {
                     onConfirm?.Invoke(inputField.text);
                     GameObject.Destroy(dialogObj);

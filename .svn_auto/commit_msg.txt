@@ -1,8 +1,7 @@
-[文档] 创建SDUI系统设计文档
+[重构] StartSettings.cs迁移至SDUI架构
 
-- 新增Documents/System/SDUI系统.md
-- 详细描述服务端驱动UI系统的设计理念、架构和实现
-- 记录数据层（Data）、表现层（UI）、网络层（Net）的协作模式
-- 说明5个技术必需的客户端本地化键的选择标准
-- 定义语言切换的事件驱动机制
-- 提供UI组件开发规范和最佳实践
+- 修改OnEnter方法接收服务端推送的UI文本并存储到Data.Instance.StartSettingsTexts
+- 添加GetText辅助方法从Data层安全获取文本
+- 替换所有30处Localization.Instance.Get()调用为GetText()
+- 保留Localization.Instance.Init()用于重新加载5个技术必需键
+- UI文本现已完全由服务端驱动，支持零客户端更新
