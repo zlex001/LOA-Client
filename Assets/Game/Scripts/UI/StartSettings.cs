@@ -43,14 +43,26 @@ namespace Game
         /// <summary>
         /// Apply interactive color feedback to button
         /// </summary>
-        private void ApplyButtonColorBlock(Button button)
+        private void ApplyButtonColorBlock(Button button, bool transparent = false)
         {
             var colors = button.colors;
-            colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(0.9607843f, 0.9607843f, 0.9607843f, 1f);
-            colors.pressedColor = new Color(0.78431374f, 0.78431374f, 0.78431374f, 1f);
-            colors.selectedColor = new Color(0.9607843f, 0.9607843f, 0.9607843f, 1f);
-            colors.disabledColor = new Color(0.78431374f, 0.78431374f, 0.78431374f, 0.5019608f);
+            if (transparent)
+            {
+                // FIX: For text-only buttons, use transparent colors
+                colors.normalColor = new Color(1f, 1f, 1f, 0f);
+                colors.highlightedColor = new Color(0.9607843f, 0.9607843f, 0.9607843f, 0.3f);
+                colors.pressedColor = new Color(0.78431374f, 0.78431374f, 0.78431374f, 0.5f);
+                colors.selectedColor = new Color(1f, 1f, 1f, 0f);
+                colors.disabledColor = new Color(0.78431374f, 0.78431374f, 0.78431374f, 0.2f);
+            }
+            else
+            {
+                colors.normalColor = Color.white;
+                colors.highlightedColor = new Color(0.9607843f, 0.9607843f, 0.9607843f, 1f);
+                colors.pressedColor = new Color(0.78431374f, 0.78431374f, 0.78431374f, 1f);
+                colors.selectedColor = new Color(0.9607843f, 0.9607843f, 0.9607843f, 1f);
+                colors.disabledColor = new Color(0.78431374f, 0.78431374f, 0.78431374f, 0.5019608f);
+            }
             button.colors = colors;
             button.transition = Selectable.Transition.ColorTint;
         }
@@ -180,18 +192,8 @@ namespace Game
         {
             Utils.Debug.Log("StartSettings", $"Language changed, rebuilding UI");
             
-            // #region agent log
-            var logPath = "/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log";
-            System.IO.File.AppendAllText(logPath, Newtonsoft.Json.JsonConvert.SerializeObject(new {
-                location = "StartSettings.cs:180",
-                message = "OnLanguageChanged triggered",
-                data = new { 
-                    currentLanguage = Data.Instance.Language.ToString()
-                },
-                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                hypothesisId = "H2"
-            }) + "\n");
-            // #endregion
+            // FIX: Reload localization for new language
+            Localization.Instance.Init(Data.Instance.Language.ToString());
             
             BuildUI();
         }
@@ -587,7 +589,7 @@ namespace Game
             var minusButton = minusButtonObj.AddComponent<Button>();
             minusButton.targetGraphic = minusButtonImage;
             minusButton.onClick.AddListener(OnFontSizeDecrease);
-            ApplyButtonColorBlock(minusButton);
+            ApplyButtonColorBlock(minusButton, transparent: true);
             
             var minusTextObj = new GameObject("Text");
             minusTextObj.transform.SetParent(minusButtonObj.transform, false);
@@ -609,7 +611,7 @@ namespace Game
             valueTextObj.transform.SetParent(controlObj.transform, false);
             
             var valueTextRect = valueTextObj.AddComponent<RectTransform>();
-            valueTextRect.sizeDelta = new Vector2(120, 40);
+            valueTextRect.sizeDelta = new Vector2(200, 40);  // FIX: Increased from 120 to 200 to accommodate long text
             
             var valueText = valueTextObj.AddComponent<Text>();
             valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
@@ -631,25 +633,6 @@ namespace Game
             if (currentIndex < 0) currentIndex = 1; // Default to medium
             valueText.text = fontLabels[currentIndex];
             
-            // #region agent log
-            var logPath = "/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log";
-            System.IO.File.AppendAllText(logPath, Newtonsoft.Json.JsonConvert.SerializeObject(new {
-                location = "StartSettings.cs:540",
-                message = "Font size item created",
-                data = new { 
-                    currentFontSize = currentFontSize,
-                    currentIndex = currentIndex,
-                    labelText = fontLabels[currentIndex],
-                    textRectWidth = valueTextRect.rect.width,
-                    textRectHeight = valueTextRect.rect.height,
-                    preferredWidth = valueText.preferredWidth,
-                    preferredHeight = valueText.preferredHeight
-                },
-                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                hypothesisId = "H3,H4,H5"
-            }) + "\n");
-            // #endregion
-            
             // Plus button (text only)
             var plusButtonObj = new GameObject("PlusButton");
             plusButtonObj.transform.SetParent(controlObj.transform, false);
@@ -663,7 +646,7 @@ namespace Game
             var plusButton = plusButtonObj.AddComponent<Button>();
             plusButton.targetGraphic = plusButtonImage;
             plusButton.onClick.AddListener(OnFontSizeIncrease);
-            ApplyButtonColorBlock(plusButton);
+            ApplyButtonColorBlock(plusButton, transparent: true);
             
             var plusTextObj = new GameObject("Text");
             plusTextObj.transform.SetParent(plusButtonObj.transform, false);
@@ -884,38 +867,12 @@ namespace Game
             int nextIndex = (currentIndex + 1) % allLanguages.Count;
             var newLanguage = allLanguages[nextIndex];
             
-            // #region agent log
-            var logPath = "/Users/zhangxi/LOA-Client/trunk/.cursor/debug.log";
-            System.IO.File.AppendAllText(logPath, Newtonsoft.Json.JsonConvert.SerializeObject(new {
-                location = "StartSettings.cs:683",
-                message = "Before language change",
-                data = new { 
-                    oldLanguage = Data.Instance.Language.ToString(),
-                    newLanguage = newLanguage.ToString()
-                },
-                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                hypothesisId = "H1,H2"
-            }) + "\n");
-            // #endregion
-            
             // Update language
             Data.Instance.Language = newLanguage;
             Local.Instance.Save(Data.Instance.User);
             
             // Rebuild UI to reflect new language
             BuildUI();
-            
-            // #region agent log
-            System.IO.File.AppendAllText(logPath, Newtonsoft.Json.JsonConvert.SerializeObject(new {
-                location = "StartSettings.cs:695",
-                message = "After BuildUI called",
-                data = new { 
-                    currentLanguage = Data.Instance.Language.ToString()
-                },
-                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                hypothesisId = "H1"
-            }) + "\n");
-            // #endregion
         }
 
         private void OnSoundToggle(bool enabled)

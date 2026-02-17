@@ -1,1 +1,5 @@
-[修复] 修正Monitor.Remove为Monitor.Unregister方法调用
+[优化] 清理调试日志并更新本地化架构文档
+
+- 清理Data.cs和StartSettings.cs中的所有agent log调试代码
+- 更新登录与启动系统文档，添加客户端本地化章节
+- 明确定义技术必需的5个客户端本地化键

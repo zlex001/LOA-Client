@@ -264,10 +264,11 @@ namespace Game
                 if (typeof(T).IsValueType && v.Equals(default(T))) { v = default(T); }
                 befor.Fire(e, o, v);
                 raw[e] = v;
-                if (e is Type type && type == Type.LoginResponse)
+                if (e is Type type2 && type2 == Type.LoginResponse)
                 {
                     Utils.Debug.Log("Data", $"LoginResponse changed to: {v}, firing after event");
                 }
+                
                 after.Fire(e, v);
             }
         }
