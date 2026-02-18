@@ -89,9 +89,13 @@ public class Main : MonoBehaviour
             {
                 if (success)
                 {
+#if UNITY_EDITOR
+                    StepLaunch();
+#else
                     Hot.Instance.Init(BaseUrl, config.hotVersion);
                     Hot.Instance.OnStatusChanged = SetDescription;
                     StepCheckVersion();
+#endif
                 }
                 else
                 {
