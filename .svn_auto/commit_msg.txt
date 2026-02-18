@@ -1,1 +1,1 @@
-[修复] 审计修复：规则文件补全Unity包依赖、文档删除Basic层误列Gate.cs、DangerColorHelper重命名为DangerColorUtils
+[重构] 重命名Assets/Basic为Assets/Launcher，消除与Basic架构层的命名混淆，同步更新Build.cs、EditorBuildSettings、文档路径引用

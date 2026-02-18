@@ -76,7 +76,7 @@ hotUpdateAssemblies:
 
 ### 1. Main.cs 实现
 
-**文件：** `Assets/Basic/Main.cs`
+**文件：** `Assets/Launcher/Main.cs`
 
 **方法：** `LoadHotUpdateAssemblies()`
 

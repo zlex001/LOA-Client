@@ -98,11 +98,11 @@ public class Build
     {
         if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
         {
-            string project_path = packageTempPath + "/" + $"World{AssetDatabase.LoadAssetAtPath<Config>("Assets/Basic/Config.asset").appVersion}.apk";//目标目录
-            string[] outScenes = { "Assets/Basic/Main.unity" };
+            string project_path = packageTempPath + "/" + $"World{AssetDatabase.LoadAssetAtPath<Config>("Assets/Launcher/Config.asset").appVersion}.apk";//目标目录
+            string[] outScenes = { "Assets/Launcher/Main.unity" };
             BuildPipeline.BuildPlayer(outScenes, project_path, BuildTarget.Android, BuildOptions.CompressWithLz4);
 
-            string copyPath = Path.Artifacts + "/" + "ALLOUT" + "/Export/" + $"World{AssetDatabase.LoadAssetAtPath<Config>("Assets/Basic/Config.asset").appVersion}.apk";
+            string copyPath = Path.Artifacts + "/" + "ALLOUT" + "/Export/" + $"World{AssetDatabase.LoadAssetAtPath<Config>("Assets/Launcher/Config.asset").appVersion}.apk";
 
             if (System.IO.File.Exists(copyPath))
             {
@@ -114,7 +114,7 @@ public class Build
         else if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS)
         {
             string project_path = packageTempPath + "/" + "IOSProject";//目标目录
-            string[] outScenes = { "Assets/Basic/Main.unity" };
+            string[] outScenes = { "Assets/Launcher/Main.unity" };
             BuildPipeline.BuildPlayer(outScenes, project_path, BuildTarget.iOS, BuildOptions.CompressWithLz4);
 
             System.IO.Directory.CreateDirectory(packageTempPath + "/Payload");
@@ -133,7 +133,7 @@ public class Build
         else if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64)
         {
             string project_path = packageTempPath + "/MetaFarmer.exe";//目标目录
-            string[] outScenes = { "Assets/Basic/Main.unity" };
+            string[] outScenes = { "Assets/Launcher/Main.unity" };
             BuildPipeline.BuildPlayer(outScenes, project_path, BuildTarget.StandaloneWindows64, BuildOptions.CompressWithLz4);
 
             string copyPath = Path.Artifacts + "/" + "ALLOUT" + "/Export/" + "Win";
@@ -411,7 +411,7 @@ public class Build
     private static void SetConfig()
     {
         PlayerSettings.applicationIdentifier = "com.Paramedise.Qiyujianghu";
-        PlayerSettings.bundleVersion = AssetDatabase.LoadAssetAtPath<Config>("Assets/Basic/Config.asset").appVersion;
+        PlayerSettings.bundleVersion = AssetDatabase.LoadAssetAtPath<Config>("Assets/Launcher/Config.asset").appVersion;
         PlayerSettings.Android.bundleVersionCode = 1;
         PlayerSettings.iOS.buildNumber = "1";
         PlayerSettings.iOS.appleEnableAutomaticSigning = true;
@@ -420,7 +420,7 @@ public class Build
 
     public static string GetHotVersion()
     {
-        Config packageConfig = AssetDatabase.LoadAssetAtPath<Config>("Assets/Basic/Config.asset");
+        Config packageConfig = AssetDatabase.LoadAssetAtPath<Config>("Assets/Launcher/Config.asset");
         return packageConfig.hotVersion;
     }
     
