@@ -13,7 +13,7 @@ public class CopyPath : Editor
 
         var path = AssetDatabase.GetAssetPath(selectObj);
 
-        string p = path.Replace("Assets/Game/Res/","");
+        string p = path.Replace("Assets/Game/HotResources/","");
         
         p = p.Substring(0,p.LastIndexOf("."));
         
