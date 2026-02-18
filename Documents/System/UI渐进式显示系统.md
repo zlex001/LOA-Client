@@ -17,7 +17,7 @@
 
 ### 协议定义
 
-**位置**：`Assets/Game/Scripts/Network/Protocol.cs`
+**位置**：`Assets/HotScript/Net/Protocol.cs`
 
 ```csharp
 public class UILock : Base
@@ -130,7 +130,7 @@ private void ApplyFullScreenSceneLayout()
 
 ### 核心逻辑
 
-**位置**：`Assets/Game/Scripts/UI/Home.cs`
+**位置**：`Assets/HotScript/Presentation/Home.cs`
 
 ```csharp
 private void ApplyUILock()
@@ -278,7 +278,7 @@ private void OnAfterUILockChanged(params object[] args)
 
 ### Tutorial推送时机
 
-**Tutorial系统**（`Assets/Game/Scripts/UI/Tutorial.cs`）负责教程引导，服务器在教程关键节点推送UILock：
+**Tutorial系统**（`Assets/HotScript/Presentation/Tutorial.cs`）负责教程引导，服务器在教程关键节点推送UILock：
 
 1. **教程开始**：推送只有Scene的UILock
 2. **完成地图探索**：推送解锁Area和Information

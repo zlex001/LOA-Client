@@ -25,7 +25,7 @@ public static class AssetManagerExtension
 
     private static string GetFullPath(string path, string name, string suffix)
     {
-        string rootPath = $"{FrameworkPath.Runtime}/HotResources/{path}/{name}";
+        string rootPath = $"{FrameworkPath.HotResources}/{path}/{name}";
         foreach (var ext in suffix.Split('|'))
         {
             string fullPath = rootPath + ext;

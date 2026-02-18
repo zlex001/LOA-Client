@@ -5,8 +5,8 @@ using UnityEngine;
 public class Path
 {
     public static string Utils { get { return System.IO.Path.Combine(Application.dataPath + "/../Utils"); } }
-    public static string Scripts { get { return System.IO.Path.Combine(Application.dataPath + "/Game/Scripts"); } }
-    public static string Res { get { return System.IO.Path.Combine(Application.dataPath + "/Game/HotResources"); } }
+    public static string Scripts { get { return System.IO.Path.Combine(Application.dataPath + "/HotScript"); } }
+    public static string Res { get { return System.IO.Path.Combine(Application.dataPath + "/HotBundle"); } }
     public static string Scenes { get { return System.IO.Path.Combine(Application.dataPath + "/Game/Scenes"); } }
     public static string Artifacts { get { return System.IO.Path.Combine(Application.dataPath + "/../" + "Artifacts"); } }
     public static string Excel { get { return System.IO.Path.Combine(Application.dataPath + "/../Tools/Excel"); } }

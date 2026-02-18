@@ -1,0 +1,20 @@
+{
+    "name": "Domain",
+    "rootNamespace": "Game",
+    "references": [
+        "Net",
+        "Logic",
+        "Utils",
+        "Basic",
+        "Framework"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

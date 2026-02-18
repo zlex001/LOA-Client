@@ -8,7 +8,7 @@ public class FontScalerTool
     [MenuItem("Tools/Font/Add FontScaler to All UI Prefabs")]
     static void AddFontScalerToAllPrefabs()
     {
-        string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Game/HotResources/Prefabs/UI" });
+        string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/HotBundle/Prefabs/UI" });
         int totalAdded = 0;
         int prefabsModified = 0;
 
@@ -43,7 +43,7 @@ public class FontScalerTool
     [MenuItem("Tools/Font/Remove FontScaler from All UI Prefabs")]
     static void RemoveFontScalerFromAllPrefabs()
     {
-        string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Game/HotResources/Prefabs/UI" });
+        string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/HotBundle/Prefabs/UI" });
         int totalRemoved = 0;
         int prefabsModified = 0;
 

@@ -7,7 +7,7 @@ public static class FrameworkPath
 
     public static string Runtime =>
 #if UNITY_EDITOR
-        Normalize(Application.dataPath + "/Game");
+        Normalize(Application.dataPath);
 #else
         Normalize(Application.persistentDataPath + "/Game");
 #endif
@@ -21,14 +21,14 @@ public static class FrameworkPath
 
     public static string Scripts =>
 #if UNITY_EDITOR
-        Runtime + "/Scripts";
+        Normalize(Application.dataPath + "/HotScript");
 #else
         Runtime + "/scripts";
 #endif
 
     public static string HotResources =>
 #if UNITY_EDITOR
-        Runtime + "/HotResources";
+        Normalize(Application.dataPath + "/HotBundle");
 #else
         Runtime + "/res";
 #endif

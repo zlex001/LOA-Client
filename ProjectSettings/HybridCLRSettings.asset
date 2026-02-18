@@ -34,7 +34,7 @@ MonoBehaviour:
   - Framework
   - System.Core
   - mscorlib
-  outputLinkFile: Game/Scripts/HybridCLRGenerate/link.xml
-  outputAOTGenericReferenceFile: Game/Scripts/HybridCLRGenerate/AOTGenericReferences.cs
+  outputLinkFile: Framework/Generated/link.xml
+  outputAOTGenericReferenceFile: Framework/Generated/AOTGenericReferences.cs
   maxGenericReferenceIteration: 10
   maxMethodBridgeGenericIteration: 10
