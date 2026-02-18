@@ -1,1 +1,1 @@
-[文档] 项目目录结构文档目录总览添加颜色区分AOT/热更新/编辑器三个区域
+[文档] 目录总览颜色简化，仅标红Unity强制目录（Resources/Plugins/StreamingAssets/TextMesh Pro）
