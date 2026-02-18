@@ -2,17 +2,15 @@
 alwaysApply: true
 ---
 
-# LOA 客户端分层架构规则（Layered Architecture Rules v3.0）
+# LOA 客户端分层架构规则（Layered Architecture Rules v4.0）
 
-LOA 客户端采用与服务端对齐的严格分层架构。代码组织为 8 个独立程序集（Assembly），通过 Unity 程序集定义文件（.asmdef）强制执行显式依赖约束。
-
-**核心原则：** 依赖关系从高层单向流向低层。反向通信仅使用事件机制。
+LOA 客户端采用与服务端对齐的严格分层架构。代码组织为 8 个独立程序集（Assembly），通过 .asmdef 强制执行显式依赖约束。依赖关系从高层单向流向低层，反向通信仅使用事件机制。
 
 **完整架构说明：** `Documents/客户端架构文档.md`
 
 ---
 
-## 一、层级结构（Layer Structure）
+## 一、层级总览（Layer Overview）
 
 ```
 Utils（工具层）    Basic（基础设施层）
@@ -30,147 +28,57 @@ Utils（工具层）    Basic（基础设施层）
 SDK（独立，仅依赖 Framework）
 ```
 
----
+> 所有目录前缀为 `Assets/Game/Scripts/`。命名空间统一为 `Game`，特殊情况：Basic/Flow.cs → `Game.Flow`，Network/Protocol/ → `Game.Protocol`，SDK/ → `Game.SDK`。ThirdParty/ 保留原始命名空间。
 
-## 二、层级定义（Layer Definitions）
-
-### 1. Utils（工具层）
-
-- **程序集：** `Utils.asmdef` → `Assets/Game/Scripts/Utils/`
-- **命名空间：** `Game`
-- **依赖：** Framework, SuperScrollView
-
-### 2. Basic（基础设施层）
-
-- **程序集：** `Basic.asmdef` → `Assets/Game/Scripts/Basic/`
-- **命名空间：** `Game`（Flow.cs 使用 `Game.Flow`）
-- **依赖：** Framework
-
-### 3. Logic（业务数据层）
-
-- **程序集：** `Logic.asmdef` → `Assets/Game/Scripts/Logic/`
-- **命名空间：** `Game`
-- **依赖：** Utils, Basic, Framework, LitJson
-
-### 4. Net（网络层）
-
-- **程序集：** `Net.asmdef` → `Assets/Game/Scripts/Network/`
-- **命名空间：** `Game`（Protocol 代码使用 `Game.Protocol`，编译在 Net 程序集内部）
-- **依赖：** Logic, Basic, Framework, Utils
-
-### 5. Domain（领域层）
-
-- **程序集：** `Domain.asmdef` → `Assets/Game/Scripts/Domain/`
-- **命名空间：** `Game`（ProtocolHandler 使用 `Game.Domain`）
-- **依赖：** Net, Logic, Utils, Basic, Framework
-
-### 6. Presentation（表现层）
-
-- **程序集：** `Presentation.asmdef` → `Assets/Game/Scripts/UI/`
-- **命名空间：** `Game`
-- **依赖：** Domain, Logic, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView
-
-### 7. Start（启动层）
-
-- **程序集：** `Start.asmdef` → `Assets/Game/Scripts/Start/`
-- **命名空间：** `Game`
-- **依赖：** Framework, Basic, Logic, Net, Domain, Presentation
-
-### 8. SDK
-
-- **程序集：** `SDK.asmdef` → `Assets/Game/Scripts/SDK/`
-- **命名空间：** `Game.SDK`
-- **依赖：** Framework
+| 层 | 程序集 → 目录 | 依赖 | 目录结构 |
+|---|---|---|---|
+| Utils | `Utils` → `Utils/` | Framework, SuperScrollView | 按功能建子目录（Extension/, Time/, Wheel/） |
+| Basic | `Basic` → `Basic/` | Framework | 平铺 |
+| Logic | `Logic` → `Logic/` | Utils, Basic, Framework, LitJson | 数据模型放 Models/，其余根目录 |
+| Net | `Net` → `Network/` | Logic, Basic, Framework, Utils | 协议放 Protocol/，其余根目录 |
+| Domain | `Domain` → `Domain/` | Net, Logic, Utils, Basic, Framework | 平铺 |
+| Presentation | `Presentation` → `UI/` | Domain, Logic, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView | 平铺 |
+| Start | `Start` → `Start/` | Framework, Basic, Logic, Net, Domain, Presentation | 平铺 |
+| SDK | `SDK` → `SDK/` | Framework | 平台实现按 {Platform}/ 子目录 |
 
 ---
 
-## 三、命名空间规则（Namespace Rules）
+## 二、依赖与程序集规则（Dependency and Assembly Rules）
 
-**标准约定：**
+**高层 → 低层：** 直接调用
+
 ```csharp
-Assets/Game/Scripts/Logic/            → namespace Game
-Assets/Game/Scripts/Network/          → namespace Game
-Assets/Game/Scripts/Network/Protocol/ → namespace Game.Protocol
-Assets/Game/Scripts/UI/               → namespace Game
+var home = Data.Instance.Home;      // ✓ Presentation → Logic
+Data.Instance.Home = homeData;      // ✓ Net → Logic
 ```
 
-**特殊情况：**
-- Basic/Flow.cs 为 Flow\<T\> 枚举定义 `namespace Game.Flow`
-- ThirdParty/ 保留原始命名空间（DG.Tweening、LitJson 等）
+**低层 → 高层：** 禁止直接调用，使用以下机制：
 
-**关键规则：** 大多数游戏代码使用扁平的 `namespace Game`，而非嵌套命名空间。
-
----
-
-## 四、依赖规则（Dependency Rules）
-
-### 1. 允许的依赖
-
-**高层 → 低层：** 允许直接调用
 ```csharp
-// ✓ Presentation 可以调用 Logic
-var home = Data.Instance.Home;
+// Event
+Game.Event.Instance.Add("EventName", callback);   // register (upper)
+Game.Event.Instance.Fire("EventName", args);       // fire (lower)
 
-// ✓ Net 可以调用 Logic
-Data.Instance.Home = homeData;
+// Monitor
+Data.Instance.after.Register(Data.Type.Home, OnHomeChanged);  // register (upper)
+Data.Instance.after.Fire(Data.Type.Home, newHomeData);         // fire (lower)
 ```
 
-### 2. 禁止的依赖
+**程序集引用规则：**
 
-**低层 → 高层：** 必须使用事件机制
-```csharp
-// ✗ Logic 不能直接调用 UI
-UI.Instance.Open(...);  // Logic 层禁止
+- .asmdef 的 `references` 必须显式声明所有直接使用的程序集（传递性依赖不自动生效）
+- 文件名必须与程序集名称匹配（如 `Utils.asmdef` → `"name": "Utils"`）
+- 禁止引用更高层
 
-// ✓ 改用事件
-Game.Event.Instance.Fire("UI.Event.Click", data);
-```
-
-### 3. 跨层通信机制
-
-**机制一：全局事件总线**
-```csharp
-Game.Event.Instance.Add("EventName", callback);   // 注册（高层）
-Game.Event.Instance.Fire("EventName", args);       // 触发（低层）
-```
-
-**机制二：数据属性监听**
-```csharp
-Data.Instance.after.Register(Data.Type.Home, OnHomeChanged);  // 注册（高层）
-Data.Instance.after.Fire(Data.Type.Home, newHomeData);         // 触发（低层）
+```json
+{ "name": "Domain", "references": ["Net", "Logic", "Utils", "Basic", "Framework"] }
 ```
 
 ---
 
-## 五、文件管理规范（File Management）
+## 三、文件管理规范（File Management）
 
-### 1. 文件归属决策树
-
-新建 .cs 文件时，按以下顺序判断归属层：
-
-1. 是否为通用工具/扩展方法？ → **Utils**
-2. 是否为基础设施（事件、流程、监听）？ → **Basic**
-3. 是否为业务数据或数据模型？ → **Logic**
-4. 是否为网络协议或协议转换？ → **Net**（协议定义放 `Network/Protocol/`）
-5. 是否为领域业务逻辑？ → **Domain**
-6. 是否为 UI 界面或 UI 组件？ → **Presentation**
-7. 是否为启动流程？ → **Start**
-8. 是否为平台 SDK？ → **SDK**
-
-### 2. 文件夹结构约定
-
-```
-Utils/          按功能领域建子目录（Extension/, Time/, Wheel/），通用工具放根目录
-Basic/          平铺
-Logic/          数据模型放 Models/，其余管理器放根目录
-Network/        协议定义放 Protocol/，其余放根目录
-Domain/         平铺（文件增多后按领域建子目录）
-UI/             平铺
-Start/          平铺
-SDK/            管理器放根目录，平台实现按 {Platform}/ 子目录（Android/, IOS/, Windows/, Base/）
-```
-
-### 3. 文件命名约定
+### 1. 命名约定
 
 | 类型 | 命名模式 | 示例 |
 |------|---------|------|
@@ -184,63 +92,9 @@ SDK/            管理器放根目录，平台实现按 {Platform}/ 子目录（
 | UI 界面 | 与 `Config.UI` 键名一致 | `Home.cs`, `Start.cs`, `Story.cs` |
 | 平台实现 | `{平台名}Sdk.cs` | `AndroidSdk.cs`, `IOSSdk.cs` |
 
-### 4. 子目录创建规则
+### 2. 子目录规则
 
 - 同一功能领域的文件达到 **3 个以上**时，建子目录归组
 - 子目录命名使用 **PascalCase**
 - 禁止嵌套超过 **2 层**（层目录本身算第 1 层）
 - 子目录不需要独立 .asmdef（除非有明确的程序集隔离需求）
-
----
-
-## 六、程序集定义规则（Assembly Definition Rules）
-
-### 1. 创建新的 .asmdef
-
-创建新层时：
-1. 文件名必须与程序集名称匹配（如 `Utils.asmdef` → `"name": "Utils"`）
-2. 在 `references` 数组中包含低层依赖项
-3. 禁止引用更高层
-
-### 2. 引用规则
-
-**必须引用：**
-- 所有直接使用的程序集
-- 传递性依赖不会自动生效
-
-**示例（Domain.asmdef）：**
-```json
-{
-    "name": "Domain",
-    "references": ["Net", "Logic", "Utils", "Basic", "Framework"]
-}
-```
-
-**禁止：**
-```json
-// ✗ 低层不能引用高层
-{
-    "name": "Logic",
-    "references": ["Net"]  // FORBIDDEN! Logic is lower than Net
-}
-```
-
----
-
-## 七、常见错误（Common Mistakes）
-
-1. **循环依赖** — ✗ Logic ↔ Net、Net ↔ Domain
-2. **反向依赖** — ✗ Basic 引用 UI、Logic 引用 Net → ✓ 使用事件
-3. **错误命名空间** — ✗ `namespace Game.Logic`（应为 `namespace Game`）、✗ `namespace Game.Net.Protocol`（应为 `namespace Game.Protocol`）
-4. **低层直接调用 UI** — ✗ Logic/Net 中 `UI.Instance.Open()` → ✓ `Game.Event.Instance.Fire()`
-
----
-
-## 八、违反规则（When to Violate Rules）
-
-**从不。** 分层架构由 .asmdef 文件强制执行，编译器将阻止违规。
-
-如需反向通信，使用：
-- `Game.Event.Instance`（全局事件总线）
-- `Data.Instance.after`（属性变更通知）
-- Monitor 模式
