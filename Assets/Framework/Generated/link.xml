@@ -22,13 +22,13 @@
     <type fullname="DG.Tweening.DOTweenModuleUI" preserve="all" />
   </assembly>
   <assembly fullname="Framework">
-    <type fullname="AssetManager" preserve="all" />
-    <type fullname="AssetManagerExtension" preserve="all" />
+    <type fullname="Framework.AssetManager" preserve="all" />
+    <type fullname="Framework.AssetManagerExtension" preserve="all" />
     <type fullname="Framework.FontScaler" preserve="all" />
+    <type fullname="Framework.Http" preserve="all" />
+    <type fullname="Framework.Localization" preserve="all" />
+    <type fullname="Framework.Singleton`1" preserve="all" />
     <type fullname="Framework.ZipSharp" preserve="all" />
-    <type fullname="Http" preserve="all" />
-    <type fullname="Localization" preserve="all" />
-    <type fullname="Singleton`1" preserve="all" />
   </assembly>
   <assembly fullname="Google.Protobuf">
     <type fullname="Google.Protobuf.CodedInputStream" preserve="all" />

@@ -1,5 +1,10 @@
 using Framework;
 using Game.Basic;
+using Game.Logic;
+using Game.Net;
+using Net = Game.Net.Net;
+using Config = Game.Logic.Config;
+using Protocol = Game.Net.Protocol;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -297,9 +302,9 @@ namespace Game.Presentation
         private void AfterInitialResponseChange(params object[] args)
         {
             int v = (int)args[0];
-            InitialResponse.Code code = (InitialResponse.Code)v;
+            Protocol.InitialResponse.Code code = (Protocol.InitialResponse.Code)v;
             
-            if (code == InitialResponse.Code.Success)
+            if (code == Protocol.InitialResponse.Code.Success)
             {
                 Close();
             }

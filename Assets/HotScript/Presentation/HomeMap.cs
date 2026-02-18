@@ -5,10 +5,12 @@ using UnityEngine.UI;
 using System.Linq;
 using System;
 using System.Collections.Generic;
-using Protocol = Game.Net.Protocol;
 
 namespace Game.Presentation
 {
+    using Net = Game.Net.Net;
+    using Protocol = Game.Net.Protocol;
+
     public class HomeMap : MonoBehaviour
     {
         private MapData map;

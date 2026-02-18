@@ -185,7 +185,7 @@ namespace Game.Logic
         public string HotVersion => PlayerPrefs.GetString("HOT_VERSION");
         public string Gateway { get; set; }
         public string Device => PlayerPrefs.GetString("DEVICE");
-        public string? Dark { get => Get<string>(Type.Dark); set => Change(Type.Dark, value); }
+        public string Dark { get => Get<string>(Type.Dark); set => Change(Type.Dark, value); }
         public Languages Language { get => Get<Languages>(Type.Language); set => Change(Type.Language, value); }
         public int FontSize { get => Get<int>(Type.FontSize); set => Change(Type.FontSize, value); }
 

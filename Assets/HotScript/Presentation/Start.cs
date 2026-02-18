@@ -2,7 +2,6 @@ using DG.Tweening;
 using Framework;
 using Game.Logic;
 using Game.Net;
-using Config = Game.Logic.Config;
 using UnityEngine.UI;
 using SuperScrollView;
 using UnityEngine;
@@ -13,6 +12,10 @@ using System;
 
 namespace Game.Presentation
 {
+    using Net = Game.Net.Net;
+    using Config = Game.Logic.Config;
+    using Protocol = Game.Net.Protocol;
+
     public class Start : UI.Core
     {
         #region Enums and Constants
@@ -302,7 +305,7 @@ namespace Game.Presentation
             {
                 // No accounts: send QuickStart request
                 Utils.Debug.Log("Start", "No local accounts, sending QuickStartRequest");
-                Net.Instance.Send(new QuickStartRequest
+                Net.Instance.Send(new Protocol.QuickStartRequest
                 {
                     device = Data.Instance.Device,
                     version = Data.Instance.AppVersion,
@@ -527,10 +530,10 @@ namespace Game.Presentation
         {
             Utils.Debug.Log("Start", $"OnAfterLoginResponseChanged triggered, args count: {args.Length}");
             int v = (int)args[0];
-            LoginResponse.Code code = (LoginResponse.Code)v;
+            Protocol.LoginResponse.Code code = (Protocol.LoginResponse.Code)v;
             Utils.Debug.Log("Start", $"LoginResponse code: {code} ({v})");
             
-            if (code == LoginResponse.Code.Success)
+            if (code == Protocol.LoginResponse.Code.Success)
             {
                 Utils.Debug.Log("Start", "Login success, closing Start UI");
                 Close();

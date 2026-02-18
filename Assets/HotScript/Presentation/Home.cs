@@ -7,10 +7,12 @@ using Game.Net;
 using System.Linq;
 using UnityEditor;
 using System.Collections.Generic;
-using Protocol = Game.Net.Protocol;
 
 namespace Game.Presentation
 {
+    using Net = Game.Net.Net;
+    using Protocol = Game.Net.Protocol;
+
     public class Home : UI.Core
     {
         private const float UnitHeight = 83f;
@@ -175,10 +177,10 @@ namespace Game.Presentation
 
             UpdateSceneInfo();
 
-            Data.Instance.after.Register(DataPair.Type.Hp, OnAfterHpChange);
-            Data.Instance.after.Register(DataPair.Type.Mp, OnAfterMpChange);
-            Data.Instance.after.Register(DataPair.Type.Lp, OnAfterLpChange);
-            Data.Instance.after.Register(DataPair.Type.Shield, OnAfterShieldChange);
+            Data.Instance.after.Register(Protocol.DataPair.Type.Hp, OnAfterHpChange);
+            Data.Instance.after.Register(Protocol.DataPair.Type.Mp, OnAfterMpChange);
+            Data.Instance.after.Register(Protocol.DataPair.Type.Lp, OnAfterLpChange);
+            Data.Instance.after.Register(Protocol.DataPair.Type.Shield, OnAfterShieldChange);
             Data.Instance.after.Register(Data.Type.Pos, OnAfterPosChanged);
             Data.Instance.after.Register(Data.Type.SceneName, OnAfterSceneNameChanged);
             Data.Instance.after.Register(Data.Type.Maps, OnAfterMapsChanged);
@@ -196,10 +198,10 @@ namespace Game.Presentation
 
         public override void OnClose()
         {
-            Data.Instance.after.Unregister(DataPair.Type.Hp, OnAfterHpChange);
-            Data.Instance.after.Unregister(DataPair.Type.Mp, OnAfterMpChange);
-            Data.Instance.after.Unregister(DataPair.Type.Lp, OnAfterLpChange);
-            Data.Instance.after.Unregister(DataPair.Type.Shield, OnAfterShieldChange);
+            Data.Instance.after.Unregister(Protocol.DataPair.Type.Hp, OnAfterHpChange);
+            Data.Instance.after.Unregister(Protocol.DataPair.Type.Mp, OnAfterMpChange);
+            Data.Instance.after.Unregister(Protocol.DataPair.Type.Lp, OnAfterLpChange);
+            Data.Instance.after.Unregister(Protocol.DataPair.Type.Shield, OnAfterShieldChange);
             Data.Instance.after.Unregister(Data.Type.Pos, OnAfterPosChanged);
             Data.Instance.after.Unregister(Data.Type.SceneName, OnAfterSceneNameChanged);
             Data.Instance.after.Unregister(Data.Type.Maps, OnAfterMapsChanged);
@@ -554,7 +556,7 @@ namespace Game.Presentation
 
         private void OnChatEndEdit(string text)
         {
-            Net.Instance.Send(new Chat(text));
+            Net.Instance.Send(new Protocol.Chat(text));
         }
 
         void Update()

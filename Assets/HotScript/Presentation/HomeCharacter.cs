@@ -1,11 +1,14 @@
+using Game.Logic;
 using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using Protocol = Game.Net.Protocol;
 
 namespace Game.Presentation
 {
+    using Net = Game.Net.Net;
+    using Protocol = Game.Net.Protocol;
+
     public class HomeCharacter : MonoBehaviour
     {
         private int hash;

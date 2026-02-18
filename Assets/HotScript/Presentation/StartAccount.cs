@@ -2,6 +2,8 @@ using SuperScrollView;
 using UnityEngine;
 using UnityEngine.UI;
 using Framework;
+using Game.Logic;
+using Config = Game.Logic.Config;
 
 namespace Game.Presentation
 {

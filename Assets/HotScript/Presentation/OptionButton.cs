@@ -1,10 +1,14 @@
 using Framework;
+using Game.Logic;
 using Game.Net;
 using UnityEngine.UI;
-using Protocol = Game.Net.Protocol;
 
 namespace Game.Presentation
 {
+    using Net = Game.Net.Net;
+    using Config = Game.Logic.Config;
+    using Protocol = Game.Net.Protocol;
+
     public class OptionButton : OptionItem
     {
         void Start()

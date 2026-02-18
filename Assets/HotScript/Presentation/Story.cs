@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game.Logic;
 using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
-using Protocol = Game.Net.Protocol;
 
 namespace Game.Presentation
 {
+    using Net = Game.Net.Net;
+    using Protocol = Game.Net.Protocol;
+
     public class Story : UI.Core
     {
         #region Constants

@@ -1,4 +1,6 @@
 using Framework;
+using Game.Logic;
+using Config = Game.Logic.Config;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;

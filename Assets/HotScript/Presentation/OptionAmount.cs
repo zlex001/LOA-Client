@@ -1,10 +1,12 @@
 using Framework;
 using Game.Net;
 using UnityEngine.UI;
-using Protocol = Game.Net.Protocol;
 
 namespace Game.Presentation
 {
+    using Net = Game.Net.Net;
+    using Protocol = Game.Net.Protocol;
+
     public class OptionAmount : OptionItem
     {
         public Text titleText;

@@ -30,12 +30,12 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// DG.Tweening.Core.DOSetter<UnityEngine.Vector2>
 	// DG.Tweening.Core.DOSetter<float>
 	// DG.Tweening.Core.DOSetter<int>
+	// Framework.Singleton<object>
 	// Google.Protobuf.Collections.RepeatedField<object>
 	// Google.Protobuf.IDeepCloneable<object>
 	// Google.Protobuf.IMessage<object>
 	// Google.Protobuf.MessageParser<object>
-	// Singleton<object>
-	// System.Action<Game.Flow.StartStep>
+	// System.Action<Game.Start.StartStep>
 	// System.Action<byte,object>
 	// System.Action<float>
 	// System.Action<int,object>
@@ -44,8 +44,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.Enumerator<object,object>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<object,object>
 	// System.Collections.Generic.Dictionary.ValueCollection<object,object>
-	// System.Collections.Generic.Dictionary<Game.Flow.StartStep,object>
-	// System.Collections.Generic.Dictionary<Game.OptionItemType,object>
+	// System.Collections.Generic.Dictionary<Game.Logic.OptionItemType,object>
+	// System.Collections.Generic.Dictionary<Game.Start.StartStep,object>
 	// System.Collections.Generic.Dictionary<object,byte>
 	// System.Collections.Generic.Dictionary<object,int>
 	// System.Collections.Generic.Dictionary<object,object>
@@ -58,7 +58,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.KeyValuePair<object,int>
 	// System.Collections.Generic.KeyValuePair<object,object>
 	// System.Collections.Generic.List.Enumerator<object>
-	// System.Collections.Generic.List<Game.Data.Languages>
+	// System.Collections.Generic.List<Game.Logic.Data.Languages>
 	// System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<object,double>>
 	// System.Collections.Generic.List<System.ValueTuple<System.ValueTuple<object,object,int,byte>,object,object>>
 	// System.Collections.Generic.List<int>
@@ -81,8 +81,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Nullable<float>
 	// System.Predicate<object>
 	// System.Runtime.CompilerServices.CallSite<object>
-	// System.ValueTuple<Game.TipType,object>
-	// System.ValueTuple<Game.UI.Tips,object>
+	// System.ValueTuple<Game.Logic.TipType,object>
+	// System.ValueTuple<Game.Presentation.UI.Tips,object>
 	// System.ValueTuple<System.ValueTuple<object,object,int,byte>,object,object>
 	// System.ValueTuple<int,int,object>
 	// System.ValueTuple<object,object,byte,byte>
@@ -108,9 +108,9 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// object System.Activator.CreateInstance<object>()
 		// object[] System.Array.Empty<object>()
 		// int System.Array.IndexOf<int>(int[],int)
-		// bool System.Enum.TryParse<Game.Data.Languages>(string,Game.Data.Languages&)
+		// bool System.Enum.TryParse<Game.Logic.Data.Languages>(string,Game.Logic.Data.Languages&)
 		// bool System.Linq.Enumerable.Any<object>(System.Collections.Generic.IEnumerable<object>,System.Func<object,bool>)
-		// System.Collections.Generic.IEnumerable<Game.Data.Languages> System.Linq.Enumerable.Cast<Game.Data.Languages>(System.Collections.IEnumerable)
+		// System.Collections.Generic.IEnumerable<Game.Logic.Data.Languages> System.Linq.Enumerable.Cast<Game.Logic.Data.Languages>(System.Collections.IEnumerable)
 		// int System.Linq.Enumerable.Count<object>(System.Collections.Generic.IEnumerable<object>)
 		// System.Collections.Generic.KeyValuePair<object,int> System.Linq.Enumerable.ElementAt<System.Collections.Generic.KeyValuePair<object,int>>(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<object,int>>,int)
 		// object System.Linq.Enumerable.FirstOrDefault<object>(System.Collections.Generic.IEnumerable<object>,System.Func<object,bool>)
@@ -119,7 +119,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Collections.Generic.IEnumerable<object> System.Linq.Enumerable.Select<object,object>(System.Collections.Generic.IEnumerable<object>,System.Func<object,object>)
 		// bool System.Linq.Enumerable.SequenceEqual<int>(System.Collections.Generic.IEnumerable<int>,System.Collections.Generic.IEnumerable<int>)
 		// System.Collections.Generic.Dictionary<object,object> System.Linq.Enumerable.ToDictionary<System.Collections.Generic.KeyValuePair<object,System.ValueTuple<int,int,object>>,object,object>(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<object,System.ValueTuple<int,int,object>>>,System.Func<System.Collections.Generic.KeyValuePair<object,System.ValueTuple<int,int,object>>,object>,System.Func<System.Collections.Generic.KeyValuePair<object,System.ValueTuple<int,int,object>>,object>)
-		// System.Collections.Generic.List<Game.Data.Languages> System.Linq.Enumerable.ToList<Game.Data.Languages>(System.Collections.Generic.IEnumerable<Game.Data.Languages>)
+		// System.Collections.Generic.List<Game.Logic.Data.Languages> System.Linq.Enumerable.ToList<Game.Logic.Data.Languages>(System.Collections.Generic.IEnumerable<Game.Logic.Data.Languages>)
 		// System.Collections.Generic.List<int> System.Linq.Enumerable.ToList<int>(System.Collections.Generic.IEnumerable<int>)
 		// System.Collections.Generic.List<object> System.Linq.Enumerable.ToList<object>(System.Collections.Generic.IEnumerable<object>)
 		// System.Collections.Generic.IEnumerable<object> System.Linq.Enumerable.Where<object>(System.Collections.Generic.IEnumerable<object>,System.Func<object,bool>)
