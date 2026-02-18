@@ -12,7 +12,6 @@ using System;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Config = Game.Logic.Config;
     using Protocol = Game.Net.Protocol;
 
@@ -305,7 +304,7 @@ namespace Game.Presentation
             {
                 // No accounts: send QuickStart request
                 Utils.Debug.Log("Start", "No local accounts, sending QuickStartRequest");
-                Net.Instance.Send(new Protocol.QuickStartRequest
+                NetManager.Instance.Send(new Protocol.QuickStartRequest
                 {
                     device = Data.Instance.Device,
                     version = Data.Instance.AppVersion,

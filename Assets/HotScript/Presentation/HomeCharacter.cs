@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Protocol = Game.Net.Protocol;
 
     public class HomeCharacter : MonoBehaviour
@@ -17,7 +16,7 @@ namespace Game.Presentation
         private void OnClick()
         {
             Utils.ClickEffect.TextEcho(transform, transform.Find("Name").GetComponent<Text>());
-            Net.Instance.Send(new Protocol.ClickCharacter(hash));
+            NetManager.Instance.Send(new Protocol.ClickCharacter(hash));
         }
 
         public void Refresh(CharacterData data)

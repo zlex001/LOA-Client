@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Protocol = Game.Net.Protocol;
 
     public class OptionToggle : OptionItem
@@ -21,7 +20,7 @@ namespace Game.Presentation
             if (value)
             {
                 string label = text.text == "全部" ? "" : text.text;
-                Net.Instance.Send(new Protocol.OptionToggle(label, value));
+                NetManager.Instance.Send(new Protocol.OptionToggle(label, value));
             }
         }
 

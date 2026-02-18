@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Protocol = Game.Net.Protocol;
 
     public class Story : UI.Core
@@ -61,7 +60,7 @@ namespace Game.Presentation
             if (!isQuitting)
             {
                 // Notify server that story playback is complete
-                Net.Instance.Send(new Protocol.StoryComplete());
+                NetManager.Instance.Send(new Protocol.StoryComplete());
             }
         }
 

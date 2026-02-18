@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Config = Game.Logic.Config;
     using Protocol = Game.Net.Protocol;
 
@@ -131,7 +130,7 @@ namespace Game.Presentation
         }
         private void SendMessage()
         {
-            Net.Instance.Send(new Protocol.OptionSlider(index, (int)slider.value));
+            NetManager.Instance.Send(new Protocol.OptionSlider(index, (int)slider.value));
         }
     }
 }

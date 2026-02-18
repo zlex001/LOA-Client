@@ -11,7 +11,6 @@ using DG.Tweening;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Config = Game.Logic.Config;
 
     /// <summary>
@@ -784,8 +783,8 @@ namespace Game.Presentation
             
             // Close panel and reconnect
             Close();
-            Net.Instance.Disconnect();
-            Net.Instance.Connect(Data.Instance.SelectedServer.Ip, Data.Instance.SelectedServer.Port);
+            NetManager.Instance.Disconnect();
+            NetManager.Instance.Connect(Data.Instance.SelectedServer.Ip, Data.Instance.SelectedServer.Port);
         }
 
         private void OnAccountEdit(Account account)

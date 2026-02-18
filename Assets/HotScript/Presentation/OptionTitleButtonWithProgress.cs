@@ -7,7 +7,6 @@ using LitJson;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Config = Game.Logic.Config;
     using Protocol = Game.Net.Protocol;
 
@@ -49,7 +48,7 @@ namespace Game.Presentation
         private void OnClick()
         {
             Utils.ClickEffect.TextPress(transform.Find("Button/Text"), transform.Find("Button/Text").GetComponent<Text>());
-            Net.Instance.Send(new Protocol.OptionButton(index, side));
+            NetManager.Instance.Send(new Protocol.OptionButton(index, side));
         }
     }
 }

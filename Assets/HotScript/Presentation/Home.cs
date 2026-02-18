@@ -10,7 +10,6 @@ using System.Collections.Generic;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Protocol = Game.Net.Protocol;
 
     public class Home : UI.Core
@@ -556,7 +555,7 @@ namespace Game.Presentation
 
         private void OnChatEndEdit(string text)
         {
-            Net.Instance.Send(new Protocol.Chat(text));
+            NetManager.Instance.Send(new Protocol.Chat(text));
         }
 
         void Update()

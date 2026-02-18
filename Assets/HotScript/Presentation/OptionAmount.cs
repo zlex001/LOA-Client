@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Protocol = Game.Net.Protocol;
 
     public class OptionAmount : OptionItem
@@ -30,7 +29,7 @@ namespace Game.Presentation
                     amount = 1;
                 }
                 inputField.text = amount.ToString();
-                Net.Instance.Send(new Protocol.OptionAmount(amount));
+                NetManager.Instance.Send(new Protocol.OptionAmount(amount));
             }
         }
         void Start()

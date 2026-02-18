@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Config = Game.Logic.Config;
     using Protocol = Game.Net.Protocol;
 
@@ -14,7 +13,7 @@ namespace Game.Presentation
     {
         void Start()
         {
-            GetComponent<InputField>().onEndEdit.AddListener((text) => Net.Instance.Send(new Protocol.OptionFilter(index,text)));
+            GetComponent<InputField>().onEndEdit.AddListener((text) => NetManager.Instance.Send(new Protocol.OptionFilter(index,text)));
         }
         public void Refresh(int index, OptionItemData item)
         {

@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace Game.Start
 {
-    using Net = Game.Net.Net;
     using Config = Game.Logic.Config;
     using Protocol = Game.Net.Protocol;
 
@@ -35,7 +34,7 @@ namespace Game.Start
             Data.Instance.Init();
             UI.Instance.Init(9f, 16f);
             Audio.Instance.Init();
-            Net.Instance.Init();
+            NetManager.Instance.Init();
             
             // Register event listeners for layer separation (Data -> Start -> Net)
             Game.Basic.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
@@ -47,12 +46,12 @@ namespace Game.Start
         private static void OnInitializeConfirmClick(params object[] args)
         {
             string name = (string)args[0];
-            Net.Instance.Send(new Protocol.InitializeConfirm(name));
+            NetManager.Instance.Send(new Protocol.InitializeConfirm(name));
         }
 
         private static void OnInitializeRandomClick(params object[] args)
         {
-            Net.Instance.Send(new Protocol.InitializeRandom());
+            NetManager.Instance.Send(new Protocol.InitializeRandom());
         }
     }
     public static class StartupFlowManager

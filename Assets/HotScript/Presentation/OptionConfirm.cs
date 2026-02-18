@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Protocol = Game.Net.Protocol;
 
     public class OptionConfirm : OptionItem
@@ -19,7 +18,7 @@ namespace Game.Presentation
 
         private void OnButtonClick()
         {
-            Net.Instance.Send(new Protocol.OptionConfirm(index, side));
+            NetManager.Instance.Send(new Protocol.OptionConfirm(index, side));
         }
     }
 }

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 
 namespace Game.Presentation
 {
-    using Net = Game.Net.Net;
     using Protocol = Game.Net.Protocol;
 
     public class HomeMap : MonoBehaviour
@@ -173,7 +172,7 @@ namespace Game.Presentation
             }
             
             Utils.Debug.Log("HomeMap", $"[DEBUG-ClickMap] 准备发送ClickMap到服务器");
-            Net.Instance.Send(new Protocol.ClickMap(targetPos));
+            NetManager.Instance.Send(new Protocol.ClickMap(targetPos));
             Utils.Debug.Log("HomeMap", $"[DEBUG-ClickMap] 已发送ClickMap");
         }
     }
