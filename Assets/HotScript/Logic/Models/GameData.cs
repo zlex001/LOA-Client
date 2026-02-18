@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Game
+namespace Game.Logic
 {
     /// <summary>
     /// Map data model - represents a map tile

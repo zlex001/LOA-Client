@@ -1,6 +1,6 @@
 {
     "name": "Domain",
-    "rootNamespace": "Game",
+    "rootNamespace": "Game.Domain",
     "references": [
         "Net",
         "Logic",

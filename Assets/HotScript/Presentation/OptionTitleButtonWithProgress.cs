@@ -1,9 +1,11 @@
 using Framework;
+using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
 using LitJson;
+using Protocol = Game.Net.Protocol;
 
-namespace Game
+namespace Game.Presentation
 {
     public class OptionTitleButtonWithProgress : OptionItem
     {

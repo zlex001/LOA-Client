@@ -1,10 +1,13 @@
 using Framework;
+using Game.Basic;
+using Game.Logic;
+using Config = Game.Logic.Config;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
 
-namespace Game
+namespace Game.Presentation
 {
     public class OptionAlipay : OptionItem
     {
@@ -21,7 +24,7 @@ namespace Game
 
         public void OnPurchaseComplete(Product product)
         {
-            Game.Event.Instance.Fire("PurchaseComplete", product.receipt);
+            Game.Basic.Event.Instance.Fire("PurchaseComplete", product.receipt);
             UI.Instance.Close(Config.UI.Option);
             //Data.Instance.Change(Data.Type.PlayerState, Data.PlayerState.Normal);
         }

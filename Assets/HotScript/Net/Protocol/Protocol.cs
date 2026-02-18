@@ -2,9 +2,11 @@ using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Basic;
+using Game.Logic;
 using UnityEngine;
 
-namespace Game.Protocol
+namespace Game.Net.Protocol
 {
     public class Base
     {
@@ -661,7 +663,7 @@ namespace Game.Protocol
 
         public override void Processed()
         {
-            if (System.Enum.TryParse(language, out Game.Data.Languages lang))
+            if (System.Enum.TryParse(language, out Data.Languages lang))
             {
                 Data.Instance.Language = lang;
             }
@@ -675,10 +677,10 @@ namespace Game.Protocol
         public override void Processed()
         {
             Data.Instance.User.ScreenUIAdaptation = value / 100f;
-            Game.Local.Instance.Save(Data.Instance.User);
+            Local.Instance.Save(Data.Instance.User);
 
             // Notify UI layer through event instead of direct call
-            Game.Event.Instance.Fire("UI.ScreenUIAdaptation.Changed");
+            Game.Basic.Event.Instance.Fire("UI.ScreenUIAdaptation.Changed");
         }
     }
 

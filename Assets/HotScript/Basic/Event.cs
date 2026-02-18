@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace  Game
+namespace Game.Basic
 {
     public class Event
     {

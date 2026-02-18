@@ -1,1 +1,1 @@
-[修复] 补充目录重构遗漏：Framework.asmdef添加HybridCLR引用、清理SVNTools和Editor/Path残留旧路径
+[重构] 命名空间与程序集统一：每个程序集对应独立命名空间（Game.{Layer}），Framework统一为namespace Framework

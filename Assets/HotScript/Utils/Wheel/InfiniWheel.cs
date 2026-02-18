@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-namespace Game
+namespace Game.Utils
 {
     /// <summary>
     /// Infini wheel.

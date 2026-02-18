@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game
+namespace Game.Logic
 {
     public static class Config
     {

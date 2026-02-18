@@ -1,47 +1,51 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine;
-public class DragElement : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+
+namespace Game.Utils
 {
-    private GameObject scrollRect;
-
-    private Image raycast_Image;
-
-
-    private void Start()
+    public class DragElement : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        raycast_Image = gameObject.GetComponent<Image>();
-    }
+        private GameObject scrollRect;
 
-    public void SetScrollRect(GameObject obj)
-    {
-        scrollRect = obj;
-    }
+        private Image raycast_Image;
 
-    public void OnBeginDrag(PointerEventData pointerEventData)
-    {
-        // If you only need to pass the drag through use
-        if (scrollRect != null)
+
+        private void Start()
         {
-            ExecuteEvents.Execute(scrollRect, pointerEventData, ExecuteEvents.beginDragHandler);
+            raycast_Image = gameObject.GetComponent<Image>();
         }
-        raycast_Image.raycastTarget = false;
-    }
 
-    public void OnDrag(PointerEventData pointerEventData)
-    {
-        if (scrollRect != null)
+        public void SetScrollRect(GameObject obj)
         {
-            ExecuteEvents.Execute(scrollRect, pointerEventData, ExecuteEvents.dragHandler);
+            scrollRect = obj;
         }
-    }
 
-    public void OnEndDrag(PointerEventData pointerEventData)
-    {
-        if (scrollRect != null)
+        public void OnBeginDrag(PointerEventData pointerEventData)
         {
-            ExecuteEvents.Execute(scrollRect, pointerEventData, ExecuteEvents.endDragHandler);
+            // If you only need to pass the drag through use
+            if (scrollRect != null)
+            {
+                ExecuteEvents.Execute(scrollRect, pointerEventData, ExecuteEvents.beginDragHandler);
+            }
+            raycast_Image.raycastTarget = false;
         }
-        raycast_Image.raycastTarget = true;
+
+        public void OnDrag(PointerEventData pointerEventData)
+        {
+            if (scrollRect != null)
+            {
+                ExecuteEvents.Execute(scrollRect, pointerEventData, ExecuteEvents.dragHandler);
+            }
+        }
+
+        public void OnEndDrag(PointerEventData pointerEventData)
+        {
+            if (scrollRect != null)
+            {
+                ExecuteEvents.Execute(scrollRect, pointerEventData, ExecuteEvents.endDragHandler);
+            }
+            raycast_Image.raycastTarget = true;
+        }
     }
 }

@@ -1,11 +1,12 @@
 using Framework;
+using Game.Basic;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
-namespace Game
+namespace Game.Logic
 {
     /// <summary>
     /// Tip types for UI display
@@ -314,15 +315,15 @@ namespace Game
             Framework.FontScaler.GetCurrentFontSize = () => FontSize;
 
             // Setup UI Listeners
-            Game.Event.Instance.Add("UI.Event.Click", OnUIClick);
-            Game.Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
-            Game.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
-            Game.Event.Instance.Add("Game.Home.Event.SceneZoomIn", OnHomeSceneZoomIn);
-            Game.Event.Instance.Add("Game.Home.Event.SceneZoomOut", OnHomeSceneZoomOut);
-            Game.Event.Instance.Add("Game.Home.Event.ChannelToggle", OnHomeChannelToggle);
-            //Game.Event.Instance.Add(Option.Event.Return, OnOptionReturn);
+            Game.Basic.Event.Instance.Add("UI.Event.Click", OnUIClick);
+            Game.Basic.Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
+            Game.Basic.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
+            Game.Basic.Event.Instance.Add("Game.Home.Event.SceneZoomIn", OnHomeSceneZoomIn);
+            Game.Basic.Event.Instance.Add("Game.Home.Event.SceneZoomOut", OnHomeSceneZoomOut);
+            Game.Basic.Event.Instance.Add("Game.Home.Event.ChannelToggle", OnHomeChannelToggle);
+            //Game.Basic.Event.Instance.Add(Option.Event.Return, OnOptionReturn);
 
-            Game.Event.Instance.Add("HeartbeatLog.Toggle", OnHeartbeatLogToggle);
+            Game.Basic.Event.Instance.Add("HeartbeatLog.Toggle", OnHeartbeatLogToggle);
         }
 
         private void OnUIClick(params object[] args)
@@ -398,13 +399,13 @@ namespace Game
         {
             string name = (string)args[0];
             // Trigger event instead of directly calling Net (respecting layer separation)
-            Game.Event.Instance.Fire("Game.Initialize.Click.Confirm", name);
+            Game.Basic.Event.Instance.Fire("Game.Initialize.Click.Confirm", name);
         }
 
         private void OnInitializeRandomClick(params object[] args)
         {
             // Trigger event instead of directly calling Net (respecting layer separation)
-            Game.Event.Instance.Fire("Game.Initialize.Click.Random");
+            Game.Basic.Event.Instance.Fire("Game.Initialize.Click.Random");
         }
         private void OnHomeSceneZoomIn(params object[] args)
         {

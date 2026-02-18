@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Framework;
 using UnityEngine;
-namespace Game
+namespace Game.SDK
 {
     public class SDKManager : Singleton<SDKManager>
     {

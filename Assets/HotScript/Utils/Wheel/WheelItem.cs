@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-namespace Game
+namespace Game.Utils
 {
     public class WheelItem : MonoBehaviour
     {

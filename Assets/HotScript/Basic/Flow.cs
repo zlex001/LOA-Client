@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Game
+namespace Game.Basic
 {
     public class Flow<T> where T : Enum
     {

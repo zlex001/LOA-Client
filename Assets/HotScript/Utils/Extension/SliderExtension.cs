@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Game
+namespace Game.Utils
 {
     public static class SliderExtension
 {

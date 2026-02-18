@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System;
-using Game.Protocol;
+using Framework;
+using Game.Logic;
+using Game.Net.Protocol;
+using Config = Game.Logic.Config;
 using Newtonsoft.Json;
 using UnityTimer;
 using System.Collections;
 
 
-namespace Game
+namespace Game.Net
 {
     public partial class Net : Singleton<Net>
     {
@@ -436,7 +439,7 @@ namespace Game
 
         private void HandlePacket(Packet packet)
         {
-            string typeName = $"Game.Protocol.{packet.Name}, Game";
+            string typeName = $"Game.Net.Protocol.{packet.Name}, Net";
             Type type = Type.GetType(typeName);
             if (type != null)
             {
@@ -454,7 +457,7 @@ namespace Game
             try
             {
                 string content = Encoding.UTF8.GetString(bytes);
-                return (Protocol.Base)JsonConvert.DeserializeObject(content, Type.GetType($"Game.Protocol.{name}"));
+                return (Protocol.Base)JsonConvert.DeserializeObject(content, Type.GetType($"Game.Net.Protocol.{name}"));
             }
             catch (Exception)
             {
@@ -591,7 +594,7 @@ namespace Game
 
         private void OnAfterOptionChanged(params object[] args)
         {
-            Game.Protocol.Option option = (Game.Protocol.Option)args[0];
+            Protocol.Option option = (Protocol.Option)args[0];
 
             if (option != null && option.lefts != null)
             {

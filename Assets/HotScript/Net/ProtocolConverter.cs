@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Game.Protocol;
+using Game.Logic;
+using Game.Net.Protocol;
 
-namespace Game
+namespace Game.Net
 {
     /// <summary>
     /// Protocol to Logic data model converter

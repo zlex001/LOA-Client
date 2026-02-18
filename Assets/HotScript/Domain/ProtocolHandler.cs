@@ -1,5 +1,6 @@
 using System;
-using Game.Protocol;
+using Game.Logic;
+using Game.Net.Protocol;
 
 namespace Game.Domain
 {

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using Sequence = DG.Tweening.Sequence;
 using UnityTimer;
 
-namespace Game
+namespace Game.Presentation
 {
     public class Option : UI.Core
     {

@@ -2,12 +2,11 @@ using Framework;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using Game.Protocol;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using DG.Tweening;
 
-namespace Game
+namespace Game.Presentation
 {
     public class Dark : UI.Core
     {

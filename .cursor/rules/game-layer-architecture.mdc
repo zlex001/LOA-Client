@@ -28,18 +28,18 @@ Utils（工具层）    Basic（基础设施层）
 SDK（独立，仅依赖 Framework）
 ```
 
-> 所有热更新程序集目录前缀为 `Assets/HotScript/`。命名空间统一为 `Game`，特殊情况：Basic/Flow.cs → `Game.Flow`，Net/Protocol/ → `Game.Protocol`，SDK/ → `Game.SDK`。ThirdParty/ 位于 `Assets/ThirdParty/`，保留原始命名空间。
+> 所有热更新程序集目录前缀为 `Assets/HotScript/`。每个程序集对应独立命名空间，命名规则为 `Game.{层名}`（如 `Game.Logic`、`Game.Net`）。Framework 程序集使用 `Framework` 命名空间。ThirdParty/ 位于 `Assets/ThirdParty/`，保留原始命名空间。
 
-| 层 | 程序集 → 目录 | 依赖 | 目录结构 |
-|---|---|---|---|
-| Utils | `Utils` → `Utils/` | Framework, SuperScrollView | 按功能建子目录（Extension/, Time/, Wheel/） |
-| Basic | `Basic` → `Basic/` | Framework | 平铺 |
-| Logic | `Logic` → `Logic/` | Utils, Basic, Framework, LitJson | 数据模型放 Models/，其余根目录 |
-| Net | `Net` → `Net/` | Logic, Basic, Framework, Utils | 协议放 Protocol/，其余根目录 |
-| Domain | `Domain` → `Domain/` | Net, Logic, Utils, Basic, Framework | 平铺 |
-| Presentation | `Presentation` → `Presentation/` | Domain, Logic, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView, Unity.Addressables, UnityEngine.Purchasing | 平铺 |
-| Start | `Start` → `Start/` | Framework, Basic, Logic, Net, Domain, Presentation | 平铺 |
-| SDK | `SDK` → `SDK/` | Framework | 平台实现按 {Platform}/ 子目录 |
+| 层 | 程序集 → 目录 | 命名空间 | 依赖 | 目录结构 |
+|---|---|---|---|---|
+| Utils | `Utils` → `Utils/` | `Game.Utils` | Framework, SuperScrollView | 按功能建子目录（Extension/, Time/, Wheel/） |
+| Basic | `Basic` → `Basic/` | `Game.Basic` | Framework | 平铺 |
+| Logic | `Logic` → `Logic/` | `Game.Logic` | Utils, Basic, Framework, LitJson | 数据模型放 Models/，其余根目录 |
+| Net | `Net` → `Net/` | `Game.Net`（协议：`Game.Net.Protocol`） | Logic, Basic, Framework, Utils | 协议放 Protocol/，其余根目录 |
+| Domain | `Domain` → `Domain/` | `Game.Domain` | Net, Logic, Utils, Basic, Framework | 平铺 |
+| Presentation | `Presentation` → `Presentation/` | `Game.Presentation` | Domain, Logic, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView, Unity.Addressables, UnityEngine.Purchasing | 平铺 |
+| Start | `Start` → `Start/` | `Game.Start` | Framework, Basic, Logic, Net, Domain, Presentation | 平铺 |
+| SDK | `SDK` → `SDK/` | `Game.SDK` | Framework | 平台实现按 {Platform}/ 子目录 |
 
 ---
 
@@ -55,11 +55,11 @@ Data.Instance.Home = homeData;      // ✓ Net → Logic
 **低层 → 高层：** 禁止直接调用，使用以下机制：
 
 ```csharp
-// Event
-Game.Event.Instance.Add("EventName", callback);   // register (upper)
-Game.Event.Instance.Fire("EventName", args);       // fire (lower)
+// Event (Game.Basic.Event)
+Event.Instance.Add("EventName", callback);   // register (upper)
+Event.Instance.Fire("EventName", args);       // fire (lower)
 
-// Monitor
+// Monitor (Game.Basic.Monitor)
 Data.Instance.after.Register(Data.Type.Home, OnHomeChanged);  // register (upper)
 Data.Instance.after.Fire(Data.Type.Home, newHomeData);         // fire (lower)
 ```

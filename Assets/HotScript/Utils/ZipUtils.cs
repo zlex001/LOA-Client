@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Framework;
 
-namespace Game
+namespace Game.Utils
 {
     public class ZipUtils
     {

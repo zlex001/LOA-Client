@@ -1,7 +1,10 @@
+using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-namespace Game
+using Protocol = Game.Net.Protocol;
+
+namespace Game.Presentation
 {
     public class HomeCharacter : MonoBehaviour
     {

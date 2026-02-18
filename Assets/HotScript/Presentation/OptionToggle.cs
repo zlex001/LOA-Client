@@ -1,6 +1,8 @@
+using Game.Net;
 using UnityEngine.UI;
+using Protocol = Game.Net.Protocol;
 
-namespace Game
+namespace Game.Presentation
 {
     public class OptionToggle : OptionItem
     {

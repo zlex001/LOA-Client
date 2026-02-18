@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-namespace Game
+namespace Game.Presentation
 {
     public class MapTransition : MonoBehaviour
     {

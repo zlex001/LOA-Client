@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 #if UNITY_IPHONE
-namespace Game
+namespace Game.SDK
 {
     public class IOSSdk : BaseSdk
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
-namespace Game
+namespace Game.SDK
 {
     public class WindowsSdk : BaseSdk
     {

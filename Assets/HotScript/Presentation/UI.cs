@@ -3,14 +3,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityTimer;
 using Framework;
+using Game.Basic;
+using Game.Logic;
+using Config = Game.Logic.Config;
 using System.Linq;
 using Newtonsoft.Json;
 using DG.Tweening;
 using LitJson;
 using System;
 using System.Net.Http;
+using Protocol = Game.Net.Protocol;
 
-namespace Game
+namespace Game.Presentation
 {
     public class UI : Singleton<UI>
     {
@@ -86,7 +90,7 @@ namespace Game
 
             ApplyScreenUIAdaptation();
 
-            Game.Event.Instance.Add(Event.Click, OnClick);
+            Game.Basic.Event.Instance.Add(Event.Click, OnClick);
             Data.Instance.after.Register(Data.Type.LoginAccount, OnAfterLoginAccountChanged);
             Data.Instance.after.Register(Data.Type.Online, OnAfterOnlineChanged);
             Data.Instance.after.Register(Data.Type.Initialize, OnAfterInitializeChanged);
@@ -128,7 +132,7 @@ namespace Game
         {
             if (Input.GetMouseButtonUp(0))
             {
-                Game.Event.Instance.Fire(Event.Click);
+                Game.Basic.Event.Instance.Fire(Event.Click);
             }
         }
 

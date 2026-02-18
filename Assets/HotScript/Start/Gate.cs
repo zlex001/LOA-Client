@@ -1,19 +1,22 @@
-using Game.Flow;
+using Framework;
+using Game.Basic;
+using Game.Logic;
+using Game.Net;
+using Game.Presentation;
+using Config = Game.Logic.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Protocol = Game.Net.Protocol;
 
-namespace Game.Flow
+namespace Game.Start
 {
     public enum StartStep
     {
         RequestGateway,
     }
-}
 
-namespace Game
-{
     public  class Gate
     {
         public static void Entrance(string gateway)
@@ -33,8 +36,8 @@ namespace Game
             Net.Instance.Init();
             
             // Register event listeners for layer separation (Data -> Start -> Net)
-            Game.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
-            Game.Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
+            Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
+            Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
             
             StartupFlowManager.Start();
         }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_ANDROID
-namespace Game
+namespace Game.SDK
 {
     public class AndroidSdk : BaseSdk
     {

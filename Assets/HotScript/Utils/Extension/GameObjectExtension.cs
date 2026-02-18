@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace Game
+using Framework;
+namespace Game.Utils
 {
     public static class GameObjectExtension
     {

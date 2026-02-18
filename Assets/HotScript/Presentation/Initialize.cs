@@ -1,12 +1,12 @@
 using Framework;
-using Game.Protocol;
+using Game.Basic;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game
+namespace Game.Presentation
 {
     public class Initialize : UI.Core
     {
@@ -172,7 +172,7 @@ namespace Game
         #region UI Event Handlers
         private void OnRandomClick()
         {
-            Game.Event.Instance.Fire(Click.Random);
+            Game.Basic.Event.Instance.Fire(Click.Random);
         }
 
         private void OnConfirmClick()
@@ -180,7 +180,7 @@ namespace Game
             string checkResult = NameCheck;
             if (checkResult == "")
             {
-                Game.Event.Instance.Fire(Click.Confirm, transform.Find("Name").GetComponent<InputField>().text);
+                Game.Basic.Event.Instance.Fire(Click.Confirm, transform.Find("Name").GetComponent<InputField>().text);
             }
             else
             {

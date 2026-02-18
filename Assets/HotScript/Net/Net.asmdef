@@ -1,6 +1,6 @@
 {
     "name": "Net",
-    "rootNamespace": "Game",
+    "rootNamespace": "Game.Net",
     "references": [
         "Logic",
         "Basic",

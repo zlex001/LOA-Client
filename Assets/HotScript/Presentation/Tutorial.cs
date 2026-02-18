@@ -1,11 +1,13 @@
 using LitJson;
+using Game.Logic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using SuperScrollView;
+using Protocol = Game.Net.Protocol;
 
-namespace Game
+namespace Game.Presentation
 {
     /// <summary>
     /// Tutorial guidance UI that highlights targets based on server instructions.

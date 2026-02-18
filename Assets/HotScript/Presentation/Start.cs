@@ -1,15 +1,17 @@
 using DG.Tweening;
 using Framework;
+using Game.Logic;
+using Game.Net;
+using Config = Game.Logic.Config;
 using UnityEngine.UI;
 using SuperScrollView;
 using UnityEngine;
 using System.Linq;
-using Game.Protocol;
 using UnityTimer;
 using System.Collections.Generic;
 using System;
 
-namespace Game
+namespace Game.Presentation
 {
     public class Start : UI.Core
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game
+namespace Game.Utils
 {
     public static class DangerColorHelper
     {

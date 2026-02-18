@@ -1,6 +1,6 @@
 {
     "name": "Logic",
-    "rootNamespace": "Game",
+    "rootNamespace": "Game.Logic",
     "references": [
         "Utils",
         "Basic",

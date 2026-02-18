@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Framework;
 
-namespace Game
+namespace Game.Presentation
 {
     public class StartAccount : MonoBehaviour
     {

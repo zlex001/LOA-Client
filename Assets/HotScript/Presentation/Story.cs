@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
+using Protocol = Game.Net.Protocol;
 
-namespace Game
+namespace Game.Presentation
 {
     public class Story : UI.Core
     {

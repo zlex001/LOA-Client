@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace Game
+namespace Game.SDK
 {
     public abstract class BaseSdk
     {

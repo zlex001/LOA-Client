@@ -1,6 +1,6 @@
 {
     "name": "Start",
-    "rootNamespace": "Game",
+    "rootNamespace": "Game.Start",
     "references": [
         "Framework",
         "Basic",

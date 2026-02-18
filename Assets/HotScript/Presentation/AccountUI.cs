@@ -1,8 +1,9 @@
+using Game.Logic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-namespace Game
+namespace Game.Presentation
 {
     public class AccountUI : UI.Core
     {

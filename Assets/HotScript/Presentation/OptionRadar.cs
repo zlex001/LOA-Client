@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game
+namespace Game.Presentation
 {
     public class OptionRadar : OptionItem
     {

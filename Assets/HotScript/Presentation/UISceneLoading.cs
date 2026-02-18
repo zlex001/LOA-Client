@@ -1,17 +1,18 @@
 using Framework;
+using Game.Basic;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game
+namespace Game.Presentation
 {
 
     public class UISceneLoading : UI.Core
     {
-        //进度
+        //????
         public Text ui_progressText;
-        //进度条
+        //??????
         public Image ui_loadingProgress;
 
         private float m_ProgressPercent = 0.0f;
@@ -19,20 +20,20 @@ namespace Game
         public override void OnCreate(params object[] args)
         {
             SetActive(false);
-            Game.Event.Instance.Add("UI_Show_SceneLoading", OnShowLoading);
-            Game.Event.Instance.Add("UI_Hide_SceneLoading", OnHideLoading);
+            Game.Basic.Event.Instance.Add("UI_Show_SceneLoading", OnShowLoading);
+            Game.Basic.Event.Instance.Add("UI_Hide_SceneLoading", OnHideLoading);
         }
 
         public override void OnClose()
         {
             base.OnClose();
 
-            Game.Event.Instance.Remove("UI_Show_SceneLoading", OnShowLoading);
-            Game.Event.Instance.Remove("UI_Hide_SceneLoading", OnHideLoading);
+            Game.Basic.Event.Instance.Remove("UI_Show_SceneLoading", OnShowLoading);
+            Game.Basic.Event.Instance.Remove("UI_Hide_SceneLoading", OnHideLoading);
         }
 
         /// <summary>
-        /// 显示Loading
+        /// ???Loading
         /// </summary>
         public void OnShowLoading(params object[]args)
         {

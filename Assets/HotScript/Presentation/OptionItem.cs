@@ -2,7 +2,7 @@ using Framework;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game
+namespace Game.Presentation
 {
     public class OptionItem : UI.Core
     {

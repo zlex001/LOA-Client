@@ -1,12 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using SuperScrollView;
+using Game.Basic;
+using Game.Logic;
+using Game.Net;
 using System.Linq;
 using UnityEditor;
 using System.Collections.Generic;
-using Game.Protocol;
+using Protocol = Game.Net.Protocol;
 
-namespace Game
+namespace Game.Presentation
 {
     public class Home : UI.Core
     {
@@ -166,8 +169,8 @@ namespace Game
             transform.Find("Scene/ZoomOut").GetComponent<Button>().onClick.AddListener(OnSceneZoomOutClick);
             transform.Find("Area").GetComponent<LoopListView2>().InitListView(Characters.Count, OnGetCharacterByIndex);
             transform.Find("Information").GetComponent<LoopListView2>().InitListView(Data.Instance.Informations.Count, OnGetMessageByIndex);
-            foreach (Toggle toggle in transform.Find("Chat/Channel").GetComponentsInChildren<Toggle>(true)) { toggle.onValueChanged.AddListener((isOn) => Game.Event.Instance.Fire(Event.ChannelToggle, toggle.gameObject.name, isOn)); }
-            Game.Event.Instance.Add(Event.ChannelToggle, OnChannelToggle);
+            foreach (Toggle toggle in transform.Find("Chat/Channel").GetComponentsInChildren<Toggle>(true)) { toggle.onValueChanged.AddListener((isOn) => Game.Basic.Event.Instance.Fire(Event.ChannelToggle, toggle.gameObject.name, isOn)); }
+            Game.Basic.Event.Instance.Add(Event.ChannelToggle, OnChannelToggle);
             transform.Find("Chat/Input").GetComponent<InputField>().onEndEdit.AddListener(OnChatEndEdit);
 
             UpdateSceneInfo();
@@ -300,11 +303,11 @@ namespace Game
         }
         private void OnSceneZoomInClick()
         {
-            Game.Event.Instance.Fire(Event.SceneZoomIn);
+            Game.Basic.Event.Instance.Fire(Event.SceneZoomIn);
         }
         private void OnSceneZoomOutClick()
         {
-            Game.Event.Instance.Fire(Event.SceneZoomOut);
+            Game.Basic.Event.Instance.Fire(Event.SceneZoomOut);
         }
         private LoopGridViewItem OnGetMapByIndex(LoopGridView loop, int index, int row, int column)
         {

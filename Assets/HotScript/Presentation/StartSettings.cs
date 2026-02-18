@@ -1,4 +1,7 @@
 using Framework;
+using Game.Logic;
+using Game.Net;
+using Config = Game.Logic.Config;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -6,7 +9,7 @@ using System.Linq;
 using System;
 using DG.Tweening;
 
-namespace Game
+namespace Game.Presentation
 {
     /// <summary>
     /// iOS/WeChat style grouped list settings panel
