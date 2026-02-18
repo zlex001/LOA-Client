@@ -1,1 +1,1 @@
-[删除] 清理旧架构残留空目录及其meta文件(Res/Data/Protocol),强制Unity重新编译修复编辑器启动失败
+[修复] 删除Launcher/中重复的LanguageDetector.cs和Localization.cs(统一使用Framework/版本消除双单例),目录结构文档增加一层深度并修正5处与实际不一致
