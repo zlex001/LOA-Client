@@ -1,1 +1,1 @@
-[删除] 移除Res.meta（r170漏删，导致Unity自动重建空Res目录）
+[删除] 清理旧架构残留空目录及其meta文件(Res/Data/Protocol),强制Unity重新编译修复编辑器启动失败
