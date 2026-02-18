@@ -1,1 +1,1 @@
-[文档] 客户端分层架构文档：开篇图和4.1节图加入Launcher及程序集分类，补充Launcher与Framework分离说明
+[删除] 移除TextMesh Pro示例脚本，减少Assembly-CSharp编译体积
