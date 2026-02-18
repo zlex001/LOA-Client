@@ -1,1 +1,1 @@
-[文档] 目录总览颜色简化，仅标红Unity强制目录（Resources/Plugins/StreamingAssets/TextMesh Pro）
+[文档] 目录总览中AOT标签加粗显示
