@@ -1,1 +1,1 @@
-[删除] 移除未使用的 TextMesh Pro 依赖及 IngameDebugConsole 插件
+[文档] 同步移除架构文档和规则文件中的 TextMesh Pro 与 IngameDebugConsole 引用
