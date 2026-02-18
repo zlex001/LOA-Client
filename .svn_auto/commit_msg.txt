@@ -1,1 +1,1 @@
-[重构] 重命名Assets/Basic为Assets/Launcher，消除与Basic架构层的命名混淆，同步更新Build.cs、EditorBuildSettings、文档路径引用
+[文档] 新增 Assets 项目目录结构文档，按更新机制分区说明各文件夹职责与归属规则
