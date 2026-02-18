@@ -2,124 +2,313 @@
 alwaysApply: true
 ---
 
-# Unity 客户端热更新程序集架构规则
+# LOA 客户端多程序集热更新规则（Multi-Assembly Hot Update）
 
-本项目使用 HybridCLR 实现热更新。**目标：版本上线后实现 0 强更**（无需重新提审即可更新游戏功能与内容）。
+LOA 客户端采用 **HybridCLR 多程序集热更新**架构，将游戏代码拆分为 8 个独立的热更新程序集（Assembly），实现增量更新和更好的可维护性。
 
-**核心原则**：程序集划分的**唯一依据**是**是否可在上线后修改**，而非代码组织是否优雅。
-
----
-
-## 程序集分类
-
-### 1. Assembly-CSharp（启动引导）
-
-**位置**：`Assets/Bootstrap/`（无 `.asmdef`，编译到 Unity 默认的 `Assembly-CSharp.dll`）
-
-- **职责**：应用启动与热更新引导
-- **包含**：启动入口（Main.cs）、版本检查、DLL 下载、动态加载 Game 程序集
-- **约束**：
-  - ❌ 不得包含业务逻辑
-  - ❌ 不得包含完整 UI（启动进度条除外）
-  - ✅ 只负责"把游戏启动起来"
+**目标：** 发布后零强制更新。无需重新提交整包，即可单独更新某一层的程序集。
 
 ---
 
-### 2. Framework（基础设施）
+## 一、程序集分类（Assembly Classification）
 
-**定义**：`Assets/Framework/Framework.asmdef`
+### 1. 热更新程序集（Hot Update Assemblies，共 8 个）
 
-- **职责**：为 Game 程序集提供稳定、长期不变的基础能力
-- **包含**：资源管理、网络基础设施（Http/Socket）、文件操作、Editor 需要的工具、第三方 SDK 封装
-- **约束**：
-  - ✅ API 需谨慎设计，考虑长期稳定性
-  - ❌ 不得包含业务逻辑
-  - ⚠️ 修改 Framework 需重新打包提审
+| 程序集 | 大小 | 目录 | 职责 |
+|--------|------|------|------|
+| Utils.dll | 30KB | `Assets/Game/Scripts/Utils/` | 通用工具 |
+| Basic.dll | 7KB | `Assets/Game/Scripts/Basic/` | 核心基础设施 |
+| Logic.dll | 42KB | `Assets/Game/Scripts/Logic/` | 业务数据 |
+| Net.dll | 38KB | `Assets/Game/Scripts/Network/` | 网络通信 |
+| Domain.dll | 5KB | `Assets/Game/Scripts/Domain/` | 领域逻辑 |
+| Presentation.dll | 122KB | `Assets/Game/Scripts/UI/` | UI 层（最大） |
+| Start.dll | 7.5KB | `Assets/Game/Scripts/Start/` | 启动流程 |
+| SDK.dll | 4KB | `Assets/Game/Scripts/SDK/` | 平台 SDK |
 
----
+**合计：** 255.5KB
 
-### 3. Game（业务逻辑 - 可热更新）
+### 2. AOT 程序集（编译进主包，共 4 个）
 
-**定义**：`Assets/Game/Scripts/Game.asmdef`
-
-- **职责**：承载所有可能频繁迭代的游戏功能
-- **包含**：所有 UI、游戏流程、网络协议业务处理、数据管理、玩法系统
-- **约束**：
-  - ✅ 所有业务逻辑必须放在 Game 程序集
-  - ✅ 确保任何业务调整可通过热更新完成
-
----
-
-### 4. Editor（开发工具）
-
-**位置**：`Assets/Editor/`（无 `.asmdef`，自动编译为 Editor 程序集）
-
-- **职责**：Unity 编辑器扩展、构建工具、开发辅助工具
-- **包含**：自定义编辑器窗口、Inspector 扩展、构建脚本、资源处理工具、协议生成工具
-- **约束**：
-  - ✅ 可以引用 Framework 和 Assembly-CSharp
-  - ❌ **不能引用 Game**（Game.dll 运行时才加载）
-  - ⚠️ 只在编辑器中运行，不参与打包
+| 程序集 | 目录 | 原因 |
+|--------|------|------|
+| Framework | `Assets/Framework/` | 稳定基础设施 |
+| LitJson | `Assets/Game/Scripts/ThirdParty/Json/` | 第三方库，极少变更 |
+| DOTweenModules | `Assets/Game/Scripts/ThirdParty/Demigiant/DOTween/Modules/` | 第三方库，稳定 |
+| SuperScrollView | `Assets/Game/Scripts/ThirdParty/SuperScrollView/Scripts/` | 第三方库，稳定 |
 
 ---
 
-## 依赖规则
+## 二、HybridCLR 配置（HybridCLR Configuration）
 
-### 依赖图
+### 1. 配置文件
 
-```
-Editor ──┐
-         ├─> Framework <── Game（热更新）
-Bootstrap─┘                 ↑
-         └──[反射加载]───────┘
+**文件：** `ProjectSettings/HybridCLRSettings.asset`
+
+**热更新程序集配置：**
+```yaml
+hotUpdateAssemblyDefinitions: []
+hotUpdateAssemblies:
+  - Utils
+  - Basic
+  - Logic
+  - Net
+  - Domain
+  - Presentation
+  - Start
+  - SDK
 ```
 
-### 依赖表
+**重要规则：**
+1. 使用程序集**名称**（来自 .asmdef 的 "name" 字段），而非文件名
+2. **不得**包含 `.asmdef` 后缀
+3. **不得**包含路径
+4. 名称区分大小写
 
-| 程序集 | 可以依赖 | 不得依赖 |
-|--------|----------|----------|
-| **Editor** | Framework、Bootstrap | Game |
-| **Bootstrap** | Framework | Game、Editor |
-| **Framework** | 第三方库 | Game、Editor、Bootstrap |
-| **Game** | Framework | Bootstrap、Editor |
-
-**核心约束**：
-- ❌ 禁止循环依赖
-- ❌ Bootstrap 不能静态引用 Game（通过 `Assembly.Load()` 动态加载）
-- ❌ Editor 不能引用 Game（Game.dll 编辑时不存在）
+**示例：**
+- ✓ 正确：`Utils`
+- ✗ 错误：`Utils.asmdef`
+- ✗ 错误：`Assets/Game/Scripts/Utils/Utils`
+- ✗ 错误：`utils`（大小写错误）
 
 ---
 
-## 决策树：代码应该放在哪里？
+## 三、加载机制（Loading Mechanism）
 
-### 第 1 步：Editor 需要使用吗？
-- **是** → **Framework**（Editor 无法访问 Game）
-  - 示例：构建工具（ZipSharp、DirectoryUtils）、协议生成器
-- **否** → 继续第 2 步
+### 1. Main.cs 实现
 
-### 第 2 步：是否只用于启动？
-- **是** → **Bootstrap**（Assembly-CSharp）
-  - 示例：Main.cs、热更新下载器、启动配置
-- **否** → 继续第 3 步
+**文件：** `Assets/Basic/Main.cs`
 
-### 第 3 步：上线后会频繁修改吗？
-- **会，经常改** → **Game**
-  - 示例：UI、玩法、业务逻辑、网络协议处理
-- **不会，稳定基础设施** → **Framework**
-  - 示例：资源管理器、HTTP 封装、文件工具、SDK 封装
+**方法：** `LoadHotUpdateAssemblies()`
+
+**编辑器模式：**
+```csharp
+string[] hotUpdateAssemblyNames = new string[] 
+{
+    "Utils", "Basic", "Logic", "Net", 
+    "Domain", "Presentation", "Start", "SDK"
+};
+
+foreach (var name in hotUpdateAssemblyNames)
+{
+    var assembly = AppDomain.CurrentDomain.GetAssemblies()
+        .FirstOrDefault(a => a.GetName().Name == name);
+    assemblies.Add(assembly);
+}
+```
+
+**运行时模式：**
+```csharp
+string[] hotUpdateDlls = new string[] 
+{
+    "utils.dll.bytes", "basic.dll.bytes", "logic.dll.bytes",
+    "net.dll.bytes", "domain.dll.bytes", "presentation.dll.bytes",
+    "start.dll.bytes", "sdk.dll.bytes"
+};
+
+foreach (var dllFile in hotUpdateDlls)
+{
+    string dllPath = $"{FrameworkPath.Scripts}/{dllFile}";
+    var assembly = System.Reflection.Assembly.Load(
+        System.IO.File.ReadAllBytes(dllPath)
+    );
+}
+```
+
+**加载顺序：** 从低层到高层（Utils → Basic → ... → Start → SDK），确保依赖项优先加载。
 
 ---
 
-## 特殊场景处理
+## 四、构建流程（Build Workflow）
 
-| 场景 | 解决方案 | 原因 |
-|------|----------|------|
-| `game.dll.bytes` > 5MB | 分析是否有稳定代码可下沉至 Framework | 保持热更新包体积小 |
-| Framework 能力不足 | 短期：Game 实现或绕行；长期：规划到下一主版本 | 不污染 AOT 程序集 |
-| Editor 和 Game 都需要的工具 | **必须放 Framework** | Editor 只能访问 Framework |
+### 1. 编译热更新 DLL
+
+**Unity 菜单：** `HybridCLR` → `Generate` → `All`
+
+**输出目录：** `HybridCLRData/HotUpdateDlls/{Platform}/`
+
+**生成文件：**
+```
+Utils.dll
+Basic.dll
+Logic.dll
+Net.dll
+Domain.dll
+Presentation.dll
+Start.dll
+SDK.dll
+```
+
+### 2. 打包热更新包
+
+**Unity 菜单：** `Pack` → `BuildAllHotUpdate`
+
+**输出目录：** `Artifacts/ALLOUT/HotUpdate/{Platform}/scripts/`
+
+**生成文件：**
+```
+utils.dll.bytes
+basic.dll.bytes
+logic.dll.bytes
+net.dll.bytes
+domain.dll.bytes
+presentation.dll.bytes
+start.dll.bytes
+sdk.dll.bytes
+```
+
+**构建脚本：** `Assets/Editor/Build/Build.cs` 自动读取 HybridCLR 配置并复制所有热更新 DLL。
 
 ---
 
-## 核心理念
+## 五、依赖规则（Dependency Rules）
 
-**在热更新架构中，"是否可热更"永远优先于"代码组织是否优雅"。**
+### 1. 允许的依赖
+
+**热更新 → AOT：**
+```csharp
+// ✓ Utils 可以引用 Framework
+{
+    "name": "Utils",
+    "references": ["Framework"]
+}
+```
+
+**热更新 → 热更新（遵循层级顺序）：**
+```csharp
+// ✓ Presentation 可以引用 Logic
+{
+    "name": "Presentation",
+    "references": ["Logic", "Domain", ...]
+}
+```
+
+### 2. 禁止的依赖
+
+**AOT → 热更新：**
+```csharp
+// ✗ Framework 不能引用 Utils
+{
+    "name": "Framework",
+    "references": ["Utils"]  // Build error!
+}
+```
+
+**原因：** AOT 程序集在热更新程序集存在之前就已编译进主包。
+
+---
+
+## 六、决策树：热更新还是 AOT？
+
+### 1. 是否为第三方库代码？
+**是** → **AOT 程序集**
+- 原因：体积大、稳定、极少更新
+- 示例：LitJson、DOTween、SuperScrollView
+
+### 2. 是否为极少变更的稳定基础设施？
+**是** → **AOT 程序集**（Framework）
+- 原因：减少热更新包体积
+- 示例：AssetManager、Http、Hot
+
+### 3. 是否为频繁变更的业务逻辑？
+**是** → **热更新程序集**
+- 原因：支持运行时更新
+- 示例：UI、游戏机制、协议处理
+
+### 4. 是否供 Editor 工具使用？
+**是** → **AOT 程序集**（Framework）
+- 原因：Editor 无法访问热更新程序集
+- 示例：构建工具、协议生成器
+
+---
+
+## 七、热更新优势（Hot Update Benefits）
+
+### 1. 单程序集（v1.0）vs 多程序集（v2.0）
+
+| 维度 | v1.0（Game.dll） | v2.0（8 个程序集） | 提升 |
+|------|-----------------|-------------------|------|
+| 更新粒度 | 全量或全不更新 | 按层单独更新 | 灵活性 ↑ |
+| 更新包大小 | ~5MB（全量） | 122KB（仅 UI） | 缩小 96% |
+| 编译速度 | 30s（整体编译） | 5-15s（并行） | 快 3-6 倍 |
+| 架构清晰度 | 扁平 | 严格分层 | 可维护性 ↑ |
+| 与服务端一致性 | 低 | 高 | 一致性 ↑ |
+
+**实际案例：**
+- 仅更新 UI：下载 `presentation.dll.bytes`（122KB）
+- 原来：下载 `game.dll.bytes`（~5MB）
+- **下载体积缩小 96%！**
+
+---
+
+## 八、常见问题（Common Issues）
+
+### 1. Generate 时出现 MissingReferenceException
+
+**症状：**
+```
+MissingReferenceException: The variable hotUpdateAssemblyDefinitions doesn't exist
+```
+
+**原因：** HybridCLRSettings.asset 中存在无效引用
+
+**解决方案：** 改用 `hotUpdateAssemblies` 字符串数组：
+```yaml
+hotUpdateAssemblyDefinitions: []
+hotUpdateAssemblies:
+  - Utils
+  - Basic
+  - Logic
+  - Net
+  - Domain
+  - Presentation
+  - Start
+  - SDK
+```
+
+### 2. Sequence contains no matching element
+
+**症状：**
+```
+Launch failed: Sequence contains no matching element
+```
+
+**原因：** Main.cs 尝试加载不存在的 "Game" 程序集
+
+**解决方案：** 使用 `LoadHotUpdateAssemblies()` 方法加载全部 8 个程序集
+
+### 3. Failed to resolve assembly
+
+**原因：** 旧版 Data/ 目录中的文件与 Logic 程序集冲突
+
+**解决方案：** 完全删除旧版 Data/ 目录
+
+---
+
+## 九、验证清单（Validation Checklist）
+
+配置热更新后，逐项确认：
+
+- [ ] HybridCLRSettings.asset 的 `hotUpdateAssemblies` 中包含 8 个程序集
+- [ ] Unity 编译无报错
+- [ ] `HybridCLR → Generate → All` 执行成功
+- [ ] `HybridCLRData/HotUpdateDlls/{Platform}/` 中存在 8 个 DLL 文件
+- [ ] 游戏在 Unity Editor 中可正常启动
+- [ ] 控制台显示 8 条 "Loaded hot update assembly" 日志
+- [ ] 无 "Sequence contains no matching element" 报错
+
+---
+
+## 十、核心规则（Critical Rules）
+
+1. **禁止创建单一 Game.asmdef** — 使用 8 个层级专属程序集
+2. **禁止从 AOT 程序集引用热更新程序集** — 将导致构建失败
+3. **必须在 HybridCLR 中配置全部 8 个程序集** — 缺失的程序集不会加载
+4. **必须按依赖顺序加载程序集** — 从低层到高层
+5. **hotUpdateAssemblies 中不得包含 .asmdef 后缀** — 仅使用程序集名称
+
+---
+
+## 十一、参考资料（References）
+
+- 完整架构文档：`Documents/客户端架构文档.md`（第 9 章：热更新机制）
+- HybridCLR 官方文档：https://www.hybridclr.cn/

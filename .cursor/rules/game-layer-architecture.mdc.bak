@@ -1,0 +1,65 @@
+---
+alwaysApply: true
+---
+# Game 程序集分层架构规则
+
+## 目录结构
+
+```
+Assets/Game/Scripts/
+├── Basic/              # 基础设施（Flow、Monitor）
+├── Data/               # 数据管理（Data、Config、Local）
+├── Network/            # 网络通信（Net、Protocol/）
+├── UI/                 # 表现层
+│   ├── Core/           # UI 管理器（UI.cs）
+│   ├── Common/         # 通用组件（Option*）
+│   ├── Start/          # 启动相关
+│   ├── Initialize/     # 初始化
+│   ├── Home/           # 主界面
+│   ├── Story/          # 剧情
+│   └── Loading/        # 加载
+├── Utils/              # 工具类
+│   ├── Extensions/     # 扩展方法
+│   ├── Helpers/        # 辅助类
+│   └── Components/     # 通用组件
+├── ThirdParty/         # 第三方库（DOTween、Protobuf、Json 等）
+└── SDK/                # 平台 SDK（Android、IOS、Windows）
+```
+
+## 命名空间约定
+
+**规则**：命名空间反映目录结构
+
+```csharp
+Assets/Game/Scripts/{Folder}/        → namespace Game.{Folder}
+Assets/Game/Scripts/UI/Home/         → namespace Game.UI.Home
+Assets/Game/Scripts/Network/Protocol/ → namespace Game.Network.Protocol
+```
+
+**例外**：`ThirdParty/` 保持第三方库原有命名空间
+
+## 文件归属标准
+
+| 类型 | 目录 | 示例 |
+|------|------|------|
+| 继承 `UI.Core` 的界面 | `UI/{模块}/` | Initialize.cs, Home.cs |
+| 单例管理类 | 按职责分类 | Data.cs → Data/, Net.cs → Network/ |
+| 基础工具（Flow、Monitor） | `Basic/` | Flow.cs, Monitor.cs |
+| 静态工具类 | `Utils/Helpers/` | MathUtils.cs |
+| 扩展方法 | `Utils/Extensions/` | ButtonExtension.cs |
+| 协议定义 | `Network/Protocol/` | Protocol.cs, PBLocal.cs |
+| 第三方库/官方代码 | `ThirdParty/` | DOTween/, Protobuf/ |
+| 平台相关 | `SDK/` | AndroidSdk.cs |
+
+## 依赖约束
+
+- ✅ 上层可依赖下层：UI → Data/Network → Basic
+- ❌ 禁止下层依赖上层：Basic 不得依赖 UI
+- ❌ 禁止平级循环依赖：Data ↔ Network 互相依赖
+- ✅ 所有层均可使用 Utils
+
+## 不可移动文件
+
+- `Game.asmdef` - 程序集定义
+- `game.dll.bytes` - 构建产物
+- `HybridCLRGenerate/` - 生成代码

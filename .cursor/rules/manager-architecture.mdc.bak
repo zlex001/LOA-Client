@@ -1,0 +1,189 @@
+---
+alwaysApply: true
+---
+
+# 客户端管理器协作架构规则
+
+## 架构模式
+
+客户端采用**管理器协作架构**，而非严格的垂直分层架构：
+
+```
+Unity引擎 + Framework程序集
+  (Singleton, AssetManager, Http, Hot)
+              ↓
+      Basic层（游戏逻辑基础）
+  (Gate, Flow, Monitor, Event)
+              ↓
+    ┌──────┬──────┬──────┬──────┐
+    │ Data │ Net  │  UI  │Audio │  ← 平等的管理器
+    └──────┴──────┴──────┴──────┘
+           通过事件系统协作
+```
+
+## 核心概念
+
+### Manager（管理器）
+
+- **定义**：继承 Singleton<T> 的核心单例类
+- **职责**：管理特定领域的数据和逻辑
+- **生命周期**：由Unity MonoBehaviour管理，支持Awake、Update等生命周期方法
+- **示例**：Data.Instance、Net.Instance、UI.Instance、Audio.Instance
+
+### 协作模式
+
+客户端架构的三大设计理念：
+
+1. **数据驱动**：Data 是唯一数据源
+   - 所有游戏状态存储在 Data.Instance
+   - 其他管理器不存储状态，仅响应数据变化
+
+2. **事件驱动**：管理器通过事件系统通信
+   - 避免管理器之间的直接调用
+   - 通过 Monitor/Event 解耦
+
+3. **响应式**：管理器响应数据变化自动执行
+   - Net 监听 Data 变化，自动发送协议
+   - UI 监听 Data 变化，自动更新界面
+
+### 通信机制
+
+客户端提供三种事件通信机制：
+
+#### 1. Monitor 事件系统（对象级事件）
+
+```csharp
+// 注册监听
+obj.monitor.Register(eventKey, callback);
+
+// 触发事件
+obj.monitor.Fire(eventKey, args);
+
+// 应用场景：Data 属性变化通知
+Data.Instance.after.Register(Data.Type.LoginAccount, OnAfterLoginAccountChanged);
+```
+
+#### 2. Event 全局事件总线
+
+```csharp
+// 注册监听
+Game.Event.Instance.Add(eventKey, callback);
+
+// 触发事件
+Game.Event.Instance.Fire(eventKey, args);
+
+// 应用场景：跨模块通信（如UI点击事件）
+```
+
+#### 3. Data 属性监听
+
+```csharp
+// 变化前监听（可拦截）
+Data.Instance.befor.Register(Data.Type.X, callback);
+
+// 变化后监听
+Data.Instance.after.Register(Data.Type.X, callback);
+
+// 应用场景：响应游戏状态变化
+```
+
+## 依赖规则
+
+### 管理器层级
+
+- **Framework 程序集**：基础设施层，提供 Singleton、AssetManager、Http、Hot 等基础能力
+- **Basic 层**：游戏逻辑基础层，提供 Flow、Monitor、Event、Gate
+- **管理器层**：Data、Net、UI、Audio 平等协作
+
+### 依赖约束
+
+- ✅ 管理器可依赖 Framework 程序集
+- ✅ 管理器可依赖 Basic 层（Flow、Monitor、Event）
+- ✅ 管理器之间可互相依赖，但应通过事件系统解耦
+- ❌ 禁止 Basic 层依赖管理器
+- ❌ 禁止 Framework 程序集依赖 Game 程序集
+
+### 初始化顺序
+
+所有管理器在 Gate.Entrance 中统一初始化：
+
+```csharp
+public static void Entrance(string gateway)
+{
+    // 0. 设置网关地址
+    Data.Instance.Gateway = gateway;
+    
+    // 0.1 恢复语言设置
+    string languageStr = PlayerPrefs.GetString("LANGUAGE", "ChineseSimplified");
+    if (Enum.TryParse(languageStr, out Data.Languages language))
+    {
+        Data.Instance.Language = language;
+    }
+    
+    // 1-4. 初始化管理器（按依赖顺序）
+    Data.Instance.Init();      // 1. 数据管理器
+    UI.Instance.Init(9f, 16f); // 2. UI管理器
+    Audio.Instance.Init();     // 3. 音频管理器
+    Net.Instance.Init();       // 4. 网络管理器
+    
+    // 5. 启动流程状态机
+    StartupFlowManager.Start();
+}
+```
+
+## 与服务端架构的差异
+
+### 服务端架构（严格分层）
+
+```
+Utils → Basic → Logic → Net → Domain → Start
+```
+
+- 严格垂直分层
+- 单向依赖
+- 反向通信通过 Monitor 事件系统
+
+### 客户端架构（管理器协作）
+
+```
+Framework → Basic → 管理器层（Data/Net/UI/Audio）
+```
+
+- 扁平化管理器协作
+- 管理器平等，通过事件通信
+- 数据驱动 + 事件驱动
+
+### 为什么不同？
+
+1. **Unity MonoBehaviour 特性**：
+   - 需要 Awake、Update 等生命周期方法
+   - Singleton<T> 模式更符合 Unity 实践
+
+2. **客户端特点**：
+   - UI 交互频繁，需要响应式更新
+   - 网络协议与数据状态紧密关联
+   - 资源管理需要 Unity 生命周期支持
+
+3. **设计理念**：
+   - 服务端强调分层隔离，降低复杂度
+   - 客户端强调响应式，提升交互体验
+
+## 最佳实践
+
+1. **管理器职责清晰**：
+   - Data：数据存储和状态管理
+   - Net：网络通信和协议处理
+   - UI：界面显示和交互逻辑
+   - Audio：音频播放和控制
+
+2. **优先使用事件通信**：
+   - 避免管理器之间的直接调用
+   - 通过 Monitor/Event 解耦
+
+3. **数据集中管理**：
+   - 状态统一存储在 Data.Instance
+   - 其他管理器响应数据变化
+
+4. **初始化统一管理**：
+   - 所有管理器在 Gate.Entrance 中初始化
+   - 事件监听在 Awake 中注册

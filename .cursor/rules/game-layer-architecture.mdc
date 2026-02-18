@@ -1,65 +1,377 @@
 ---
 alwaysApply: true
 ---
-# Game 程序集分层架构规则
 
-## 目录结构
+# LOA 客户端分层架构规则（Layered Architecture Rules v2.0）
+
+LOA 客户端采用与服务端对齐的严格分层架构。代码组织为 8 个独立程序集（Assembly），通过 Unity 程序集定义文件（.asmdef）强制执行显式依赖约束。
+
+**核心原则：** 依赖关系从高层单向流向低层。反向通信仅使用事件机制。
+
+---
+
+## 一、层级结构（Layer Structure）
 
 ```
-Assets/Game/Scripts/
-├── Basic/              # 基础设施（Flow、Monitor）
-├── Data/               # 数据管理（Data、Config、Local）
-├── Network/            # 网络通信（Net、Protocol/）
-├── UI/                 # 表现层
-│   ├── Core/           # UI 管理器（UI.cs）
-│   ├── Common/         # 通用组件（Option*）
-│   ├── Start/          # 启动相关
-│   ├── Initialize/     # 初始化
-│   ├── Home/           # 主界面
-│   ├── Story/          # 剧情
-│   └── Loading/        # 加载
-├── Utils/              # 工具类
-│   ├── Extensions/     # 扩展方法
-│   ├── Helpers/        # 辅助类
-│   └── Components/     # 通用组件
-├── ThirdParty/         # 第三方库（DOTween、Protobuf、Json 等）
-└── SDK/                # 平台 SDK（Android、IOS、Windows）
+Utils（工具层）
+  ↓
+Basic（基础设施层）
+  ↓
+Logic（业务数据层）
+  ↓
+Net（网络层）← Protocol（子程序集）
+  ↓
+Domain（领域层）
+  ↓
+Presentation（表现层）
+  ↓
+Start（启动层）
 ```
 
-## 命名空间约定
+---
 
-**规则**：命名空间反映目录结构
+## 二、层级定义（Layer Definitions）
 
+### 1. Utils 层（工具层）
+
+**程序集：** `Utils.asmdef`
+**目录：** `Assets/Game/Scripts/Utils/`
+**命名空间：** `Game` 或 `Game.Utils`
+**职责：** 通用工具与实用功能
+**依赖：** Framework, SuperScrollView
+
+**包含内容：**
+- 静态工具类
+- 扩展方法
+- 可复用 UI 组件（InfiniWheel）
+
+---
+
+### 2. Basic 层（基础设施层）
+
+**程序集：** `Basic.asmdef`
+**目录：** `Assets/Game/Scripts/Basic/`
+**命名空间：** `Game` 或 `Game.Flow`
+**职责：** 核心基础设施
+**依赖：** Utils, Framework
+
+**包含内容：**
+- 事件系统（Event.cs — 全局事件总线）
+- 监听系统（Monitor.cs — 属性监听器）
+- 流程管理（Flow.cs）
+- Gate（Gate.cs — 已迁移至 Start 层）
+
+---
+
+### 3. Logic 层（业务数据层）
+
+**程序集：** `Logic.asmdef`
+**目录：** `Assets/Game/Scripts/Logic/`
+**命名空间：** `Game`
+**职责：** 业务数据管理
+**依赖：** Utils, Basic, Framework, LitJson
+
+**包含内容：**
+- Data.cs（单例数据管理器）
+- Logic/Models/GameData.cs（数据模型：MapData、HomeData 等）
+- PBLocal.cs（本地持久化）
+- Config.cs、Local.cs、Audio.cs
+
+**关键规则：** Logic 数据模型与 Protocol 类型相互独立。属性命名使用 camelCase（如 `pos`、`name`、`scene`）。
+
+---
+
+### 4. Net 层（网络层）
+
+**程序集：** `Net.asmdef`
+**目录：** `Assets/Game/Scripts/Network/`
+**命名空间：** `Game`
+**职责：** 网络通信
+**依赖：** Protocol, Logic, Basic, Framework, Utils
+
+**包含内容：**
+- Net.cs（网络管理器）
+- ProtocolConverter.cs（Protocol → Logic 转换器）
+
+**子程序集：Protocol**
+- **程序集：** `Protocol.asmdef`
+- **目录：** `Assets/Game/Scripts/Network/Protocol/`
+- **命名空间：** `Game.Protocol`
+- **包含：** Protocol.cs（所有协议定义）
+
+**关键规则：** Protocol 类型仅用于网络序列化。业务代码应使用 Logic 数据模型。
+
+---
+
+### 5. Domain 层（领域层）
+
+**程序集：** `Domain.asmdef`
+**目录：** `Assets/Game/Scripts/Domain/`
+**命名空间：** `Game` 或 `Game.Domain`
+**职责：** 领域业务逻辑
+**依赖：** Net, Logic, Utils, Basic, Framework
+
+**包含内容：**
+- ProtocolHandler.cs（协议业务逻辑占位）
+- 未来的领域服务
+
+---
+
+### 6. Presentation 层（表现层）
+
+**程序集：** `Presentation.asmdef`
+**目录：** `Assets/Game/Scripts/UI/`
+**命名空间：** `Game`
+**职责：** 所有 UI 与用户交互
+**依赖：** Domain, Logic, Utils, Basic, Framework, Net, 第三方 UI 库
+
+**包含内容：**
+- UI.cs（UI 管理器）
+- 所有 UI 界面（Home.cs、Start.cs、Initialize.cs、Option.cs 等）
+- UI 组件
+
+**关键规则：** 使用 Logic 数据模型，而非 Protocol 类型（DataPair、Chat 等特殊情况除外）。
+
+---
+
+### 7. Start 层（启动层）
+
+**程序集：** `Start.asmdef`
+**目录：** `Assets/Game/Scripts/Start/`
+**命名空间：** `Game`
+**职责：** 应用启动编排
+**依赖：** Framework, Basic, Logic, Net, Domain, Presentation
+
+**包含内容：**
+- Gate.cs（启动流程管理器）
+
+---
+
+### 8. SDK 层
+
+**程序集：** `SDK.asmdef`
+**目录：** `Assets/Game/Scripts/SDK/`
+**命名空间：** `Game.SDK`
+**职责：** 平台 SDK 集成
+**依赖：** Framework, Basic
+
+---
+
+## 三、命名空间规则（Namespace Rules）
+
+**标准约定：**
 ```csharp
-Assets/Game/Scripts/{Folder}/        → namespace Game.{Folder}
-Assets/Game/Scripts/UI/Home/         → namespace Game.UI.Home
-Assets/Game/Scripts/Network/Protocol/ → namespace Game.Network.Protocol
+Assets/Game/Scripts/Logic/            → namespace Game
+Assets/Game/Scripts/Network/          → namespace Game
+Assets/Game/Scripts/Network/Protocol/ → namespace Game.Protocol
+Assets/Game/Scripts/UI/               → namespace Game
 ```
 
-**例外**：`ThirdParty/` 保持第三方库原有命名空间
+**特殊情况：**
+- Basic/Flow.cs 为 Flow\<T\> 枚举定义 `namespace Game.Flow`
+- ThirdParty/ 保留原始命名空间（DG.Tweening、LitJson 等）
 
-## 文件归属标准
+**关键规则：** 大多数游戏代码使用扁平的 `namespace Game`，而非嵌套命名空间。
 
-| 类型 | 目录 | 示例 |
-|------|------|------|
-| 继承 `UI.Core` 的界面 | `UI/{模块}/` | Initialize.cs, Home.cs |
-| 单例管理类 | 按职责分类 | Data.cs → Data/, Net.cs → Network/ |
-| 基础工具（Flow、Monitor） | `Basic/` | Flow.cs, Monitor.cs |
-| 静态工具类 | `Utils/Helpers/` | MathUtils.cs |
-| 扩展方法 | `Utils/Extensions/` | ButtonExtension.cs |
-| 协议定义 | `Network/Protocol/` | Protocol.cs, PBLocal.cs |
-| 第三方库/官方代码 | `ThirdParty/` | DOTween/, Protobuf/ |
-| 平台相关 | `SDK/` | AndroidSdk.cs |
+---
 
-## 依赖约束
+## 四、依赖规则（Dependency Rules）
 
-- ✅ 上层可依赖下层：UI → Data/Network → Basic
-- ❌ 禁止下层依赖上层：Basic 不得依赖 UI
-- ❌ 禁止平级循环依赖：Data ↔ Network 互相依赖
-- ✅ 所有层均可使用 Utils
+### 1. 允许的依赖
 
-## 不可移动文件
+**高层 → 低层：** 允许直接调用
+```csharp
+// ✓ Presentation 可以调用 Logic
+var home = Data.Instance.Home;
 
-- `Game.asmdef` - 程序集定义
-- `game.dll.bytes` - 构建产物
-- `HybridCLRGenerate/` - 生成代码
+// ✓ Net 可以调用 Logic
+Data.Instance.Home = homeData;
+```
+
+### 2. 禁止的依赖
+
+**低层 → 高层：** 必须使用事件机制
+```csharp
+// ✗ Logic 不能直接调用 UI
+UI.Instance.Open(...);  // Logic 层禁止
+
+// ✓ 改用事件
+Game.Event.Instance.Fire("UI.Event.Click", data);
+```
+
+### 3. 跨层通信机制
+
+**机制一：全局事件总线**
+```csharp
+// 注册监听（高层）
+Game.Event.Instance.Add("EventName", callback);
+
+// 触发事件（低层）
+Game.Event.Instance.Fire("EventName", args);
+```
+
+**机制二：数据属性监听**
+```csharp
+// 注册监听（高层）
+Data.Instance.after.Register(Data.Type.Home, OnHomeChanged);
+
+// 触发变更（低层）
+Data.Instance.after.Fire(Data.Type.Home, newHomeData);
+```
+
+---
+
+## 五、文件归属决策树（File Placement Decision Tree）
+
+### 1. 是否为工具/实用功能？
+**是** → **Utils 层**
+- 静态辅助类
+- 扩展方法
+- 可复用组件
+
+### 2. 是否为基础设施（事件、流程）？
+**是** → **Basic 层**
+- 事件系统
+- 监听系统
+- 流程管理
+
+### 3. 是否为业务数据或数据模型？
+**是** → **Logic 层**
+- Data.cs 单例
+- 数据模型（MapData、HomeData 等）
+- Config、Local、Audio
+
+### 4. 是否为网络协议相关？
+**是** → **Net 层（Protocol 子程序集）**
+- 协议定义
+- ProtocolConverter
+- Net.cs 管理器
+
+### 5. 是否为领域业务逻辑？
+**是** → **Domain 层**
+- 协议处理器
+- 领域服务
+
+### 6. 是否为 UI？
+**是** → **Presentation 层**
+- 所有 UI 界面
+- UI 组件
+- UI 交互
+
+### 7. 是否为启动逻辑？
+**是** → **Start 层**
+- Gate.cs
+- 启动流程
+
+### 8. 是否为平台 SDK？
+**是** → **SDK 层**
+
+---
+
+## 六、程序集定义规则（Assembly Definition Rules）
+
+### 1. 创建新的 .asmdef
+
+创建新层时：
+1. 文件名必须与程序集名称匹配（如 `Utils.asmdef` → `"name": "Utils"`）
+2. 在 `references` 数组中包含低层依赖项
+3. 禁止引用更高层
+
+### 2. 引用规则
+
+**必须引用：**
+- 所有直接使用的程序集
+- 传递性依赖不会自动生效
+
+**示例（Domain.asmdef）：**
+```json
+{
+    "name": "Domain",
+    "references": ["Net", "Logic", "Utils", "Basic", "Framework"]
+}
+```
+
+**禁止：**
+```json
+// ✗ 低层不能引用高层
+{
+    "name": "Logic",
+    "references": ["Net"]  // FORBIDDEN! Logic is lower than Net
+}
+```
+
+---
+
+## 七、常见错误（Common Mistakes）
+
+1. **循环依赖（Circular Dependencies）**
+   - ✗ Logic ↔ Protocol（通过将 Protocol 移至 Net 层解决）
+   - ✗ Net ↔ Domain
+
+2. **反向依赖（Reverse Dependencies）**
+   - ✗ Basic 引用 UI
+   - ✗ Logic 引用 Net
+   - ✓ 使用事件进行反向通信
+
+3. **错误命名空间（Wrong Namespace）**
+   - ✗ Logic 层使用 `namespace Game.Logic`（应使用 `namespace Game`）
+   - ✗ `namespace Game.Net.Protocol`（应使用 `namespace Game.Protocol`）
+
+4. **低层直接调用 UI（Direct UI Calls from Low Layers）**
+   - ✗ Logic/Net 层中调用 `UI.Instance.Open()`
+   - ✓ 改用 `Game.Event.Instance.Fire()`
+
+---
+
+## 八、核心架构概念（Key Architectural Concepts）
+
+### 1. Protocol 与 Logic 数据模型的区别
+
+**Protocol（网络层）：**
+- 定义于 `Network/Protocol/Protocol.cs`
+- 仅用于网络序列化
+- 自动生成或与 Protobuf 紧密耦合
+- 命名空间：`Game.Protocol`
+
+**Logic 数据模型（Logic 层）：**
+- 定义于 `Logic/Models/GameData.cs`
+- 用于应用业务逻辑
+- 手写，可扩展
+- 命名空间：`Game`
+- 属性使用 camelCase（如 `pos`、`name`）
+
+**转换方式：**
+```csharp
+// Protocol → Logic（位于 ProtocolConverter.cs）
+public static MapData ToLogic(this Protocol.Map protocol)
+{
+    return new MapData 
+    { 
+        pos = protocol.pos,
+        name = protocol.name,
+        color = protocol.color 
+    };
+}
+```
+
+---
+
+## 九、违反规则的情形（When to Violate Rules）
+
+**从不。** 分层架构由 .asmdef 文件强制执行，编译器将阻止违规。
+
+如需反向通信，使用：
+- `Game.Event.Instance`（全局事件总线）
+- `Data.Instance.after`（属性变更通知）
+- Monitor 模式
+
+---
+
+## 十、版本历史（Version History）
+
+- **v1.0：** 扁平管理器协作架构
+- **v2.0：** 严格分层架构（当前）
+  - 与服务端架构对齐
+  - 8 个独立程序集
+  - Protocol 位于 Net 层
+  - Logic 数据模型与 Protocol 分离
