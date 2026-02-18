@@ -34,10 +34,10 @@ SDK（独立，仅依赖 Framework）
 |---|---|---|---|
 | Utils | `Utils` → `Utils/` | Framework, SuperScrollView | 按功能建子目录（Extension/, Time/, Wheel/） |
 | Basic | `Basic` → `Basic/` | Framework | 平铺 |
-| Logic | `Logic` → `Logic/` | Utils, Basic, Framework, LitJson | 数据模型放 Models/，其余根目录 |
+| Logic | `Logic` → `Logic/` | Utils, Basic, Framework, LitJson, Unity.TextMeshPro | 数据模型放 Models/，其余根目录 |
 | Net | `Net` → `Network/` | Logic, Basic, Framework, Utils | 协议放 Protocol/，其余根目录 |
 | Domain | `Domain` → `Domain/` | Net, Logic, Utils, Basic, Framework | 平铺 |
-| Presentation | `Presentation` → `UI/` | Domain, Logic, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView | 平铺 |
+| Presentation | `Presentation` → `UI/` | Domain, Logic, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView, Unity.TextMeshPro, Unity.Addressables, UnityEngine.Purchasing | 平铺 |
 | Start | `Start` → `Start/` | Framework, Basic, Logic, Net, Domain, Presentation | 平铺 |
 | SDK | `SDK` → `SDK/` | Framework | 平台实现按 {Platform}/ 子目录 |
 
