@@ -1,1 +1,1 @@
-[删除] 移除TextMesh Pro示例脚本，减少Assembly-CSharp编译体积
+[删除] 移除未使用的 TextMesh Pro 依赖及 IngameDebugConsole 插件

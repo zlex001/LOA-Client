@@ -5,8 +5,7 @@
         "Utils",
         "Basic",
         "Framework",
-        "LitJson",
-        "Unity.TextMeshPro"
+        "LitJson"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
