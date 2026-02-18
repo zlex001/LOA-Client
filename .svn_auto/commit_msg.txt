@@ -1,1 +1,1 @@
-[修复] 删除Launcher/中重复的LanguageDetector.cs和Localization.cs(统一使用Framework/版本消除双单例),目录结构文档增加一层深度并修正5处与实际不一致
+[文档] 合并项目目录结构.md和客户端架构文档.md为统一架构文档，移至Documents/Architecture/目录，更新Cursor规则中的文档路径引用
