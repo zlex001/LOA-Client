@@ -1,9 +1,1 @@
-[重构] Assets目录架构重组：按角色分类一级目录，按程序集对应二级目录
-
-- Game/Scripts/ 拆分为 HotScript/（热更新代码）和 ThirdParty/（第三方AOT库）
-- Game/HotResources/ 独立为 HotBundle/（热更新资源），RawAssets/Texture 简化为 Textures
-- Launcher/ 合并入 Framework/（AOT自研基础设施）
-- HybridCLRGenerate/ 移入 Framework/Generated/
-- Network/ 重命名为 Net/，UI/ 重命名为 Presentation/，统一目录名与程序集名
-- 同步更新 FrameworkPath、Build脚本、HybridCLR配置、EditorBuildSettings 等路径引用
-- 同步更新全部架构文档和 .cursor/rules
+[修复] 补充目录重构遗漏：Framework.asmdef添加HybridCLR引用、清理SVNTools和Editor/Path残留旧路径

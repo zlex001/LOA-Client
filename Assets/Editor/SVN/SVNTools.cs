@@ -39,7 +39,7 @@ public class SVNTools
         {
             //System.IO.DirectoryInfo parent = System.IO.Directory.GetParent(Application.dataPath);
             //return parent.ToString();
-            return Application.dataPath + "/Game";
+            return Application.dataPath;
         }
     }
 
