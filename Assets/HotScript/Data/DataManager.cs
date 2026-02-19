@@ -312,7 +312,8 @@ namespace Game.Data
             }
             
             raw[Type.SceneScale] = loadedScale;
-            Languages parsedLang = Enum.TryParse(User.Language, out Languages lang) ? lang : Languages.ChineseSimplified;
+            string langSource = PlayerPrefs.GetString("LANGUAGE", User.Language ?? "");
+            Languages parsedLang = Enum.TryParse(langSource, out Languages lang) ? lang : Languages.ChineseSimplified;
             raw[Type.Language] = parsedLang;
             raw[Type.FontSize] = User.FontSize > 0 ? User.FontSize : 30;
             
