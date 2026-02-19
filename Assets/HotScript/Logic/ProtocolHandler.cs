@@ -1,8 +1,8 @@
 using System;
-using Game.Logic;
+using Game.Data;
 using Game.Net.Protocol;
 
-namespace Game.Domain
+namespace Game.Logic
 {
     /// <summary>
     /// Protocol Handler - Handles business logic when protocol is received

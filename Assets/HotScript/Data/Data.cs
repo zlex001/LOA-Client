@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
-namespace Game.Logic
+namespace Game.Data
 {
     /// <summary>
     /// Tip types for UI display

@@ -3,7 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Logic
+namespace Game.Data
 {
     public class Audio : Singleton<Audio>
     {

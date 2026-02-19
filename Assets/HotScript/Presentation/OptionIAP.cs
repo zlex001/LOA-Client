@@ -1,6 +1,6 @@
 using Framework;
 using Game.Basic;
-using Game.Logic;
+using Game.Data;
 using Game.Utils;
 using Config = Game.Logic.Config;
 using UnityEngine;

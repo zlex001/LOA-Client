@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Game.Logic;
+using Game.Data;
 using Game.Net.Protocol;
 
 namespace Game.Net

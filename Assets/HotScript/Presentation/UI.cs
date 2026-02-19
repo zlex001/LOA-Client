@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityTimer;
 using Framework;
 using Game.Basic;
-using Game.Logic;
+using Game.Data;
 using Config = Game.Logic.Config;
 using System.Linq;
 using Newtonsoft.Json;

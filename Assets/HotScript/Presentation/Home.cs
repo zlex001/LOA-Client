@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SuperScrollView;
 using Game.Basic;
-using Game.Logic;
+using Game.Data;
 using Game.Net;
 using System.Linq;
 using UnityEditor;

@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 
 
-namespace Game.Logic
+namespace Game.Data
 {
     public class Local : Singleton<Local>
     {

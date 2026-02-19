@@ -337,7 +337,7 @@ const languageFileMap: Record<string, string> = {
 
 ---
 
-### 3.4 Loading Logic
+### 3.4 Loading Data
 
 **TypeScript Implementation**:
 

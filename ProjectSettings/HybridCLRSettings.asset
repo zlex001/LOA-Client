@@ -20,9 +20,9 @@ MonoBehaviour:
   hotUpdateAssemblies:
   - Utils
   - Basic
-  - Logic
+  - Data
   - Net
-  - Domain
+  - Logic
   - Presentation
   - Start
   - SDK

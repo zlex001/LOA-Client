@@ -1,18 +1,20 @@
 {
-    "name": "Domain",
-    "rootNamespace": "Game.Domain",
+    "name": "Data",
+    "rootNamespace": "Game.Data",
     "references": [
-        "Net",
-        "Logic",
         "Utils",
         "Basic",
-        "Framework"
+        "Framework",
+        "LitJson"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll",
+        "Newtonsoft.Json.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

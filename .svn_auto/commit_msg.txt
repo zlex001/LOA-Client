@@ -1,1 +1,1 @@
-[重构] 重命名Net类为NetManager，消除类名与命名空间CA1724碰撞，删除17处using别名
+[重构] 层级重命名：Logic→Data(数据层)、Domain→Logic(逻辑层)

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Basic;
-using Game.Logic;
+using Game.Data;
 using UnityEngine;
 
 namespace Game.Net.Protocol

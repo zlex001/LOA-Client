@@ -1,6 +1,6 @@
 using Framework;
 using Game.Basic;
-using Game.Logic;
+using Game.Data;
 using Game.Net;
 using Config = Game.Logic.Config;
 using Protocol = Game.Net.Protocol;

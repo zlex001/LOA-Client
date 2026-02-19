@@ -2,7 +2,7 @@
     "name": "Net",
     "rootNamespace": "Game.Net",
     "references": [
-        "Logic",
+        "Data",
         "Basic",
         "Framework",
         "Utils"

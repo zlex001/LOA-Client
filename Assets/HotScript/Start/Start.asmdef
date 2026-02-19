@@ -4,9 +4,9 @@
     "references": [
         "Framework",
         "Basic",
-        "Logic",
+        "Data",
         "Net",
-        "Domain",
+        "Logic",
         "Presentation"
     ],
     "includePlatforms": [],

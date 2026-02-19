@@ -2,8 +2,8 @@
     "name": "Presentation",
     "rootNamespace": "Game.Presentation",
     "references": [
-        "Domain",
         "Logic",
+        "Data",
         "Utils",
         "Basic",
         "Framework",

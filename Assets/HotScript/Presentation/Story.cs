@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Game.Logic;
+using Game.Data;
 using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;

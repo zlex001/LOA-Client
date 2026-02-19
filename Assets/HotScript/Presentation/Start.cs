@@ -1,6 +1,6 @@
 using DG.Tweening;
 using Framework;
-using Game.Logic;
+using Game.Data;
 using Game.Net;
 using UnityEngine.UI;
 using SuperScrollView;

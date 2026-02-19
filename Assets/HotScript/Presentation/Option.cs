@@ -1,6 +1,6 @@
 using DG.Tweening;
 using Framework;
-using Game.Logic;
+using Game.Data;
 using Game.Utils;
 using Config = Game.Logic.Config;
 using LitJson;

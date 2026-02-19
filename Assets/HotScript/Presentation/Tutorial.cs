@@ -1,5 +1,5 @@
 using LitJson;
-using Game.Logic;
+using Game.Data;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;

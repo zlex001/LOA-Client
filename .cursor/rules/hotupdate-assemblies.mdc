@@ -18,9 +18,9 @@ LOA 客户端采用 **HybridCLR 多程序集热更新**架构，将游戏代码�
 |--------|------|------|------|
 | Utils.dll | 30KB | `Assets/HotScript/Utils/` | 通用工具 |
 | Basic.dll | 7KB | `Assets/HotScript/Basic/` | 核心基础设施 |
-| Logic.dll | 42KB | `Assets/HotScript/Logic/` | 业务数据 |
+| Data.dll | 42KB | `Assets/HotScript/Data/` | 数据管理 |
 | Net.dll | 38KB | `Assets/HotScript/Net/` | 网络通信 |
-| Domain.dll | 5KB | `Assets/HotScript/Domain/` | 领域逻辑 |
+| Logic.dll | 5KB | `Assets/HotScript/Logic/` | 逻辑处理 |
 | Presentation.dll | 122KB | `Assets/HotScript/Presentation/` | UI 层（最大） |
 | Start.dll | 7.5KB | `Assets/HotScript/Start/` | 启动流程 |
 | SDK.dll | 4KB | `Assets/HotScript/SDK/` | 平台 SDK |
@@ -50,9 +50,9 @@ hotUpdateAssemblyDefinitions: []
 hotUpdateAssemblies:
   - Utils
   - Basic
-  - Logic
+  - Data
   - Net
-  - Domain
+  - Logic
   - Presentation
   - Start
   - SDK
@@ -84,8 +84,8 @@ hotUpdateAssemblies:
 ```csharp
 string[] hotUpdateAssemblyNames = new string[] 
 {
-    "Utils", "Basic", "Logic", "Net", 
-    "Domain", "Presentation", "Start", "SDK"
+    "Utils", "Basic", "Data", "Net", 
+    "Logic", "Presentation", "Start", "SDK"
 };
 
 foreach (var name in hotUpdateAssemblyNames)
@@ -100,8 +100,8 @@ foreach (var name in hotUpdateAssemblyNames)
 ```csharp
 string[] hotUpdateDlls = new string[] 
 {
-    "utils.dll.bytes", "basic.dll.bytes", "logic.dll.bytes",
-    "net.dll.bytes", "domain.dll.bytes", "presentation.dll.bytes",
+    "utils.dll.bytes", "basic.dll.bytes", "data.dll.bytes",
+    "net.dll.bytes", "logic.dll.bytes", "presentation.dll.bytes",
     "start.dll.bytes", "sdk.dll.bytes"
 };
 
@@ -130,9 +130,9 @@ foreach (var dllFile in hotUpdateDlls)
 ```
 Utils.dll
 Basic.dll
-Logic.dll
+Data.dll
 Net.dll
-Domain.dll
+Logic.dll
 Presentation.dll
 Start.dll
 SDK.dll
@@ -148,9 +148,9 @@ SDK.dll
 ```
 utils.dll.bytes
 basic.dll.bytes
-logic.dll.bytes
+data.dll.bytes
 net.dll.bytes
-domain.dll.bytes
+logic.dll.bytes
 presentation.dll.bytes
 start.dll.bytes
 sdk.dll.bytes
@@ -175,10 +175,10 @@ sdk.dll.bytes
 
 **热更新 → 热更新（遵循层级顺序）：**
 ```csharp
-// ✓ Presentation 可以引用 Logic
+// ✓ Presentation 可以引用 Data
 {
     "name": "Presentation",
-    "references": ["Logic", "Domain", ...]
+    "references": ["Data", "Logic", ...]
 }
 ```
 
@@ -257,9 +257,9 @@ hotUpdateAssemblyDefinitions: []
 hotUpdateAssemblies:
   - Utils
   - Basic
-  - Logic
+  - Data
   - Net
-  - Domain
+  - Logic
   - Presentation
   - Start
   - SDK
@@ -278,9 +278,9 @@ Launch failed: Sequence contains no matching element
 
 ### 3. Failed to resolve assembly
 
-**原因：** 旧版 Data/ 目录中的文件与 Logic 程序集冲突
+**原因：** 旧版目录中的文件与程序集冲突
 
-**解决方案：** 完全删除旧版 Data/ 目录
+**解决方案：** 完全删除旧版目录
 
 ---
 

@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System;
 using Framework;
-using Game.Logic;
+using Game.Data;
 using Game.Net.Protocol;
 using Config = Game.Logic.Config;
 using Newtonsoft.Json;

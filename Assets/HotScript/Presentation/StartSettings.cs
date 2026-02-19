@@ -1,5 +1,5 @@
 using Framework;
-using Game.Logic;
+using Game.Data;
 using Game.Net;
 using Game.Utils;
 using UnityEngine;

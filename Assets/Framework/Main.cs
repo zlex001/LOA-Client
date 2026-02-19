@@ -245,7 +245,7 @@ namespace Framework
 #if UNITY_EDITOR
             string[] hotUpdateAssemblyNames = new string[] 
             {
-                "Utils", "Basic", "Logic", "Net", "Domain", "Presentation", "Start", "SDK"
+                "Utils", "Basic", "Data", "Net", "Logic", "Presentation", "Start", "SDK"
             };
             
             var assemblies = new List<System.Reflection.Assembly>();
@@ -269,9 +269,9 @@ namespace Framework
             {
                 "utils.dll.bytes",
                 "basic.dll.bytes",
-                "logic.dll.bytes",
+                "data.dll.bytes",
                 "net.dll.bytes",
-                "domain.dll.bytes",
+                "logic.dll.bytes",
                 "presentation.dll.bytes",
                 "start.dll.bytes",
                 "sdk.dll.bytes"
