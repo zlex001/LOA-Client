@@ -1,1 +1,1 @@
-[修复] 添加 using Data = Game.Data.Data 类型别名，解决命名空间与类名冲突
+[修复] Data类重命名为DataManager，解决命名空间与类名冲突导致的编译错误

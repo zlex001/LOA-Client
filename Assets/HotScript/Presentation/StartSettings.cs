@@ -1,6 +1,5 @@
 using Framework;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net;
 using Game.Utils;
 using UnityEngine;
@@ -51,7 +50,7 @@ namespace Game.Presentation
         /// </summary>
         private string GetText(string key)
         {
-            var texts = Data.Instance.StartSettingsTexts;
+            var texts = DataManager.Instance.StartSettingsTexts;
             if (texts != null && texts.ContainsKey(key))
             {
                 return texts[key];
@@ -180,11 +179,11 @@ namespace Game.Presentation
             // Receive and store UI texts from server
             if (args.Length > 0 && args[0] is Dictionary<string, string> texts)
             {
-                Data.Instance.StartSettingsTexts = texts;
+                DataManager.Instance.StartSettingsTexts = texts;
             }
             
             // Register language change observer
-            Data.Instance.after.Register(Data.Type.Language, OnLanguageChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Language, OnLanguageChanged);
             
             if (_panelRect == null || _maskImage == null) return;
             
@@ -207,7 +206,7 @@ namespace Game.Presentation
             Utils.Debug.Log("StartSettings", "OnExit - closing panel");
             
             // Unregister language change observer
-            Data.Instance.after.Unregister(Data.Type.Language, OnLanguageChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Language, OnLanguageChanged);
             
             if (_panelRect != null) _panelRect.DOKill();
             if (_maskImage != null) _maskImage.DOKill();
@@ -218,7 +217,7 @@ namespace Game.Presentation
             Utils.Debug.Log("StartSettings", $"Language changed, rebuilding UI");
             
             // FIX: Reload localization for new language
-            Localization.Instance.Init(Data.Instance.Language.ToString());
+            Localization.Instance.Init(DataManager.Instance.Language.ToString());
             
             BuildUI();
         }
@@ -262,8 +261,8 @@ namespace Game.Presentation
         #region Data Loading
         private void LoadAccountData()
         {
-            _accounts = Data.Instance.User.Accounts.ToList();
-            _selectedIndex = Data.Instance.User.SelectedAccountIndex;
+            _accounts = DataManager.Instance.User.Accounts.ToList();
+            _selectedIndex = DataManager.Instance.User.SelectedAccountIndex;
             
             Utils.Debug.Log("StartSettings", $"Loaded {_accounts.Count} accounts, selected: {_selectedIndex}");
         }
@@ -539,7 +538,7 @@ namespace Game.Presentation
             valueRect.anchoredPosition = new Vector2(-15, 0);
             
             var valueText = valueObj.AddComponent<Text>();
-            valueText.text = GetLanguageName(Data.Instance.Language);
+            valueText.text = GetLanguageName(DataManager.Instance.Language);
             valueText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             valueText.fontSize = 38;
             valueText.color = ColorTextSecondary;
@@ -653,7 +652,7 @@ namespace Game.Presentation
                 GetText("font_size_large"),
                 GetText("font_size_extra_large")
             };
-            int currentFontSize = Data.Instance.FontSize;
+            int currentFontSize = DataManager.Instance.FontSize;
             int currentIndex = System.Array.IndexOf(fontSizes, currentFontSize);
             if (currentIndex < 0) currentIndex = 1; // Default to medium
             valueText.text = fontLabels[currentIndex];
@@ -762,7 +761,7 @@ namespace Game.Presentation
             var toggle = toggleObj.AddComponent<Toggle>();
             toggle.targetGraphic = bgImage;
             toggle.graphic = checkImage;
-            toggle.isOn = Data.Instance.User.UISoundEnabled;
+            toggle.isOn = DataManager.Instance.User.UISoundEnabled;
             toggle.onValueChanged.AddListener(OnSoundToggle);
             
             var padding = itemObj.AddComponent<LayoutElement>();
@@ -779,13 +778,13 @@ namespace Game.Presentation
             if (newIndex < 0) return;
             
             _selectedIndex = newIndex;
-            Data.Instance.User.SelectedAccountIndex = _selectedIndex;
-            Local.Instance.Save(Data.Instance.User);
+            DataManager.Instance.User.SelectedAccountIndex = _selectedIndex;
+            Local.Instance.Save(DataManager.Instance.User);
             
             // Close panel and reconnect
             Close();
             NetManager.Instance.Disconnect();
-            NetManager.Instance.Connect(Data.Instance.SelectedServer.Ip, Data.Instance.SelectedServer.Port);
+            NetManager.Instance.Connect(DataManager.Instance.SelectedServer.Ip, DataManager.Instance.SelectedServer.Port);
         }
 
         private void OnAccountEdit(Account account)
@@ -803,7 +802,7 @@ namespace Game.Presentation
                 account.Id = newId;
                 account.Password = newPassword;
                 account.Note = newNote;
-                Local.Instance.Save(Data.Instance.User);
+                Local.Instance.Save(DataManager.Instance.User);
                 BuildUI();
             });
         }
@@ -829,20 +828,20 @@ namespace Game.Presentation
                 if (index < 0) return;
                 
                 _accounts.RemoveAt(index);
-                Data.Instance.User.Accounts.RemoveAt(index);
+                DataManager.Instance.User.Accounts.RemoveAt(index);
                 
                 if (_selectedIndex == index)
                 {
                     _selectedIndex = 0;
-                    Data.Instance.User.SelectedAccountIndex = 0;
+                    DataManager.Instance.User.SelectedAccountIndex = 0;
                 }
                 else if (_selectedIndex > index)
                 {
                     _selectedIndex--;
-                    Data.Instance.User.SelectedAccountIndex = _selectedIndex;
+                    DataManager.Instance.User.SelectedAccountIndex = _selectedIndex;
                 }
                 
-                Local.Instance.Save(Data.Instance.User);
+                Local.Instance.Save(DataManager.Instance.User);
                 BuildUI();
             });
         }
@@ -867,8 +866,8 @@ namespace Game.Presentation
                 };
                 
                 _accounts.Add(newAccount);
-                Data.Instance.User.Accounts.Add(newAccount);
-                Local.Instance.Save(Data.Instance.User);
+                DataManager.Instance.User.Accounts.Add(newAccount);
+                Local.Instance.Save(DataManager.Instance.User);
                 
                 Utils.Debug.Log("StartSettings", $"Added new account: {newAccount.Id}");
                 BuildUI();
@@ -877,7 +876,7 @@ namespace Game.Presentation
         #endregion
 
         #region Settings Callbacks
-        private string GetLanguageName(Data.Languages language)
+        private string GetLanguageName(DataManager.Languages language)
         {
             return GetText($"lang_{language}");
         }
@@ -887,14 +886,14 @@ namespace Game.Presentation
             Utils.Debug.Log("StartSettings", "Language item clicked");
             
             // Cycle through languages
-            var allLanguages = Enum.GetValues(typeof(Data.Languages)).Cast<Data.Languages>().ToList();
-            int currentIndex = allLanguages.IndexOf(Data.Instance.Language);
+            var allLanguages = Enum.GetValues(typeof(DataManager.Languages)).Cast<DataManager.Languages>().ToList();
+            int currentIndex = allLanguages.IndexOf(DataManager.Instance.Language);
             int nextIndex = (currentIndex + 1) % allLanguages.Count;
             var newLanguage = allLanguages[nextIndex];
             
             // Update language
-            Data.Instance.Language = newLanguage;
-            Local.Instance.Save(Data.Instance.User);
+            DataManager.Instance.Language = newLanguage;
+            Local.Instance.Save(DataManager.Instance.User);
             
             // Rebuild UI to reflect new language
             BuildUI();
@@ -904,22 +903,22 @@ namespace Game.Presentation
         {
             Utils.Debug.Log("StartSettings", $"Sound toggled: {enabled}");
             
-            Data.Instance.User.UISoundEnabled = enabled;
-            Local.Instance.Save(Data.Instance.User);
+            DataManager.Instance.User.UISoundEnabled = enabled;
+            Local.Instance.Save(DataManager.Instance.User);
         }
         
         private void OnFontSizeDecrease()
         {
             int[] fontSizes = { 25, 30, 35, 40 };
-            int currentFontSize = Data.Instance.FontSize;
+            int currentFontSize = DataManager.Instance.FontSize;
             int currentIndex = System.Array.IndexOf(fontSizes, currentFontSize);
             if (currentIndex < 0) currentIndex = 1;
             
             if (currentIndex > 0)
             {
                 currentIndex--;
-                Data.Instance.FontSize = fontSizes[currentIndex];
-                Local.Instance.Save(Data.Instance.User);
+                DataManager.Instance.FontSize = fontSizes[currentIndex];
+                Local.Instance.Save(DataManager.Instance.User);
                 BuildUI();
                 Utils.Debug.Log("StartSettings", $"Font size decreased to {fontSizes[currentIndex]}");
             }
@@ -928,15 +927,15 @@ namespace Game.Presentation
         private void OnFontSizeIncrease()
         {
             int[] fontSizes = { 25, 30, 35, 40 };
-            int currentFontSize = Data.Instance.FontSize;
+            int currentFontSize = DataManager.Instance.FontSize;
             int currentIndex = System.Array.IndexOf(fontSizes, currentFontSize);
             if (currentIndex < 0) currentIndex = 1;
             
             if (currentIndex < fontSizes.Length - 1)
             {
                 currentIndex++;
-                Data.Instance.FontSize = fontSizes[currentIndex];
-                Local.Instance.Save(Data.Instance.User);
+                DataManager.Instance.FontSize = fontSizes[currentIndex];
+                Local.Instance.Save(DataManager.Instance.User);
                 BuildUI();
                 Utils.Debug.Log("StartSettings", $"Font size increased to {fontSizes[currentIndex]}");
             }

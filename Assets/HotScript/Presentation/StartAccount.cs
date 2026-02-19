@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Framework;
 using Game.Data;
-using Data = Game.Data.Data;
 using Config = Game.Data.Config;
 
 namespace Game.Presentation
@@ -18,10 +17,10 @@ namespace Game.Presentation
         public void Refresh(int index)
         {
             this.index = index;
-            Account account = Data.Instance.User.Accounts[index];
+            Account account = DataManager.Instance.User.Accounts[index];
             string note = string.IsNullOrEmpty(account.Note) ? "" : $"[{account.Note}]";
             transform.Find("Label").GetComponent<Text>().text = $"[{index}]{account.Id}{note}";
-            GetComponent<Toggle>().SetIsOnWithoutNotify(Data.Instance.User.SelectedAccountIndex == index);
+            GetComponent<Toggle>().SetIsOnWithoutNotify(DataManager.Instance.User.SelectedAccountIndex == index);
         }
         public void Error()
         {
@@ -32,8 +31,8 @@ namespace Game.Presentation
         {
             if (isOn)
             {
-                Data.Instance.User.SelectedAccountIndex = index;
-                Local.Instance.Save(Data.Instance.User);
+                DataManager.Instance.User.SelectedAccountIndex = index;
+                Local.Instance.Save(DataManager.Instance.User);
             }
         }
     }

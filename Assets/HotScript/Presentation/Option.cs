@@ -1,7 +1,6 @@
 using DG.Tweening;
 using Framework;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Utils;
 using Config = Game.Data.Config;
 using LitJson;
@@ -174,16 +173,16 @@ namespace Game.Presentation
                 { OptionItemType.Confirm,  (obj, path, item) => Confirm(obj, indices.confirm++, path, item) },
                 { OptionItemType.Amount,   (obj, path, item) => Amount(obj, indices.amount++, path, item) },
             };
-            lastOption = Data.Instance.Option;
-            Refresh(transform.Find("Left/Viewport/Content").gameObject, Data.Instance.Option.lefts, 0);  // side = 0
-            Refresh(transform.Find("Right/Viewport/Content").gameObject, Data.Instance.Option.rights, 1); // side = 1
-            Animate(Data.Instance.Option);
+            lastOption = DataManager.Instance.Option;
+            Refresh(transform.Find("Left/Viewport/Content").gameObject, DataManager.Instance.Option.lefts, 0);  // side = 0
+            Refresh(transform.Find("Right/Viewport/Content").gameObject, DataManager.Instance.Option.rights, 1); // side = 1
+            Animate(DataManager.Instance.Option);
             transform.Find("Return").GetComponent<Button>().onClick.AddListener(OnReturnClick);
-            Data.Instance.after.Register(Data.Type.Option, OnAfterOptionChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Option, OnAfterOptionChanged);
         }
         public override void OnClose()
         {
-            Data.Instance.after.Unregister(Data.Type.Option, OnAfterOptionChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Option, OnAfterOptionChanged);
         }
 
         public override void OnScreenAdaptationChanged()
@@ -202,7 +201,7 @@ namespace Game.Presentation
         #endregion
         private void OnAfterOptionChanged(params object[] args)
         {
-            var currentOption = Data.Instance.Option;
+            var currentOption = DataManager.Instance.Option;
             if (lastOption != currentOption)
             {
                 lastOption = currentOption;
@@ -214,7 +213,7 @@ namespace Game.Presentation
 
         private void OnReturnClick()
         {
-            Data.Instance.OptionReturn = DateTime.Now;
+            DataManager.Instance.OptionReturn = DateTime.Now;
         }
 
         #region Core Methods

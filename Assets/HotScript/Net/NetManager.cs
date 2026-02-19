@@ -5,7 +5,6 @@ using System.Text;
 using System;
 using Framework;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net.Protocol;
 using Config = Game.Data.Config;
 using Newtonsoft.Json;
@@ -47,7 +46,7 @@ namespace Game.Net
         /// </summary>
         private string GetErrorText(string key, params object[] args)
         {
-            var texts = Data.Instance.ErrorTexts;
+            var texts = DataManager.Instance.ErrorTexts;
             if (texts != null && texts.ContainsKey(key))
             {
                 return args.Length > 0 ? string.Format(texts[key], args) : texts[key];
@@ -80,13 +79,13 @@ namespace Game.Net
 
         void Awake()
         {
-            Data.Instance.after.Register(Data.Type.LoginAccount, OnAfterLoginAccountChanged);
-            Data.Instance.after.Register(Data.Type.Online, OnAfterOnlineChanged);
-            Data.Instance.after.Register(Data.Type.Option, OnAfterOptionChanged);
-            Data.Instance.befor.Register(Data.Type.OptionReturn, OnBeforOptionReturnChanged);
-            Data.Instance.befor.Register(Data.Type.SocketMissedHeartbeats, OnBeforeMissedHeartbeatsChanged);
-            Data.Instance.befor.Register(Data.Type.Ping, OnAfterPingChanged);
-            Data.Instance.after.Register(Data.Type.Servers, OnAfterServersChanged);
+            DataManager.Instance.after.Register(DataManager.Type.LoginAccount, OnAfterLoginAccountChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Online, OnAfterOnlineChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Option, OnAfterOptionChanged);
+            DataManager.Instance.befor.Register(DataManager.Type.OptionReturn, OnBeforOptionReturnChanged);
+            DataManager.Instance.befor.Register(DataManager.Type.SocketMissedHeartbeats, OnBeforeMissedHeartbeatsChanged);
+            DataManager.Instance.befor.Register(DataManager.Type.Ping, OnAfterPingChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Servers, OnAfterServersChanged);
         }
 
         void Update()
@@ -132,7 +131,7 @@ namespace Game.Net
                 Utils.Debug.Log("Net", "Socket closed");
             }
             
-            Data.Instance.Online = false;
+            DataManager.Instance.Online = false;
             CancelReconnect();
             Utils.Debug.Log("Net", "Disconnected successfully");
         }
@@ -162,9 +161,9 @@ namespace Game.Net
                 Utils.Debug.LogError("Socket", $"Connection timeout after {Time.time - startTime} seconds. Target: {ip}:{port}");
                 Socket.Close();
                 
-                Data.Instance.Dark = null;
-                Data.Instance.Tip = (TipType.Fly, GetErrorText("connection_timeout"));
-                Data.Instance.Online = false;
+                DataManager.Instance.Dark = null;
+                DataManager.Instance.Tip = (TipType.Fly, GetErrorText("connection_timeout"));
+                DataManager.Instance.Online = false;
                 yield break;
             }
                 yield return null;
@@ -173,10 +172,10 @@ namespace Game.Net
             try
             {
                 Socket.EndConnect(result);
-                Data.Instance.Online = true;
-                Data.Instance.Ping = DateTime.Now;
-                Data.Instance.Pong = DateTime.Now;
-                Data.Instance.SocketMissedHeartbeats = 0;
+                DataManager.Instance.Online = true;
+                DataManager.Instance.Ping = DateTime.Now;
+                DataManager.Instance.Pong = DateTime.Now;
+                DataManager.Instance.SocketMissedHeartbeats = 0;
                 Utils.Debug.LogSuccess("Socket", $"Successfully connected to server: {ip}:{port}");
             }
         catch (SocketException e)
@@ -184,23 +183,23 @@ namespace Game.Net
             Utils.Debug.LogError("Socket", $"Connection failed, SocketException: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}. Target: {ip}:{port}");
             Socket.Close();
             
-            Data.Instance.Dark = null;
+            DataManager.Instance.Dark = null;
             string errorKey = "connection_failed";
             if (e.SocketErrorCode == SocketError.ConnectionRefused)
             {
                 errorKey = "connection_refused";
             }
-            Data.Instance.Tip = (TipType.Fly, GetErrorText(errorKey));
-            Data.Instance.Online = false;
+            DataManager.Instance.Tip = (TipType.Fly, GetErrorText(errorKey));
+            DataManager.Instance.Online = false;
         }
         catch (Exception e)
         {
             Utils.Debug.LogError("Socket", $"Connection failed, unexpected exception: {e.Message}. Target: {ip}:{port}");
             Socket.Close();
             
-            Data.Instance.Dark = null;
-            Data.Instance.Tip = (TipType.Fly, GetErrorText("connection_failed"));
-            Data.Instance.Online = false;
+            DataManager.Instance.Dark = null;
+            DataManager.Instance.Tip = (TipType.Fly, GetErrorText("connection_failed"));
+            DataManager.Instance.Online = false;
         }
         }
 
@@ -251,8 +250,8 @@ namespace Game.Net
                         {
                             Utils.Debug.LogWarning("Socket", "Server disconnected (Receive == 0)");
                             Socket.Close();
-                            Data.Instance.Tip = (TipType.Fly, GetErrorText("server_disconnected"));
-                            Data.Instance.Online = false;
+                            DataManager.Instance.Tip = (TipType.Fly, GetErrorText("server_disconnected"));
+                            DataManager.Instance.Online = false;
                             return;
                         }
                         else
@@ -283,14 +282,14 @@ namespace Game.Net
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Net", $"Receive data exception: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    Data.Instance.Tip = (TipType.Fly, GetErrorText("network_communication_error"));
-                    Data.Instance.Online = false;
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("network_communication_error"));
+                    DataManager.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Net", $"Receive data unexpected exception: {e.Message}\nStackTrace: {e.StackTrace}");
-                    Data.Instance.Tip = (TipType.Fly, GetErrorText("network_communication_error"));
-                    Data.Instance.Online = false;
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("network_communication_error"));
+                    DataManager.Instance.Online = false;
                 }
                 }
             }
@@ -332,14 +331,14 @@ namespace Game.Net
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Socket", $"SocketException during send: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    Data.Instance.Tip = (TipType.Fly, GetErrorText("send_failed"));
-                    Data.Instance.Online = false;
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("send_failed"));
+                    DataManager.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Socket", $"Unexpected exception during send: {e.Message}\nStackTrace: {e.StackTrace}");
-                    Data.Instance.Tip = (TipType.Fly, GetErrorText("send_failed"));
-                    Data.Instance.Online = false;
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("send_failed"));
+                    DataManager.Instance.Online = false;
                 }
             }
         }
@@ -361,13 +360,13 @@ namespace Game.Net
             catch (SocketException e)
             {
                 Utils.Debug.LogError("Socket", $"SocketException in SendCallback: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                Data.Instance.Online = false;
+                DataManager.Instance.Online = false;
                 return;
             }
             catch (Exception e)
             {
                 Utils.Debug.LogError("Socket", $"Unexpected exception in SendCallback: {e.Message}");
-                Data.Instance.Online = false;
+                DataManager.Instance.Online = false;
                 return;
             }
 
@@ -399,12 +398,12 @@ namespace Game.Net
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Socket", $"SocketException during SendCallback continuation: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    Data.Instance.Online = false;
+                    DataManager.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Socket", $"Unexpected exception during SendCallback continuation: {e.Message}");
-                    Data.Instance.Online = false;
+                    DataManager.Instance.Online = false;
                 }
             }
         }
@@ -472,7 +471,7 @@ namespace Game.Net
 
         private void Heartbeat()
         {
-            if (!Data.Instance.Online)
+            if (!DataManager.Instance.Online)
             {
                 Utils.Debug.LogHeartbeat("Socket", "Heartbeat check: Not online, skipping");
                 return;
@@ -480,22 +479,22 @@ namespace Game.Net
 
             if (Socket != null && Socket.Connected)
             {
-                TimeSpan delay = DateTime.Now - Data.Instance.Pong;
+                TimeSpan delay = DateTime.Now - DataManager.Instance.Pong;
                 if (delay.TotalSeconds <= Config.Net.HeartbeatTimeout)
                 {
-                    if (Data.Instance.SocketMissedHeartbeats > 0)
+                    if (DataManager.Instance.SocketMissedHeartbeats > 0)
                     {
-                        Utils.Debug.LogSuccess("Socket", $"Heartbeat recovered. Previously missed heartbeats: {Data.Instance.SocketMissedHeartbeats}");
+                        Utils.Debug.LogSuccess("Socket", $"Heartbeat recovered. Previously missed heartbeats: {DataManager.Instance.SocketMissedHeartbeats}");
                     }
 
-                Data.Instance.SocketMissedHeartbeats = 0;
-                Data.Instance.Ping = DateTime.Now;
-                Utils.Debug.LogHeartbeat("Net", $"Ping sent at {Data.Instance.Ping}, delay since last Pong: {delay.TotalSeconds:F2}s");
+                DataManager.Instance.SocketMissedHeartbeats = 0;
+                DataManager.Instance.Ping = DateTime.Now;
+                Utils.Debug.LogHeartbeat("Net", $"Ping sent at {DataManager.Instance.Ping}, delay since last Pong: {delay.TotalSeconds:F2}s");
             }
                 else
                 {
-                    Data.Instance.SocketMissedHeartbeats++;
-                    Utils.Debug.LogHeartbeat("Socket", $"Heartbeat missed #{Data.Instance.SocketMissedHeartbeats}: Last Pong was {delay.TotalSeconds:F2}s ago (timeout: {Config.Net.HeartbeatTimeout}s)");
+                    DataManager.Instance.SocketMissedHeartbeats++;
+                    Utils.Debug.LogHeartbeat("Socket", $"Heartbeat missed #{DataManager.Instance.SocketMissedHeartbeats}: Last Pong was {delay.TotalSeconds:F2}s ago (timeout: {Config.Net.HeartbeatTimeout}s)");
                 }
             }
             else
@@ -520,12 +519,12 @@ namespace Game.Net
             {
                 Utils.Debug.LogError("Net", $"Max missed heartbeats reached ({Config.Net.MaxMissedHeartbeats}), marking as disconnected");
                 
-                if (Data.Instance.Online)
+                if (DataManager.Instance.Online)
                 {
-                    Data.Instance.Tip = (TipType.Fly, GetErrorText("server_disconnected"));
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("server_disconnected"));
                 }
                 
-                Data.Instance.Online = false;
+                DataManager.Instance.Online = false;
             }
         }
 
@@ -535,24 +534,24 @@ namespace Game.Net
 
         private void OnAfterLoginAccountChanged(params object[] args)
         {
-            Utils.Debug.Log("Net", $"LoginAccount changed. Online: {Data.Instance.Online}");
+            Utils.Debug.Log("Net", $"LoginAccount changed. Online: {DataManager.Instance.Online}");
             
-            if (Data.Instance.LoginAccount == null)
+            if (DataManager.Instance.LoginAccount == null)
             {
                 Utils.Debug.LogWarning("Net", "LoginAccount is null, skipping login");
                 return;
             }
             
-            if (Data.Instance.Online)
+            if (DataManager.Instance.Online)
             {
                 // Send Login protocol (works for both guest and regular accounts)
                 Utils.Debug.Log("Net", "Sending Login protocol");
-                Send(new Login(Data.Instance.LoginAccount));
+                Send(new Login(DataManager.Instance.LoginAccount));
             }
             else
             {
-                Utils.Debug.Log("Net", $"Not online, initiating TCP connection to {Data.Instance.SelectedServer.Ip}:{Data.Instance.SelectedServer.Port}");
-                Connect(Data.Instance.SelectedServer.Ip, Data.Instance.SelectedServer.Port);
+                Utils.Debug.Log("Net", $"Not online, initiating TCP connection to {DataManager.Instance.SelectedServer.Ip}:{DataManager.Instance.SelectedServer.Port}");
+                Connect(DataManager.Instance.SelectedServer.Ip, DataManager.Instance.SelectedServer.Port);
             }
         }
 
@@ -565,24 +564,24 @@ namespace Game.Net
                 bool wasReconnecting = isReconnecting;
                 ResetReconnectState();
                 
-                if (!wasReconnecting && Data.Instance.LoginAccount != null)
+                if (!wasReconnecting && DataManager.Instance.LoginAccount != null)
                 {
                     // Check if this is a QuickStart login
-                    if (Data.Instance.LoginAccount.Id == "__QuickStart__")
+                    if (DataManager.Instance.LoginAccount.Id == "__QuickStart__")
                     {
                         Utils.Debug.Log("Net", "Connected, sending QuickStartRequest");
                         Send(new QuickStartRequest
                         {
-                            device = Data.Instance.Device,
-                            version = Data.Instance.AppVersion,
+                            device = DataManager.Instance.Device,
+                            version = DataManager.Instance.AppVersion,
                             platform = Application.platform.ToString(),
-                            language = Data.Instance.Language.ToString()
+                            language = DataManager.Instance.Language.ToString()
                         });
                     }
                     else
                     {
                         Utils.Debug.Log("Net", "Connected, sending Login protocol");
-                        Send(new Login(Data.Instance.SelectedAccount));
+                        Send(new Login(DataManager.Instance.SelectedAccount));
                     }
                 }
             }
@@ -621,7 +620,7 @@ namespace Game.Net
             }
             else
             {
-                Data.Instance.Tip = (TipType.Fly, GetErrorText("rate_limit"));
+                DataManager.Instance.Tip = (TipType.Fly, GetErrorText("rate_limit"));
             }
         }
 
@@ -646,7 +645,7 @@ namespace Game.Net
 
         private void TriggerAutoReconnect()
         {
-            if (Data.Instance.Online)
+            if (DataManager.Instance.Online)
             {
                 Utils.Debug.Log("Reconnect", "Already online, skip auto-reconnect");
                 return;
@@ -655,7 +654,7 @@ namespace Game.Net
             // Check if in Start UI (through Data instead of UI)
             // TODO: Add a flag in Data to track current UI state
             // For now, always attempt reconnect
-            // if (Data.Instance.CurrentUI == "Start")
+            // if (DataManager.Instance.CurrentUI == "Start")
             // {
             //     Utils.Debug.Log("Reconnect", "First connection failed in Start UI, not auto-reconnecting");
             //     return;
@@ -690,7 +689,7 @@ namespace Game.Net
                     Config.Net.MaxReconnectDelay
                 );
 
-                Data.Instance.Dark = GetErrorText(
+                DataManager.Instance.Dark = GetErrorText(
                     "reconnecting_countdown",
                     reconnectAttempts.ToString(),
                     Mathf.CeilToInt(delay).ToString()
@@ -699,17 +698,17 @@ namespace Game.Net
                 Utils.Debug.Log("Reconnect", $"Attempt #{reconnectAttempts}, waiting {delay}s");
                 yield return new WaitForSeconds(delay);
 
-                Data.Instance.Dark = GetErrorText("reconnecting_attempt", reconnectAttempts.ToString());
+                DataManager.Instance.Dark = GetErrorText("reconnecting_attempt", reconnectAttempts.ToString());
 
                 yield return ConnectCoroutine(
-                    Data.Instance.SelectedServer.Ip,
-                    Data.Instance.SelectedServer.Port
+                    DataManager.Instance.SelectedServer.Ip,
+                    DataManager.Instance.SelectedServer.Port
                 );
 
-                if (Data.Instance.Online)
+                if (DataManager.Instance.Online)
                 {
                     Utils.Debug.LogSuccess("Reconnect", $"Reconnect successful after {reconnectAttempts} attempts");
-                    Data.Instance.Tip = (TipType.Fly, GetErrorText("reconnect_success"));
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("reconnect_success"));
                     ResetReconnectState();
                     
                     // TODO: Use event to notify upper layer to restart startup flow
@@ -726,7 +725,7 @@ namespace Game.Net
             {
                 StopCoroutine(reconnectCoroutine);
                 ResetReconnectState();
-                Data.Instance.Dark = null;
+                DataManager.Instance.Dark = null;
                 Utils.Debug.Log("Reconnect", "User cancelled reconnect");
             }
         }

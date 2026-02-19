@@ -1,6 +1,5 @@
 using Framework;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
@@ -64,7 +63,7 @@ namespace Game.Presentation
                 inputField.text = labels[idx];
                 if (idx < FontSizes.Length)
                 {
-                    Data.Instance.FontSize = FontSizes[idx];
+                    DataManager.Instance.FontSize = FontSizes[idx];
                 }
             }
             else
@@ -80,7 +79,7 @@ namespace Game.Presentation
 
         private void PreviewScreenAdaptation(float value)
         {
-            Data.Instance.User.ScreenUIAdaptation = value / 100f;
+            DataManager.Instance.User.ScreenUIAdaptation = value / 100f;
             var uiManager = Object.FindObjectOfType<UI>();
             uiManager?.ApplyScreenUIAdaptation();
         }
@@ -111,7 +110,7 @@ namespace Game.Presentation
             int currentValue = values[1];
             if (IsFontSizeMode)
             {
-                int localIdx = System.Array.IndexOf(FontSizes, Data.Instance.FontSize);
+                int localIdx = System.Array.IndexOf(FontSizes, DataManager.Instance.FontSize);
                 if (localIdx >= 0) currentValue = localIdx;
                 
                 slider.gameObject.SetActive(false);

@@ -1,6 +1,5 @@
 using System;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net.Protocol;
 
 namespace Game.Logic
@@ -40,11 +39,11 @@ namespace Game.Logic
         private static void HandlePong(Pong protocol)
         {
 #if UNITY_EDITOR
-            TimeSpan roundTrip = DateTime.Now - Data.Instance.Ping;
-            TimeSpan serverDelta = protocol.dateTime - Data.Instance.Ping;
+            TimeSpan roundTrip = DateTime.Now - DataManager.Instance.Ping;
+            TimeSpan serverDelta = protocol.dateTime - DataManager.Instance.Ping;
             Utils.Debug.LogHeartbeat("Protocol", $"Pong processed. Server time: {protocol.dateTime}, Round trip: {roundTrip.TotalMilliseconds:F2}ms, Server processing: {serverDelta.TotalMilliseconds:F2}ms");
 #endif
-            Data.Instance.Pong = protocol.dateTime;
+            DataManager.Instance.Pong = protocol.dateTime;
         }
         
         private static void HandleLoginResponse(LoginResponse protocol)

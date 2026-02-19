@@ -1,6 +1,5 @@
 using Framework;
 using Game.Data;
-using Data = Game.Data.Data;
 using Config = Game.Data.Config;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,8 +17,8 @@ namespace Game.Presentation
         private Coroutine connectingTextCoroutine;
         public override void OnCreate(params object[] args)
         {
-            Data.Instance.after.Register(Data.Type.Servers, OnAfterServersChanged);
-            Data.Instance.after.Register(Data.Type.Dark, OnAfterDataDark);
+            DataManager.Instance.after.Register(DataManager.Type.Servers, OnAfterServersChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Dark, OnAfterDataDark);
         }
         public override void OnEnter(params object[] args)
         {
@@ -37,7 +36,7 @@ namespace Game.Presentation
         }
         public override void OnClose()
         {
-            Data.Instance.after.Unregister(Data.Type.Servers, OnAfterServersChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Servers, OnAfterServersChanged);
         }
 
 

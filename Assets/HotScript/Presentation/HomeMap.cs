@@ -1,5 +1,4 @@
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,22 +21,22 @@ namespace Game.Presentation
         void Start()
         {
             GetComponent<Button>().onClick.AddListener(OnClick);
-            Data.Instance.after.Register(Data.Type.Area, OnAreaChanged);
-            Data.Instance.after.Register(Data.Type.SceneScale, OnSceneScaleChanged);
-            Data.Instance.after.Register(Data.Type.WorldMap, OnWorldMapChanged);
-            Data.Instance.after.Register(Data.Type.SceneName, OnSceneNameChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Area, OnAreaChanged);
+            DataManager.Instance.after.Register(DataManager.Type.SceneScale, OnSceneScaleChanged);
+            DataManager.Instance.after.Register(DataManager.Type.WorldMap, OnWorldMapChanged);
+            DataManager.Instance.after.Register(DataManager.Type.SceneName, OnSceneNameChanged);
             
             EnsureComponentsCached();
         }
 
         void OnDestroy()
         {
-            if (Data.IsAlive)
+            if (DataManager.IsAlive)
             {
-                Data.Instance.after.Unregister(Data.Type.Area, OnAreaChanged);
-                Data.Instance.after.Unregister(Data.Type.SceneScale, OnSceneScaleChanged);
-                Data.Instance.after.Unregister(Data.Type.WorldMap, OnWorldMapChanged);
-                Data.Instance.after.Unregister(Data.Type.SceneName, OnSceneNameChanged);
+                DataManager.Instance.after.Unregister(DataManager.Type.Area, OnAreaChanged);
+                DataManager.Instance.after.Unregister(DataManager.Type.SceneScale, OnSceneScaleChanged);
+                DataManager.Instance.after.Unregister(DataManager.Type.WorldMap, OnWorldMapChanged);
+                DataManager.Instance.after.Unregister(DataManager.Type.SceneName, OnSceneNameChanged);
             }
         }
 
@@ -59,8 +58,8 @@ namespace Game.Presentation
             
             bool parseSuccess = ColorUtility.TryParseHtmlString(map.color, out var c);
             tileImage.color = parseSuccess ? c : Color.white;
-            borderImage.color = new Color(255, 255, 255, Enumerable.SequenceEqual(map.pos, Data.Instance.Pos) ? 16 : 0);
-            nameText.fontSize = (int)(Data.Instance.SceneContainerSize * 38 / 180 / Data.Instance.SceneScale);
+            borderImage.color = new Color(255, 255, 255, Enumerable.SequenceEqual(map.pos, DataManager.Instance.Pos) ? 16 : 0);
+            nameText.fontSize = (int)(DataManager.Instance.SceneContainerSize * 38 / 180 / DataManager.Instance.SceneScale);
             
             
             InitializeTransparency();
@@ -76,7 +75,7 @@ namespace Game.Presentation
         {
             if (nameText != null)
             {
-                nameText.fontSize = (int)(Data.Instance.SceneContainerSize * 38 / 180 / Data.Instance.SceneScale);
+                nameText.fontSize = (int)(DataManager.Instance.SceneContainerSize * 38 / 180 / DataManager.Instance.SceneScale);
             }
             UpdateTransparency();
         }
@@ -108,11 +107,11 @@ namespace Game.Presentation
 
         private bool IsWorldMapView()
         {
-            float maxScale = Data.Instance.GetMaxSceneScale();
-            return Data.Instance.SceneScale >= maxScale && 
-                   Data.Instance.WorldMap != null && 
-                   Data.Instance.WorldMap.scenes != null && 
-                   Data.Instance.WorldMap.scenes.Count > 0;
+            float maxScale = DataManager.Instance.GetMaxSceneScale();
+            return DataManager.Instance.SceneScale >= maxScale && 
+                   DataManager.Instance.WorldMap != null && 
+                   DataManager.Instance.WorldMap.scenes != null && 
+                   DataManager.Instance.WorldMap.scenes.Count > 0;
         }
 
         private void InitializeTransparency()
@@ -136,7 +135,7 @@ namespace Game.Presentation
                 {
                     nameText.text = "";
                     
-                    var currentSceneName = Data.Instance.SceneName;
+                    var currentSceneName = DataManager.Instance.SceneName;
                     bool isCurrentScene = !string.IsNullOrEmpty(currentSceneName) && 
                                          map.name == currentSceneName;
                     
@@ -144,7 +143,7 @@ namespace Game.Presentation
                 }
                 else
                 {
-                    bool isWalkable = ContainsPos(Data.Instance.Area, map.pos);
+                    bool isWalkable = ContainsPos(DataManager.Instance.Area, map.pos);
                     color.a = isWalkable ? 1f : 0.04f;
                     nameText.text = color.a < 1f ? "" : map.name;
                 }
@@ -161,15 +160,15 @@ namespace Game.Presentation
             
             if (IsWorldMapView())
             {
-                string playerSceneKey = $"{Data.Instance.Pos[0]},{Data.Instance.Pos[1]},{Data.Instance.Pos[2]}";
-                if (Data.Instance.SceneCache.ContainsKey(playerSceneKey))
+                string playerSceneKey = $"{DataManager.Instance.Pos[0]},{DataManager.Instance.Pos[1]},{DataManager.Instance.Pos[2]}";
+                if (DataManager.Instance.SceneCache.ContainsKey(playerSceneKey))
                 {
-                    var playerScene = Data.Instance.SceneCache[playerSceneKey];
-                    Data.Instance.Maps = playerScene.sortedMaps;
-                    Data.Instance.SceneName = playerScene.sceneName;
+                    var playerScene = DataManager.Instance.SceneCache[playerSceneKey];
+                    DataManager.Instance.Maps = playerScene.sortedMaps;
+                    DataManager.Instance.SceneName = playerScene.sceneName;
                 }
                 
-                Data.Instance.SceneScale = Data.Instance.SceneScaleBeforeWorldMap;
+                DataManager.Instance.SceneScale = DataManager.Instance.SceneScaleBeforeWorldMap;
             }
             
             Utils.Debug.Log("HomeMap", $"[DEBUG-ClickMap] 准备发送ClickMap到服务器");

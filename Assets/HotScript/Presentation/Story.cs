@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,7 +35,7 @@ namespace Game.Presentation
         {
             ApplyAbsoluteLayout();
 
-            dialogues = Data.Instance.StoryDialogues;
+            dialogues = DataManager.Instance.StoryDialogues;
             gameObject.AddComponent<Button>().onClick.AddListener(OnClick);
             transform.Find("Confirm").GetComponent<Button>().onClick.AddListener(() => Close());
             contentRoot = transform.Find("ListView/Viewport/Content");
@@ -241,7 +240,7 @@ namespace Game.Presentation
                 new DialogueData { character = "Player", words = "I am ready. Whatever the cost may be." },
                 new DialogueData { character = "Guardian", words = "Then listen well, for I shall tell you the story of the Atlanteans..." },
             };
-            Data.Instance.StoryDialogues = testDialogues;
+            DataManager.Instance.StoryDialogues = testDialogues;
         }
         #endregion
 

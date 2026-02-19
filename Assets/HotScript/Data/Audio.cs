@@ -14,7 +14,7 @@ namespace Game.Data
 
         public void Init()
         {
-            Data.Instance.befor.Register(Data.Type.Option, OnBeforOptionChanged);
+            DataManager.Instance.befor.Register(DataManager.Type.Option, OnBeforOptionChanged);
         }
         public void Play((string, string, bool, bool) config)
         {
@@ -23,7 +23,7 @@ namespace Game.Data
             bool isBgm = config.Item3;
             bool loop = config.Item4;
             
-            if (!isBgm && !Data.Instance.User.UISoundEnabled)
+            if (!isBgm && !DataManager.Instance.User.UISoundEnabled)
             {
                 return;
             }

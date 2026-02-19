@@ -1,5 +1,4 @@
 using Game.Data;
-using Data = Game.Data.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -26,7 +25,7 @@ namespace Game.Presentation
                 var texts = args[0] as Dictionary<string, string>;
                 if (texts != null)
                 {
-                    Data.Instance.AccountTexts = texts;
+                    DataManager.Instance.AccountTexts = texts;
                 }
             }
 
@@ -48,7 +47,7 @@ namespace Game.Presentation
         
         private void RefreshUI()
         {
-            var texts = Data.Instance.AccountTexts;
+            var texts = DataManager.Instance.AccountTexts;
             if (texts == null) return;
             
             var idPlaceholder = transform.Find("Id/Placeholder")?.GetComponent<Text>();
@@ -138,7 +137,7 @@ namespace Game.Presentation
             {
                 string id = transform.Find("Id").GetComponent<InputField>().text;
                 string password = transform.Find("Password").GetComponent<InputField>().text;
-                var texts = Data.Instance.AccountTexts;
+                var texts = DataManager.Instance.AccountTexts;
                 
                 if (string.IsNullOrEmpty(id))
                     return texts != null && texts.ContainsKey("errorAccountEmpty") ? texts["errorAccountEmpty"] : "";
@@ -173,7 +172,7 @@ namespace Game.Presentation
                 string id = transform.Find("Id").GetComponent<InputField>().text;
                 string password = transform.Find("Password").GetComponent<InputField>().text;
                 string note = transform.Find("Note").GetComponent<InputField>().text;
-                Data.Instance.LoginAccount = new Account { Id = id, Password = password, Note = note };
+                DataManager.Instance.LoginAccount = new Account { Id = id, Password = password, Note = note };
                 Close();
             }
             else
@@ -185,7 +184,7 @@ namespace Game.Presentation
         private void OnCancelClick()
         {
             Close();
-            UI.Instance.Open(Config.UI.Start, Data.Instance.StartTexts);
+            UI.Instance.Open(Config.UI.Start, DataManager.Instance.StartTexts);
         }
     }
 }

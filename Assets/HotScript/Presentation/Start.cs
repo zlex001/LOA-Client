@@ -1,7 +1,6 @@
 using DG.Tweening;
 using Framework;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net;
 using UnityEngine.UI;
 using SuperScrollView;
@@ -50,7 +49,7 @@ namespace Game.Presentation
             var texts = args[0] as Dictionary<string, string>;
             if (texts != null)
             {
-                Data.Instance.StartTexts = texts;
+                DataManager.Instance.StartTexts = texts;
             }
             
             RefreshUI();
@@ -58,7 +57,7 @@ namespace Game.Presentation
         
         private void RefreshUI()
         {
-            var texts = Data.Instance.StartTexts;
+            var texts = DataManager.Instance.StartTexts;
             if (texts == null) return;
             
             if (_titleText != null && texts.ContainsKey("title"))
@@ -79,9 +78,9 @@ namespace Game.Presentation
                 string footerTemplate = texts["footer"].Replace("\\n", "\n");
                 _footerText.text = string.Format(
                     footerTemplate,
-                    Data.Instance.Device.Split("-").Last(),
-                    Data.Instance.AppVersion,
-                    Data.Instance.HotVersion
+                    DataManager.Instance.Device.Split("-").Last(),
+                    DataManager.Instance.AppVersion,
+                    DataManager.Instance.HotVersion
                 );
             }
         }
@@ -89,7 +88,7 @@ namespace Game.Presentation
         public override void OnCreate(params object[] args)
         {
             // Set default server (single server mode)
-            Data.Instance.User.SelectedServerIndex = 0;
+            DataManager.Instance.User.SelectedServerIndex = 0;
             
             // Create all UI elements dynamically
             CreateTitleUI();
@@ -98,7 +97,7 @@ namespace Game.Presentation
             CreateTipUI();
             
             // Setup UI Listeners
-            Data.Instance.after.Register(Data.Type.LoginResponse, OnAfterLoginResponseChanged);
+            DataManager.Instance.after.Register(DataManager.Type.LoginResponse, OnAfterLoginResponseChanged);
             Utils.Debug.Log("Start", "LoginResponse event listener registered");
 
             StartCoroutine(Animate());
@@ -107,7 +106,7 @@ namespace Game.Presentation
         public override void OnClose()
         {
             Utils.Debug.Log("Start", "OnClose called, unregistering LoginResponse event listener");
-            Data.Instance.after.Unregister(Data.Type.LoginResponse, OnAfterLoginResponseChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.LoginResponse, OnAfterLoginResponseChanged);
         }
 
         public override void OnScreenAdaptationChanged()
@@ -295,11 +294,11 @@ namespace Game.Presentation
             UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
             
             // Check if local accounts exist
-            if (Data.Instance.User.Accounts.Count > 0)
+            if (DataManager.Instance.User.Accounts.Count > 0)
             {
                 // Has accounts: use local account to login
-                Utils.Debug.Log("Start", $"Using local account: {Data.Instance.SelectedAccount.Id}");
-                Data.Instance.LoginAccount = Data.Instance.SelectedAccount;
+                Utils.Debug.Log("Start", $"Using local account: {DataManager.Instance.SelectedAccount.Id}");
+                DataManager.Instance.LoginAccount = DataManager.Instance.SelectedAccount;
             }
             else
             {
@@ -307,10 +306,10 @@ namespace Game.Presentation
                 Utils.Debug.Log("Start", "No local accounts, sending QuickStartRequest");
                 NetManager.Instance.Send(new Protocol.QuickStartRequest
                 {
-                    device = Data.Instance.Device,
-                    version = Data.Instance.AppVersion,
+                    device = DataManager.Instance.Device,
+                    version = DataManager.Instance.AppVersion,
                     platform = Application.platform.ToString(),
-                    language = Data.Instance.Language.ToString()
+                    language = DataManager.Instance.Language.ToString()
                 });
             }
         }
@@ -541,14 +540,14 @@ namespace Game.Presentation
             else
             {
                 Utils.Debug.Log("Start", $"Login failed, closing Dark and showing error");
-                Data.Instance.Dark = null;
+                DataManager.Instance.Dark = null;
                 
-                string message = Data.Instance.LoginResponseMessage;
+                string message = DataManager.Instance.LoginResponseMessage;
                 Utils.Debug.Log("Start", $"Error message: {message}");
                 if (!string.IsNullOrEmpty(message))
                 {
                     Utils.Debug.Log("Start", "Setting FlyTip");
-                    Data.Instance.Tip = (TipType.Fly, message);
+                    DataManager.Instance.Tip = (TipType.Fly, message);
                 }
             }
         }

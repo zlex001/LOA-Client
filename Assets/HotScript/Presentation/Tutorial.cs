@@ -1,6 +1,5 @@
 using LitJson;
 using Game.Data;
-using Data = Game.Data.Data;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,7 +38,7 @@ namespace Game.Presentation
         public override void OnEnter(params object[] args)
         {
             Utils.Debug.Log("Tutorial", "OnEnter called");
-            currentStep = Data.Instance.TutorialStep;
+            currentStep = DataManager.Instance.TutorialStep;
             if (currentStep == null)
             {
                 Utils.Debug.Log("Tutorial", "TutorialStep is null, trying legacy flow");
@@ -58,7 +57,7 @@ namespace Game.Presentation
             // Avoid accessing singleton during application quit to prevent recreation
             if (!isQuitting)
             {
-                Data.Instance.Tip = (TipType.Attach, null);
+                DataManager.Instance.Tip = (TipType.Attach, null);
             }
         }
 
@@ -162,7 +161,7 @@ namespace Game.Presentation
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, target.position);
                 Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint} at screen pos: {screen}");
-                Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+                DataManager.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
         }
         #endregion
@@ -232,7 +231,7 @@ namespace Game.Presentation
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetMap.transform.position);
                 Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint} at screen pos: {screen}");
-                Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+                DataManager.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
         }
         #endregion
@@ -278,7 +277,7 @@ namespace Game.Presentation
                 Utils.Debug.LogWarning("Tutorial", $"Unknown target area: {targetArea}");
                 if (!string.IsNullOrEmpty(currentStep.hint))
                 {
-                    Data.Instance.Tip = (TipType.Fly, currentStep.hint);
+                    DataManager.Instance.Tip = (TipType.Fly, currentStep.hint);
                 }
             }
         }
@@ -296,13 +295,13 @@ namespace Game.Presentation
                 yield break;
             }
 
-            // Find character index by configId in Data.Instance.Characters
-            var characters = Data.Instance.Characters ?? Data.Instance.Home?.characters;
+            // Find character index by configId in DataManager.Instance.Characters
+            var characters = DataManager.Instance.Characters ?? DataManager.Instance.Home?.characters;
             if (characters == null)
             {
-                Utils.Debug.LogWarning("Tutorial", "Characters list is null. Data.Instance.Characters=" + 
-                    (Data.Instance.Characters == null ? "null" : "exists") + 
-                    ", Data.Instance.Home=" + (Data.Instance.Home == null ? "null" : "exists"));
+                Utils.Debug.LogWarning("Tutorial", "Characters list is null. DataManager.Instance.Characters=" + 
+                    (DataManager.Instance.Characters == null ? "null" : "exists") + 
+                    ", DataManager.Instance.Home=" + (DataManager.Instance.Home == null ? "null" : "exists"));
                 yield break;
             }
 
@@ -331,7 +330,7 @@ namespace Game.Presentation
                 Utils.Debug.LogWarning("Tutorial", $"Character with targetId {currentStep.targetId} not found in list");
                 if (!string.IsNullOrEmpty(currentStep.hint))
                 {
-                    Data.Instance.Tip = (TipType.Fly, currentStep.hint);
+                    DataManager.Instance.Tip = (TipType.Fly, currentStep.hint);
                 }
                 yield break;
             }
@@ -395,14 +394,14 @@ namespace Game.Presentation
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetItem.position);
                 Utils.Debug.Log("Tutorial", $"Showing hint: {currentStep.hint}");
-                Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+                DataManager.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
 
             // If there's a button name to wait for in Option menu, register listener
             if (!string.IsNullOrEmpty(optionButtonName))
             {
                 pendingOptionButton = optionButtonName;
-                Data.Instance.after.Register(Data.Type.Option, OnOptionChanged);
+                DataManager.Instance.after.Register(DataManager.Type.Option, OnOptionChanged);
                 Utils.Debug.Log("Tutorial", $"Registered Option listener for button: {optionButtonName}");
             }
         }
@@ -416,7 +415,7 @@ namespace Game.Presentation
             if (string.IsNullOrEmpty(pendingOptionButton))
             {
                 StopHighlight();
-                Data.Instance.TutorialStep = null;
+                DataManager.Instance.TutorialStep = null;
                 Close();
             }
             else
@@ -433,7 +432,7 @@ namespace Game.Presentation
                 return;
             }
 
-            var option = Data.Instance.Option;
+            var option = DataManager.Instance.Option;
             if (option == null || option.Empty)
             {
                 return;
@@ -511,7 +510,7 @@ namespace Game.Presentation
             }
 
             // Unregister Option listener
-            Data.Instance.after.Unregister(Data.Type.Option, OnOptionChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Option, OnOptionChanged);
             pendingOptionButton = null;
 
             highlightedTarget = targetButton;
@@ -534,7 +533,7 @@ namespace Game.Presentation
             if (!string.IsNullOrEmpty(currentStep.hint))
             {
                 Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, targetButton.position);
-                Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
+                DataManager.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text = currentStep.hint, screen = new[] { screen.x, screen.y } }));
             }
         }
 
@@ -575,7 +574,7 @@ namespace Game.Presentation
         private void OnTargetClicked()
         {
             StopHighlight();
-            Data.Instance.TutorialStep = null;
+            DataManager.Instance.TutorialStep = null;
             Close();
         }
         #endregion
@@ -586,7 +585,7 @@ namespace Game.Presentation
             // Unregister Option listener if still registered
             if (!string.IsNullOrEmpty(pendingOptionButton))
             {
-                Data.Instance.after.Unregister(Data.Type.Option, OnOptionChanged);
+                DataManager.Instance.after.Unregister(DataManager.Type.Option, OnOptionChanged);
                 pendingOptionButton = null;
             }
 
@@ -609,13 +608,13 @@ namespace Game.Presentation
         /// </summary>
         private void HandleLegacyTutorial()
         {
-            if (Data.Instance.Tutorial == null || Data.Instance.Tutorial.Count == 0)
+            if (DataManager.Instance.Tutorial == null || DataManager.Instance.Tutorial.Count == 0)
             {
                 Close();
                 return;
             }
 
-            var tutorial = Data.Instance.Tutorial[Data.Instance.TutorialIndex];
+            var tutorial = DataManager.Instance.Tutorial[DataManager.Instance.TutorialIndex];
             (string, string, int, bool) config = tutorial.Item1;
             string path = tutorial.Item2;
             string text = tutorial.Item3;
@@ -649,9 +648,9 @@ namespace Game.Presentation
             {
                 StopHighlight();
                 Close();
-                if (Data.Instance.TutorialIndex < Data.Instance.Tutorial.Count - 1)
+                if (DataManager.Instance.TutorialIndex < DataManager.Instance.Tutorial.Count - 1)
                 {
-                    Data.Instance.TutorialIndex++;
+                    DataManager.Instance.TutorialIndex++;
                 }
             });
 
@@ -660,7 +659,7 @@ namespace Game.Presentation
             Utils.Ring.Loop(gameObject, localPos, this);
 
             Vector2 screen = RectTransformUtility.WorldToScreenPoint(Camera.main, target.position);
-            Data.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text, screen = new[] { screen.x, screen.y } }));
+            DataManager.Instance.Tip = (TipType.Attach, JsonMapper.ToJson(new { text, screen = new[] { screen.x, screen.y } }));
         }
         #endregion
     }

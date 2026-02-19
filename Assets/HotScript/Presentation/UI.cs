@@ -5,7 +5,6 @@ using UnityTimer;
 using Framework;
 using Game.Basic;
 using Game.Data;
-using Data = Game.Data.Data;
 using Config = Game.Data.Config;
 using System.Linq;
 using Newtonsoft.Json;
@@ -92,17 +91,17 @@ namespace Game.Presentation
             ApplyScreenUIAdaptation();
 
             Game.Basic.Event.Instance.Add(Event.Click, OnClick);
-            Data.Instance.after.Register(Data.Type.LoginAccount, OnAfterLoginAccountChanged);
-            Data.Instance.after.Register(Data.Type.Online, OnAfterOnlineChanged);
-            Data.Instance.after.Register(Data.Type.Initialize, OnAfterInitializeChanged);
-            Data.Instance.after.Register(Data.Type.Home, OnAfterHomeChanged);
-            Data.Instance.after.Register(Data.Type.Option, OnAfterOptionChanged);
-            Data.Instance.after.Register(Data.Type.StoryDialogues, OnAfterStoryChanged);
-            Data.Instance.after.Register(Data.Type.TutorialIndex, OnAfterTutorialIndexChanged);
-            Data.Instance.after.Register(Data.Type.TutorialStep, OnAfterTutorialStepChanged);
-            Data.Instance.after.Register(Data.Type.Dark, OnAfterDataDark);
+            DataManager.Instance.after.Register(DataManager.Type.LoginAccount, OnAfterLoginAccountChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Online, OnAfterOnlineChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Initialize, OnAfterInitializeChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Home, OnAfterHomeChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Option, OnAfterOptionChanged);
+            DataManager.Instance.after.Register(DataManager.Type.StoryDialogues, OnAfterStoryChanged);
+            DataManager.Instance.after.Register(DataManager.Type.TutorialIndex, OnAfterTutorialIndexChanged);
+            DataManager.Instance.after.Register(DataManager.Type.TutorialStep, OnAfterTutorialStepChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Dark, OnAfterDataDark);
 
-            Data.Instance.after.Register(Data.Type.Tip, OnAfterTipChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Tip, OnAfterTipChanged);
         }
 
         public void ApplyScreenUIAdaptation()
@@ -113,7 +112,7 @@ namespace Game.Presentation
             float autoTopMargin = (screenHeight - safeArea.height - safeArea.y) / screenHeight;
             float autoBottomMargin = safeArea.y / screenHeight;
             
-            float adaptationValue = Data.Instance.User.ScreenUIAdaptation;
+            float adaptationValue = DataManager.Instance.User.ScreenUIAdaptation;
             if (adaptationValue <= 0) adaptationValue = 1.0f;
             
             float topMargin = (autoTopMargin + 0.02f) * adaptationValue;

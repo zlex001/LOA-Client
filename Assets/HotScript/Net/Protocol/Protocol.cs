@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.Basic;
 using Game.Data;
-using Data = Game.Data.Data;
 using UnityEngine;
 
 namespace Game.Net.Protocol
@@ -36,11 +35,11 @@ namespace Game.Net.Protocol
         public override void Processed()
         {
 #if UNITY_EDITOR
-            TimeSpan roundTrip = DateTime.Now - Data.Instance.Ping;
-            TimeSpan serverDelta = dateTime - Data.Instance.Ping;
+            TimeSpan roundTrip = DateTime.Now - DataManager.Instance.Ping;
+            TimeSpan serverDelta = dateTime - DataManager.Instance.Ping;
             Utils.Debug.LogHeartbeat("Protocol", $"Pong已处理。服务器时间: {dateTime}, 往返时间: {roundTrip.TotalMilliseconds:F2}毫秒, 服务器处理时间: {serverDelta.TotalMilliseconds:F2}毫秒");
 #endif
-            Data.Instance.Pong = dateTime;
+            DataManager.Instance.Pong = dateTime;
         }
     }
 
@@ -50,10 +49,10 @@ namespace Game.Net.Protocol
         {
             id = account.Id;
             password = account.Password;
-            version = Data.Instance.AppVersion;
+            version = DataManager.Instance.AppVersion;
             platform = Application.platform.ToString();
             device = PlayerPrefs.GetString("DEVICE");
-            language = Data.Instance.Language.ToString();
+            language = DataManager.Instance.Language.ToString();
         }
         public string id;
         public string password;
@@ -94,7 +93,7 @@ namespace Game.Net.Protocol
                 
                 // Check if account already exists
                 bool accountExists = false;
-                foreach (var existingAccount in Data.Instance.User.Accounts)
+                foreach (var existingAccount in DataManager.Instance.User.Accounts)
                 {
                     if (existingAccount.Id == accountId)
                     {
@@ -105,9 +104,9 @@ namespace Game.Net.Protocol
                 
                 if (!accountExists)
                 {
-                    Data.Instance.User.Accounts.Add(account);
-                    Data.Instance.User.SelectedAccountIndex = Data.Instance.User.Accounts.Count - 1;
-                    Local.Instance.Save(Data.Instance.User);
+                    DataManager.Instance.User.Accounts.Add(account);
+                    DataManager.Instance.User.SelectedAccountIndex = DataManager.Instance.User.Accounts.Count - 1;
+                    Local.Instance.Save(DataManager.Instance.User);
                     Utils.Debug.Log("Protocol", $"Saved guest account: {accountId}, isNewAccount: {isNewAccount}");
                 }
                 else
@@ -116,8 +115,8 @@ namespace Game.Net.Protocol
                 }
             }
             
-            Data.Instance.LoginResponseMessage = message;
-            Data.Instance.LoginResponse = code;
+            DataManager.Instance.LoginResponseMessage = message;
+            DataManager.Instance.LoginResponse = code;
             Utils.Debug.Log("Protocol", $"LoginResponse data set complete");
         }
     }
@@ -138,7 +137,7 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            Data.Instance.Initialize = this.ToLogic();
+            DataManager.Instance.Initialize = this.ToLogic();
         }
     }
     public class InitializeRandom : Base
@@ -168,8 +167,8 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            Data.Instance.InitialResponseMessage = message;
-            Data.Instance.InitialResponse = code;
+            DataManager.Instance.InitialResponseMessage = message;
+            DataManager.Instance.InitialResponse = code;
         }
     }
     public class Map
@@ -204,11 +203,11 @@ namespace Game.Net.Protocol
             // Convert to Logic model and cache
             var sceneData = this.ToLogic();
             string sceneKey = $"{pos[0]},{pos[1]},{pos[2]}";
-            Data.Instance.SceneCache[sceneKey] = sceneData;
+            DataManager.Instance.SceneCache[sceneKey] = sceneData;
             
-            Data.Instance.Maps = sortedMaps?.Select(m => m.ToLogic()).ToList();
-            Data.Instance.Pos = pos;
-            Data.Instance.SceneName = sceneName;
+            DataManager.Instance.Maps = sortedMaps?.Select(m => m.ToLogic()).ToList();
+            DataManager.Instance.Pos = pos;
+            DataManager.Instance.SceneName = sceneName;
         }
     }
     public class Characters : Base
@@ -224,7 +223,7 @@ namespace Game.Net.Protocol
         public List<CharacterData> content;
         public override void Processed()
         {
-            Data.Instance.Characters = content?.Select(c => c.ToLogic()).ToList();
+            DataManager.Instance.Characters = content?.Select(c => c.ToLogic()).ToList();
         }
     }
     public class BattleProgress : Base
@@ -232,7 +231,7 @@ namespace Game.Net.Protocol
         public List<KeyValuePair<string, double>> content;
         public override void Processed()
         {
-            Data.Instance.BattleProgress = content;
+            DataManager.Instance.BattleProgress = content;
         }
     }
     public class Home : Base
@@ -269,11 +268,11 @@ namespace Game.Net.Protocol
             
             // Convert to Logic model and store
             var homeData = this.ToLogic();
-            Data.Instance.Home = homeData;
-            Data.Instance.Area = area;
+            DataManager.Instance.Home = homeData;
+            DataManager.Instance.Area = area;
             if (!string.IsNullOrEmpty(scene.sceneName))
             {
-                Data.Instance.SceneName = scene.sceneName;
+                DataManager.Instance.SceneName = scene.sceneName;
             }
         }
     }
@@ -310,9 +309,9 @@ namespace Game.Net.Protocol
             // 关键修复：先设置Area再设置Pos，确保RefreshAllShownItem()时Area数据已是最新
             if (area != null)
             {
-                Data.Instance.Area = area;
+                DataManager.Instance.Area = area;
             }
-            Data.Instance.Pos = content;
+            DataManager.Instance.Pos = content;
         }
     }
 
@@ -332,10 +331,10 @@ namespace Game.Net.Protocol
         public Channel channel;
         public override void Processed()
         {
-            var informations = new List<InformationData>(Data.Instance.Informations);
+            var informations = new List<InformationData>(DataManager.Instance.Informations);
             informations.Add(this.ToLogic());
             if (informations.Count > 250) { informations.RemoveAt(0); }
-            Data.Instance.Informations = informations;
+            DataManager.Instance.Informations = informations;
         }
     }
     public class Chat : Base
@@ -374,11 +373,11 @@ namespace Game.Net.Protocol
         public List<Item> rights;
         public override void Processed()
         {
-            var currentOption = Data.Instance.Option;
+            var currentOption = DataManager.Instance.Option;
             var newOption = this.ToLogic();
             // Simple comparison - store if different
             // TODO: Implement proper comparison logic if needed
-            Data.Instance.Option = newOption;
+            DataManager.Instance.Option = newOption;
         }
 
         private bool AreEqual(Option other)
@@ -530,7 +529,7 @@ namespace Game.Net.Protocol
         public override void Processed()
         {
             //Game.Data.Type worldDataType = (Game.Data.Type)Enum.Parse(typeof(Game.Data.Type), type.ToString());
-            Data.Instance.Change(type, new { value = value, color = color });
+            DataManager.Instance.Change(type, new { value = value, color = color });
         }
 
     }
@@ -560,7 +559,7 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            Data.Instance.StoryDialogues = dialogues?.Select(d => d.ToLogic()).ToList();
+            DataManager.Instance.StoryDialogues = dialogues?.Select(d => d.ToLogic()).ToList();
         }
     }
 
@@ -606,12 +605,12 @@ namespace Game.Net.Protocol
             {
                 // step=0 means clear/hide current guidance
                 Utils.Debug.Log("Tutorial", "Received clear command (step=0), clearing TutorialStep");
-                Data.Instance.TutorialStep = null;
+                DataManager.Instance.TutorialStep = null;
             }
             else
             {
                 // Normal guidance step - convert to Logic model
-                Data.Instance.TutorialStep = this.ToLogic();
+                DataManager.Instance.TutorialStep = this.ToLogic();
             }
         }
     }
@@ -623,7 +622,7 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            Data.Instance.Dark = text;
+            DataManager.Instance.Dark = text;
         }
     }
 
@@ -641,7 +640,7 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            Data.Instance.WorldMap = this.ToLogic();
+            DataManager.Instance.WorldMap = this.ToLogic();
         }
     }
 
@@ -653,7 +652,7 @@ namespace Game.Net.Protocol
         {
             if (!string.IsNullOrEmpty(text))
             {
-                Data.Instance.Tip = (TipType.Fly, text);
+                DataManager.Instance.Tip = (TipType.Fly, text);
             }
         }
     }
@@ -664,9 +663,9 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            if (System.Enum.TryParse(language, out Data.Languages lang))
+            if (System.Enum.TryParse(language, out DataManager.Languages lang))
             {
-                Data.Instance.Language = lang;
+                DataManager.Instance.Language = lang;
             }
         }
     }
@@ -677,8 +676,8 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            Data.Instance.User.ScreenUIAdaptation = value / 100f;
-            Local.Instance.Save(Data.Instance.User);
+            DataManager.Instance.User.ScreenUIAdaptation = value / 100f;
+            Local.Instance.Save(DataManager.Instance.User);
 
             // Notify UI layer through event instead of direct call
             Game.Basic.Event.Instance.Fire("UI.ScreenUIAdaptation.Changed");
@@ -691,7 +690,7 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            Data.Instance.UILock = this.ToLogic();
+            DataManager.Instance.UILock = this.ToLogic();
         }
     }
 

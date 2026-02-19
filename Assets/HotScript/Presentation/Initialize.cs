@@ -1,7 +1,6 @@
 using Framework;
 using Game.Basic;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net;
 using Config = Game.Data.Config;
 using Protocol = Game.Net.Protocol;
@@ -40,7 +39,7 @@ namespace Game.Presentation
             transform.Find("Random").GetComponent<Button>().onClick.AddListener(OnRandomClick);
 
             // Register global events
-            Data.Instance.after.Register(Data.Type.InitialResponse, AfterInitialResponseChange);
+            DataManager.Instance.after.Register(DataManager.Type.InitialResponse, AfterInitialResponseChange);
 
             ApplyAbsoluteLayout();
         }
@@ -49,12 +48,12 @@ namespace Game.Presentation
         {
             ApplyAbsoluteLayout();
 
-            transform.Find("Description").GetComponent<Text>().text = Data.Instance.Initialize.description;
-            FreshRadar(Data.Instance.Initialize.grade);
+            transform.Find("Description").GetComponent<Text>().text = DataManager.Instance.Initialize.description;
+            FreshRadar(DataManager.Instance.Initialize.grade);
             
-            if (Data.Instance.Initialize.ui != null)
+            if (DataManager.Instance.Initialize.ui != null)
             {
-                var ui = Data.Instance.Initialize.ui;
+                var ui = DataManager.Instance.Initialize.ui;
                 
                 var namePlaceholder = transform.Find("Name/Placeholder")?.GetComponent<Text>();
                 if (namePlaceholder != null && !string.IsNullOrEmpty(ui.namePlaceholder))
@@ -170,7 +169,7 @@ namespace Game.Presentation
 
         public override void OnClose()
         {
-            Data.Instance.after.Unregister(Data.Type.InitialResponse, AfterInitialResponseChange);
+            DataManager.Instance.after.Unregister(DataManager.Type.InitialResponse, AfterInitialResponseChange);
         }
         #endregion
 
@@ -189,7 +188,7 @@ namespace Game.Presentation
             }
             else
             {
-                Data.Instance.Tip = (TipType.Fly, checkResult);
+                DataManager.Instance.Tip = (TipType.Fly, checkResult);
             }
         }
 
@@ -310,12 +309,12 @@ namespace Game.Presentation
             }
             else
             {
-                Data.Instance.Dark = null;
+                DataManager.Instance.Dark = null;
                 
-                string message = Data.Instance.InitialResponseMessage;
+                string message = DataManager.Instance.InitialResponseMessage;
                 if (!string.IsNullOrEmpty(message))
                 {
-                    Data.Instance.Tip = (TipType.Fly, message);
+                    DataManager.Instance.Tip = (TipType.Fly, message);
                 }
             }
         }

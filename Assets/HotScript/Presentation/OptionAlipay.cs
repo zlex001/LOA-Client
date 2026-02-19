@@ -1,7 +1,6 @@
 using Framework;
 using Game.Basic;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Utils;
 using Config = Game.Data.Config;
 using UnityEngine;
@@ -21,19 +20,19 @@ namespace Game.Presentation
         }
         private void OnButtonClick(Button obj)
         {
-            //Data.Instance.Change(Data.Type.PlayerState, Data.PlayerState.Purchasing);
+            //DataManager.Instance.Change(DataManager.Type.PlayerState, DataManager.PlayerState.Purchasing);
         }
 
         public void OnPurchaseComplete(Product product)
         {
             Game.Basic.Event.Instance.Fire("PurchaseComplete", product.receipt);
             UI.Instance.Close(Config.UI.Option);
-            //Data.Instance.Change(Data.Type.PlayerState, Data.PlayerState.Normal);
+            //DataManager.Instance.Change(DataManager.Type.PlayerState, DataManager.PlayerState.Normal);
         }
         public void OnPurchaseFail(Product product, PurchaseFailureDescription a)
         {
             UI.Instance.Close(Config.UI.Option);
-            //Data.Instance.Change(Data.Type.PlayerState, Data.PlayerState.Normal);
+            //DataManager.Instance.Change(DataManager.Type.PlayerState, DataManager.PlayerState.Normal);
         }
 
         public void SetProdut(string text)

@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using SuperScrollView;
 using Game.Basic;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net;
 using System.Linq;
 using UnityEditor;
@@ -24,7 +23,7 @@ namespace Game.Presentation
             SceneZoomOut,
         }
 
-        private bool IsWorldMapView => Data.Instance.SceneScale >= GetMaxVisibleCells() && Data.Instance.WorldMap != null && Data.Instance.WorldMap.scenes != null && Data.Instance.WorldMap.scenes.Count > 0;
+        private bool IsWorldMapView => DataManager.Instance.SceneScale >= GetMaxVisibleCells() && DataManager.Instance.WorldMap != null && DataManager.Instance.WorldMap.scenes != null && DataManager.Instance.WorldMap.scenes.Count > 0;
 
         private float previousScale = 1.0f;
         private MapTransition mapTransition;
@@ -35,7 +34,7 @@ namespace Game.Presentation
             {
                 if (IsWorldMapView)
                 {
-                    var scenes = Data.Instance.WorldMap.scenes;
+                    var scenes = DataManager.Instance.WorldMap.scenes;
                     if (scenes == null || scenes.Count == 0)
                         return new List<MapData>();
 
@@ -67,11 +66,11 @@ namespace Game.Presentation
                     }
                     return result;
                 }
-                return Data.Instance.Maps ?? Data.Instance.Home.scene.maps;
+                return DataManager.Instance.Maps ?? DataManager.Instance.Home.scene.maps;
             }
         }
 
-        public List<CharacterData> Characters => Data.Instance.Characters ?? Data.Instance.Home.characters;
+        public List<CharacterData> Characters => DataManager.Instance.Characters ?? DataManager.Instance.Home.characters;
 
         private int MinX => Maps != null && Maps.Count > 0 && Maps.Any(m => m != null) ? Maps.Where(m => m != null).Select(m => m.pos[0]).Min() : 0;
         private int MaxX => Maps != null && Maps.Count > 0 && Maps.Any(m => m != null) ? Maps.Where(m => m != null).Select(m => m.pos[0]).Max() : 0;
@@ -116,8 +115,8 @@ namespace Game.Presentation
             var scenePanel = transform.Find("Scene").gameObject;
             mapTransition = scenePanel.AddComponent<MapTransition>();
             UpdateSceneContainerSize();
-            previousScale = Data.Instance.SceneScale;
-            foreach (var resouse in Data.Instance.Home.resouse)
+            previousScale = DataManager.Instance.SceneScale;
+            foreach (var resouse in DataManager.Instance.Home.resouse)
             {
                 if (resouse.Key == "Pp") continue;
 
@@ -135,62 +134,62 @@ namespace Game.Presentation
                 }
 
                 // 设置资源名称文本
-                if (Data.Instance.Home.ui?.resourceLabels != null && Data.Instance.Home.ui.resourceLabels.ContainsKey(resouse.Key))
+                if (DataManager.Instance.Home.ui?.resourceLabels != null && DataManager.Instance.Home.ui.resourceLabels.ContainsKey(resouse.Key))
                 {
-                    transform.Find($"Resource/{resouse.Key}/Title").GetComponent<Text>().text = Data.Instance.Home.ui.resourceLabels[resouse.Key];
+                    transform.Find($"Resource/{resouse.Key}/Title").GetComponent<Text>().text = DataManager.Instance.Home.ui.resourceLabels[resouse.Key];
                 }
             }
 
             // 设置频道按钮文本
-            if (Data.Instance.Home.ui?.channels != null)
+            if (DataManager.Instance.Home.ui?.channels != null)
             {
                 string[] channelNames = { "System", "Private", "Local", "Battle", "Broadcast", "Rumor", "Automation" };
-                for (int i = 0; i < channelNames.Length && i < Data.Instance.Home.ui.channels.Length; i++)
+                for (int i = 0; i < channelNames.Length && i < DataManager.Instance.Home.ui.channels.Length; i++)
                 {
-                    transform.Find($"Chat/Channel/{channelNames[i]}/Label").GetComponent<Text>().text = Data.Instance.Home.ui.channels[i];
+                    transform.Find($"Chat/Channel/{channelNames[i]}/Label").GetComponent<Text>().text = DataManager.Instance.Home.ui.channels[i];
                 }
             }
 
             // 设置输入框提示文本
-            if (!string.IsNullOrEmpty(Data.Instance.Home.ui?.chatPlaceholder))
+            if (!string.IsNullOrEmpty(DataManager.Instance.Home.ui?.chatPlaceholder))
             {
                 var placeholder = transform.Find("Chat/Input/Placeholder").GetComponent<Text>();
                 if (placeholder != null)
                 {
-                    placeholder.text = Data.Instance.Home.ui.chatPlaceholder;
+                    placeholder.text = DataManager.Instance.Home.ui.chatPlaceholder;
                 }
             }
             var sceneGridView = transform.Find("Scene").GetComponent<LoopGridView>();
             sceneGridView.InitGridView(Maps.Count, OnGetMapByIndex);
             sceneGridView.ItemSize = CalculateFillLayout();
             sceneGridView.SetGridFixedGroupCount(GridFixedType.ColumnCountFixed, MaxX - MinX + 1);
-            sceneGridView.MovePanelToItemByRowColumn(MaxY - Data.Instance.Pos[1], Data.Instance.Pos[0] - MinX, transform.Find("Scene").GetComponent<RectTransform>().rect.width / 2, -transform.Find("Scene").GetComponent<RectTransform>().rect.height / 2);
+            sceneGridView.MovePanelToItemByRowColumn(MaxY - DataManager.Instance.Pos[1], DataManager.Instance.Pos[0] - MinX, transform.Find("Scene").GetComponent<RectTransform>().rect.width / 2, -transform.Find("Scene").GetComponent<RectTransform>().rect.height / 2);
             sceneGridView.mOnBeginDragAction = OnSceneBeginDrag;
             transform.Find("Scene/Focus").GetComponent<Button>().onClick.AddListener(OnSceneFocusClick);
             transform.Find("Scene/ZoomIn").GetComponent<Button>().onClick.AddListener(OnSceneZoomInClick);
             transform.Find("Scene/ZoomOut").GetComponent<Button>().onClick.AddListener(OnSceneZoomOutClick);
             transform.Find("Area").GetComponent<LoopListView2>().InitListView(Characters.Count, OnGetCharacterByIndex);
-            transform.Find("Information").GetComponent<LoopListView2>().InitListView(Data.Instance.Informations.Count, OnGetMessageByIndex);
+            transform.Find("Information").GetComponent<LoopListView2>().InitListView(DataManager.Instance.Informations.Count, OnGetMessageByIndex);
             foreach (Toggle toggle in transform.Find("Chat/Channel").GetComponentsInChildren<Toggle>(true)) { toggle.onValueChanged.AddListener((isOn) => Game.Basic.Event.Instance.Fire(Event.ChannelToggle, toggle.gameObject.name, isOn)); }
             Game.Basic.Event.Instance.Add(Event.ChannelToggle, OnChannelToggle);
             transform.Find("Chat/Input").GetComponent<InputField>().onEndEdit.AddListener(OnChatEndEdit);
 
             UpdateSceneInfo();
 
-            Data.Instance.after.Register(Protocol.DataPair.Type.Hp, OnAfterHpChange);
-            Data.Instance.after.Register(Protocol.DataPair.Type.Mp, OnAfterMpChange);
-            Data.Instance.after.Register(Protocol.DataPair.Type.Lp, OnAfterLpChange);
-            Data.Instance.after.Register(Protocol.DataPair.Type.Shield, OnAfterShieldChange);
-            Data.Instance.after.Register(Data.Type.Pos, OnAfterPosChanged);
-            Data.Instance.after.Register(Data.Type.SceneName, OnAfterSceneNameChanged);
-            Data.Instance.after.Register(Data.Type.Maps, OnAfterMapsChanged);
-            Data.Instance.after.Register(Data.Type.Characters, OnAfterCharactersChanged);
-            Data.Instance.after.Register(Data.Type.BattleProgress, OnAfterBattleProgressChanged);
-            Data.Instance.after.Register(Data.Type.Informations, OnAfterInformationsChanged);
-            Data.Instance.after.Register(Data.Type.SceneScale, OnAfterSceneScaleChanged);
-            Data.Instance.after.Register(Data.Type.Home, OnAfterHomeChanged);
-            Data.Instance.after.Register(Data.Type.WorldMap, OnAfterWorldMapChanged);
-            Data.Instance.after.Register(Data.Type.UILock, OnAfterUILockChanged);
+            DataManager.Instance.after.Register(Protocol.DataPair.Type.Hp, OnAfterHpChange);
+            DataManager.Instance.after.Register(Protocol.DataPair.Type.Mp, OnAfterMpChange);
+            DataManager.Instance.after.Register(Protocol.DataPair.Type.Lp, OnAfterLpChange);
+            DataManager.Instance.after.Register(Protocol.DataPair.Type.Shield, OnAfterShieldChange);
+            DataManager.Instance.after.Register(DataManager.Type.Pos, OnAfterPosChanged);
+            DataManager.Instance.after.Register(DataManager.Type.SceneName, OnAfterSceneNameChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Maps, OnAfterMapsChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Characters, OnAfterCharactersChanged);
+            DataManager.Instance.after.Register(DataManager.Type.BattleProgress, OnAfterBattleProgressChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Informations, OnAfterInformationsChanged);
+            DataManager.Instance.after.Register(DataManager.Type.SceneScale, OnAfterSceneScaleChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Home, OnAfterHomeChanged);
+            DataManager.Instance.after.Register(DataManager.Type.WorldMap, OnAfterWorldMapChanged);
+            DataManager.Instance.after.Register(DataManager.Type.UILock, OnAfterUILockChanged);
 
             // Apply UILock state on creation
             ApplyUILock();
@@ -198,19 +197,19 @@ namespace Game.Presentation
 
         public override void OnClose()
         {
-            Data.Instance.after.Unregister(Protocol.DataPair.Type.Hp, OnAfterHpChange);
-            Data.Instance.after.Unregister(Protocol.DataPair.Type.Mp, OnAfterMpChange);
-            Data.Instance.after.Unregister(Protocol.DataPair.Type.Lp, OnAfterLpChange);
-            Data.Instance.after.Unregister(Protocol.DataPair.Type.Shield, OnAfterShieldChange);
-            Data.Instance.after.Unregister(Data.Type.Pos, OnAfterPosChanged);
-            Data.Instance.after.Unregister(Data.Type.SceneName, OnAfterSceneNameChanged);
-            Data.Instance.after.Unregister(Data.Type.Maps, OnAfterMapsChanged);
-            Data.Instance.after.Unregister(Data.Type.Characters, OnAfterCharactersChanged);
-            Data.Instance.after.Unregister(Data.Type.BattleProgress, OnAfterBattleProgressChanged);
-            Data.Instance.after.Unregister(Data.Type.Informations, OnAfterInformationsChanged);
-            Data.Instance.after.Unregister(Data.Type.Home, OnAfterHomeChanged);
-            Data.Instance.after.Unregister(Data.Type.WorldMap, OnAfterWorldMapChanged);
-            Data.Instance.after.Unregister(Data.Type.UILock, OnAfterUILockChanged);
+            DataManager.Instance.after.Unregister(Protocol.DataPair.Type.Hp, OnAfterHpChange);
+            DataManager.Instance.after.Unregister(Protocol.DataPair.Type.Mp, OnAfterMpChange);
+            DataManager.Instance.after.Unregister(Protocol.DataPair.Type.Lp, OnAfterLpChange);
+            DataManager.Instance.after.Unregister(Protocol.DataPair.Type.Shield, OnAfterShieldChange);
+            DataManager.Instance.after.Unregister(DataManager.Type.Pos, OnAfterPosChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.SceneName, OnAfterSceneNameChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Maps, OnAfterMapsChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Characters, OnAfterCharactersChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.BattleProgress, OnAfterBattleProgressChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Informations, OnAfterInformationsChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Home, OnAfterHomeChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.WorldMap, OnAfterWorldMapChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.UILock, OnAfterUILockChanged);
         }
 
         public override void OnScreenAdaptationChanged()
@@ -296,7 +295,7 @@ namespace Game.Presentation
         private void OnSceneFocusClick()
         {
             _isFocused = true;
-            Utils.SmoothScroll.MoveToRowColumnWithTime(this, transform.Find("Scene").GetComponent<LoopGridView>(), MaxY - Data.Instance.Pos[1], Data.Instance.Pos[0] - MinX, transform.Find("Scene").GetComponent<RectTransform>().rect.width / 2, -transform.Find("Scene").GetComponent<RectTransform>().rect.height / 2, 0.145924f);
+            Utils.SmoothScroll.MoveToRowColumnWithTime(this, transform.Find("Scene").GetComponent<LoopGridView>(), MaxY - DataManager.Instance.Pos[1], DataManager.Instance.Pos[0] - MinX, transform.Find("Scene").GetComponent<RectTransform>().rect.width / 2, -transform.Find("Scene").GetComponent<RectTransform>().rect.height / 2, 0.145924f);
         }
 
         private void OnSceneBeginDrag(UnityEngine.EventSystems.PointerEventData eventData)
@@ -336,7 +335,7 @@ namespace Game.Presentation
 
             if (_isFocused)
             {
-                transform.Find("Scene").GetComponent<LoopGridView>().MovePanelToItemByRowColumn(MaxY - Data.Instance.Pos[1], Data.Instance.Pos[0] - MinX, transform.Find("Scene").GetComponent<RectTransform>().rect.width / 2, -transform.Find("Scene").GetComponent<RectTransform>().rect.height / 2);
+                transform.Find("Scene").GetComponent<LoopGridView>().MovePanelToItemByRowColumn(MaxY - DataManager.Instance.Pos[1], DataManager.Instance.Pos[0] - MinX, transform.Find("Scene").GetComponent<RectTransform>().rect.width / 2, -transform.Find("Scene").GetComponent<RectTransform>().rect.height / 2);
             }
         }
 
@@ -350,11 +349,11 @@ namespace Game.Presentation
             var sceneInfoText = transform.Find("Resource/Title/Text")?.GetComponent<Text>();
             if (sceneInfoText != null)
             {
-                string sceneName = Data.Instance.SceneName;
-                int[] pos = Data.Instance.Pos;
+                string sceneName = DataManager.Instance.SceneName;
+                int[] pos = DataManager.Instance.Pos;
                 
                 string mapName = "";
-                var maps = Data.Instance.Home?.scene?.maps;
+                var maps = DataManager.Instance.Home?.scene?.maps;
                 
                 if (maps != null && pos != null)
                 {
@@ -417,7 +416,7 @@ namespace Game.Presentation
         }
         private LoopListViewItem2 OnGetMessageByIndex(LoopListView2 listView, int index)
         {
-            List<InformationData> informationDataList = Data.Instance.Informations;
+            List<InformationData> informationDataList = DataManager.Instance.Informations;
             if (index < 0 || index >= informationDataList.Count) { return null; }
             LoopListViewItem2 item = listView.NewListViewItem("Item");
             item.transform.Find("Text").GetComponent<Text>().text = informationDataList[index].message;
@@ -433,11 +432,11 @@ namespace Game.Presentation
             bool isAtBottom = scrollRect.verticalNormalizedPosition <= 1E-6f;
             float originalPosition = scrollRect.verticalNormalizedPosition;
 
-            informationListView.SetListItemCount(Data.Instance.Informations.Count);
+            informationListView.SetListItemCount(DataManager.Instance.Informations.Count);
 
             if (isAtBottom)
             {
-                informationListView.MovePanelToItemIndex(Data.Instance.Informations.Count - 1, 0);
+                informationListView.MovePanelToItemIndex(DataManager.Instance.Informations.Count - 1, 0);
             }
             else
             {
@@ -453,7 +452,7 @@ namespace Game.Presentation
 
             if (IsWorldMapView)
             {
-                var scenes = Data.Instance.WorldMap.scenes;
+                var scenes = DataManager.Instance.WorldMap.scenes;
                 if (scenes != null && scenes.Count > 0)
                 {
                     int minX = scenes.Select(s => s.pos[0]).Min();
@@ -470,19 +469,19 @@ namespace Game.Presentation
                 }
             }
 
-            float cellSize2 = containerSize / Data.Instance.SceneScale;
+            float cellSize2 = containerSize / DataManager.Instance.SceneScale;
             return new Vector2(cellSize2, cellSize2);
         }
 
         public float GetMaxVisibleCells()
         {
-            return Data.Instance.GetMaxSceneScale();
+            return DataManager.Instance.GetMaxSceneScale();
         }
 
         private void UpdateSceneContainerSize()
         {
             RectTransform containerRect = transform.Find("Scene").GetComponent<RectTransform>();
-            Data.Instance.SceneContainerSize = Mathf.Min(containerRect.rect.width, containerRect.rect.height);
+            DataManager.Instance.SceneContainerSize = Mathf.Min(containerRect.rect.width, containerRect.rect.height);
         }
 
         private void OnAfterSceneScaleChanged(params object[] args)
@@ -492,7 +491,7 @@ namespace Game.Presentation
 
             if (newScale < maxScale)
             {
-                Data.Instance.SceneScaleBeforeWorldMap = newScale;
+                DataManager.Instance.SceneScaleBeforeWorldMap = newScale;
             }
 
             bool wasWorldMap = previousScale >= maxScale;
@@ -535,7 +534,7 @@ namespace Game.Presentation
             sceneGridView.SetListItemCount(mapCount);
             sceneGridView.SetGridFixedGroupCount(GridFixedType.ColumnCountFixed, columnCount);
 
-            int[] currentPos = Data.Instance.Pos;
+            int[] currentPos = DataManager.Instance.Pos;
             if (IsWorldMapView && currentPos != null && currentPos.Length >= 2)
             {
                 sceneGridView.MovePanelToItemByRowColumn(MaxY - currentPos[1], currentPos[0] - MinX, transform.Find("Scene").GetComponent<RectTransform>().rect.width / 2, -transform.Find("Scene").GetComponent<RectTransform>().rect.height / 2);
@@ -549,8 +548,8 @@ namespace Game.Presentation
         }
         private void OnChannelToggle(params object[] args)
         {
-            transform.Find("Information").GetComponent<LoopListView2>().SetListItemCount(Data.Instance.Informations.Count);
-            transform.Find("Information").GetComponent<LoopListView2>().MovePanelToItemIndex(Data.Instance.Informations.Count - 1, 0);
+            transform.Find("Information").GetComponent<LoopListView2>().SetListItemCount(DataManager.Instance.Informations.Count);
+            transform.Find("Information").GetComponent<LoopListView2>().MovePanelToItemIndex(DataManager.Instance.Informations.Count - 1, 0);
             transform.Find("Information").GetComponent<LoopListView2>().RefreshAllShownItem();
         }
 
@@ -615,7 +614,7 @@ namespace Game.Presentation
 
         private void ApplyUILock()
         {
-            var uiLock = Data.Instance.UILock;
+            var uiLock = DataManager.Instance.UILock;
             
             // If no UILock or empty list, show all panels (compatible with old players)
             if (uiLock == null || uiLock.unlockedPanels == null || uiLock.unlockedPanels.Count == 0)

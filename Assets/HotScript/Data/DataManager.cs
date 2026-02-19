@@ -81,7 +81,7 @@ namespace Game.Data
         public string type;
     }
 
-    public partial class Data : Singleton<Data>
+    public partial class DataManager : Singleton<DataManager>
     {
         public const float MinCellSize = 60f;
         public const float MinSceneScale = 5f;
@@ -221,10 +221,10 @@ namespace Game.Data
                 int oldValue = Get<int>(Type.SocketMissedHeartbeats);
                 if (oldValue != value)
                 {
-                    Utils.Debug.LogHeartbeat("Data", $"SocketMissedHeartbeats changed from {oldValue} to {value}");
+                    Utils.Debug.LogHeartbeat("DataManager", $"SocketMissedHeartbeats changed from {oldValue} to {value}");
                     if (value >= Config.Net.MaxMissedHeartbeats)
                     {
-                        Utils.Debug.LogWarning("Data", $"Missed heartbeats ({value}) reached threshold ({Config.Net.MaxMissedHeartbeats}), will trigger disconnection");
+                        Utils.Debug.LogWarning("DataManager", $"Missed heartbeats ({value}) reached threshold ({Config.Net.MaxMissedHeartbeats}), will trigger disconnection");
                     }
                 }
 #endif
@@ -279,7 +279,7 @@ namespace Game.Data
                 raw[e] = v;
                 if (e is Type type2 && type2 == Type.LoginResponse)
                 {
-                    Utils.Debug.Log("Data", $"LoginResponse changed to: {v}, firing after event");
+                    Utils.Debug.Log("DataManager", $"LoginResponse changed to: {v}, firing after event");
                 }
                 
                 after.Fire(e, v);

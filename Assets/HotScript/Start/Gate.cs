@@ -1,7 +1,6 @@
 using Framework;
 using Game.Basic;
 using Game.Data;
-using Data = Game.Data.Data;
 using Game.Net;
 using Game.Presentation;
 using Newtonsoft.Json;
@@ -23,16 +22,16 @@ namespace Game.Start
     {
         public static void Entrance(string gateway)
         {
-            Data.Instance.Gateway = gateway;
+            DataManager.Instance.Gateway = gateway;
             
             string languageStr = UnityEngine.PlayerPrefs.GetString("LANGUAGE", "ChineseSimplified");
             
-            if (Enum.TryParse(languageStr, out Data.Languages language))
+            if (Enum.TryParse(languageStr, out DataManager.Languages language))
             {
-                Data.Instance.Language = language;
+                DataManager.Instance.Language = language;
             }
             
-            Data.Instance.Init();
+            DataManager.Instance.Init();
             UI.Instance.Init(9f, 16f);
             Audio.Instance.Init();
             NetManager.Instance.Init();
@@ -74,9 +73,9 @@ namespace Game.Start
 
         private static void OnRequestGateway()
         {
-            string gatewayUrl = $"http://{Data.Instance.Gateway}:8880";
+            string gatewayUrl = $"http://{DataManager.Instance.Gateway}:8880";
 
-            Http.Instance.AcceptLanguage = Data.Instance.Language.ToString();
+            Http.Instance.AcceptLanguage = DataManager.Instance.Language.ToString();
             string url = $"{gatewayUrl}/api/authentication/ips";
             
             UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("loading"));
@@ -103,7 +102,7 @@ namespace Game.Start
                     return;
                 }
                 
-                Data.Instance.Servers.Clear();
+                DataManager.Instance.Servers.Clear();
                 foreach (var serverInfo in gatewayResponse.Servers)
                 {
                     var server = new Server
@@ -114,9 +113,9 @@ namespace Game.Start
                         Port = 19881 // TODO: Restore to serverInfo.Port after testing
                     };
                     
-                    List<Server> updatedServers = new List<Server>(Data.Instance.Servers);
+                    List<Server> updatedServers = new List<Server>(DataManager.Instance.Servers);
                     updatedServers.Add(server);
-                    Data.Instance.Servers = updatedServers;
+                    DataManager.Instance.Servers = updatedServers;
                 }
 
                 // Always show Start UI, let user click to proceed
