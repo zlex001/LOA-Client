@@ -138,6 +138,8 @@ namespace Game.Data
             StartSettingsTexts,
             AccountTexts,
             ErrorTexts,
+
+            Texts,
         }
         #endregion
 
@@ -265,6 +267,8 @@ namespace Game.Data
         public Dictionary<string, string> StartSettingsTexts { get => Get<Dictionary<string, string>>(Type.StartSettingsTexts); set => Change(Type.StartSettingsTexts, value); }
         public Dictionary<string, string> AccountTexts { get => Get<Dictionary<string, string>>(Type.AccountTexts); set => Change(Type.AccountTexts, value); }
         public Dictionary<string, string> ErrorTexts { get => Get<Dictionary<string, string>>(Type.ErrorTexts); set => Change(Type.ErrorTexts, value); }
+
+        public Dictionary<string, string> Texts { get => Get<Dictionary<string, string>>(Type.Texts); set => Change(Type.Texts, value); }
         #endregion
 
         #region Public Methods
@@ -287,6 +291,12 @@ namespace Game.Data
         }
 
         public T Get<T>(Enum @enum) => raw.ContainsKey(@enum) && raw[@enum] is T t ? t : default;
+
+        public string GetText(string key)
+        {
+            var texts = Texts;
+            return texts != null && texts.ContainsKey(key) ? texts[key] : null;
+        }
         #endregion
 
         #region Unity Lifecycle

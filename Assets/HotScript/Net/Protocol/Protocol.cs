@@ -702,4 +702,29 @@ namespace Game.Net.Protocol
         public string language;
     }
 
+    public class Texts : Base
+    {
+        public Dictionary<string, string> data;
+
+        public override void Processed()
+        {
+            var existing = DataManager.Instance.Texts ?? new Dictionary<string, string>();
+            foreach (var kv in data)
+                existing[kv.Key] = kv.Value;
+            DataManager.Instance.Texts = existing;
+        }
+    }
+
+    public class RequestTexts : Base
+    {
+        public string language;
+        public List<string> keys;
+
+        public RequestTexts(string language, List<string> keys)
+        {
+            this.language = language;
+            this.keys = keys;
+        }
+    }
+
 }

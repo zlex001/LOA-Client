@@ -1,1 +1,1 @@
-[优化] 从SVN移除Unity生成目录(Library/Logs/Temp/UserSettings)，依赖svn:ignore阻止再次加入
+[功能] 新增多语言文本统一数据源系统（Texts/RequestTexts协议 + DataManager.Texts）
