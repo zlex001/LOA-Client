@@ -2,7 +2,7 @@ using Framework;
 using Game.Basic;
 using Game.Data;
 using Game.Net;
-using Config = Game.Logic.Config;
+using Config = Game.Data.Config;
 using Protocol = Game.Net.Protocol;
 using Newtonsoft.Json;
 using System.Collections.Generic;

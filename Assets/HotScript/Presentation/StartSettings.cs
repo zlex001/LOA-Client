@@ -11,7 +11,7 @@ using DG.Tweening;
 
 namespace Game.Presentation
 {
-    using Config = Game.Logic.Config;
+    using Config = Game.Data.Config;
 
     /// <summary>
     /// iOS/WeChat style grouped list settings panel

@@ -2,7 +2,7 @@ using Framework;
 using Game.Basic;
 using Game.Data;
 using Game.Utils;
-using Config = Game.Logic.Config;
+using Config = Game.Data.Config;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Purchasing;

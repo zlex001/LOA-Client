@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Game.Start
 {
-    using Config = Game.Logic.Config;
+    using Config = Game.Data.Config;
     using Protocol = Game.Net.Protocol;
 
     public enum StartStep

@@ -1,1 +1,1 @@
-[重构] 层级重命名：Logic→Data(数据层)、Domain→Logic(逻辑层)
+[修复] 修复层级重命名遗漏：17处 using Config = Game.Logic.Config 类型别名未更新为 Game.Data.Config

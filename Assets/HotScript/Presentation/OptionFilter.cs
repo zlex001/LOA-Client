@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Game.Presentation
 {
-    using Config = Game.Logic.Config;
+    using Config = Game.Data.Config;
     using Protocol = Game.Net.Protocol;
 
     public class OptionFilter : OptionItem

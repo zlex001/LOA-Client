@@ -6,7 +6,7 @@ using System;
 using Framework;
 using Game.Data;
 using Game.Net.Protocol;
-using Config = Game.Logic.Config;
+using Config = Game.Data.Config;
 using Newtonsoft.Json;
 using UnityTimer;
 using System.Collections;

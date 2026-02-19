@@ -12,7 +12,7 @@ using System;
 
 namespace Game.Presentation
 {
-    using Config = Game.Logic.Config;
+    using Config = Game.Data.Config;
     using Protocol = Game.Net.Protocol;
 
     public class Start : UI.Core

@@ -5,7 +5,7 @@ using UnityTimer;
 using Framework;
 using Game.Basic;
 using Game.Data;
-using Config = Game.Logic.Config;
+using Config = Game.Data.Config;
 using System.Linq;
 using Newtonsoft.Json;
 using DG.Tweening;
