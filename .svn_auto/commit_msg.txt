@@ -1,1 +1,1 @@
-[修复] Data类重命名为DataManager，解决命名空间与类名冲突导致的编译错误
+[重构] 移除 Net/Protocol 子目录，将 Protocol.cs 移至 Net 根目录，遵循 3 文件阈值规则
