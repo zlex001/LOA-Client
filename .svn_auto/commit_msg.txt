@@ -1,1 +1,1 @@
-[功能] 新增多语言文本统一数据源系统（Texts/RequestTexts协议 + DataManager.Texts）
+[删除] 移除 Net/Protocol.cs 历史残留副本，消除与 Net/Protocol/Protocol.cs 的重复定义冲突
