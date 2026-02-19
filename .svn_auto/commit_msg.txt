@@ -1,1 +1,1 @@
-[优化] SVN自动提交脚本：排除Unity生成目录后再add，避免扫描Library等大目录
+[优化] 从SVN移除Unity生成目录(Library/Logs/Temp/UserSettings)，依赖svn:ignore阻止再次加入
