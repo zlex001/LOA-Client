@@ -1,5 +1,6 @@
 using System;
 using Game.Data;
+using Data = Game.Data.Data;
 using Game.Net.Protocol;
 
 namespace Game.Logic

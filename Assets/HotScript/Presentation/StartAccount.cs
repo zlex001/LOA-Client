@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Framework;
 using Game.Data;
+using Data = Game.Data.Data;
 using Config = Game.Data.Config;
 
 namespace Game.Presentation

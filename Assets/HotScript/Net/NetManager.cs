@@ -5,6 +5,7 @@ using System.Text;
 using System;
 using Framework;
 using Game.Data;
+using Data = Game.Data.Data;
 using Game.Net.Protocol;
 using Config = Game.Data.Config;
 using Newtonsoft.Json;

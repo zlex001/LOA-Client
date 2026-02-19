@@ -1,6 +1,7 @@
 using Framework;
 using Game.Basic;
 using Game.Data;
+using Data = Game.Data.Data;
 using Game.Net;
 using Game.Presentation;
 using Newtonsoft.Json;

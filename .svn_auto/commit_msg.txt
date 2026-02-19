@@ -1,1 +1,1 @@
-[修复] 修复层级重命名遗漏：17处 using Config = Game.Logic.Config 类型别名未更新为 Game.Data.Config
+[修复] 添加 using Data = Game.Data.Data 类型别名，解决命名空间与类名冲突

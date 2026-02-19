@@ -1,5 +1,6 @@
 using LitJson;
 using Game.Data;
+using Data = Game.Data.Data;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;

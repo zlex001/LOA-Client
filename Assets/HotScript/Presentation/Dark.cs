@@ -1,5 +1,6 @@
 using Framework;
 using Game.Data;
+using Data = Game.Data.Data;
 using Config = Game.Data.Config;
 using UnityEngine;
 using UnityEngine.UI;

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using SuperScrollView;
 using Game.Basic;
 using Game.Data;
+using Data = Game.Data.Data;
 using Game.Net;
 using System.Linq;
 using UnityEditor;

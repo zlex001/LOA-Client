@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.Basic;
 using Game.Data;
+using Data = Game.Data.Data;
 using UnityEngine;
 
 namespace Game.Net.Protocol

@@ -5,6 +5,7 @@ using UnityTimer;
 using Framework;
 using Game.Basic;
 using Game.Data;
+using Data = Game.Data.Data;
 using Config = Game.Data.Config;
 using System.Linq;
 using Newtonsoft.Json;
