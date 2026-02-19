@@ -53,6 +53,7 @@ namespace Game.Net.Protocol
             platform = Application.platform.ToString();
             device = PlayerPrefs.GetString("DEVICE");
             language = DataManager.Instance.Language.ToString();
+            Utils.Debug.Log("Lang", $"Login protocol: sending language=\"{language}\"");
         }
         public string id;
         public string password;

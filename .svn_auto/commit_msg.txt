@@ -1,1 +1,1 @@
-[修复] DataManager 语言初始化优先读取 PlayerPrefs，解决启动阶段与游戏内语种不一致的问题
+[修复] 添加语言初始化全链路日志（Main→DataManager→Login），排查语种不一致问题

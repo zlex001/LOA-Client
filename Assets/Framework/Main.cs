@@ -44,6 +44,7 @@ namespace Framework
         void Start()
         {
             string language = LanguageDetector.DetermineLanguage();
+            Debug.Log($"[Lang] Main.Start: DetermineLanguage returned \"{language}\", PlayerPrefs LANGUAGE=\"{PlayerPrefs.GetString("LANGUAGE", "(none)")}\"");
             InitLanguage(language);
             _footer.text = _lang.Get("footer", config.appVersion, Device.Split('-').Last());
             
@@ -55,13 +56,16 @@ namespace Framework
 
         void InitLanguage(string language)
         {
-            if (!PlayerPrefs.HasKey("LANGUAGE"))
+            bool hadKey = PlayerPrefs.HasKey("LANGUAGE");
+            if (!hadKey)
             {
                 PlayerPrefs.SetString("LANGUAGE", language);
                 PlayerPrefs.Save();
             }
+            Debug.Log($"[Lang] Main.InitLanguage: input=\"{language}\", PlayerPrefs existed={hadKey}, final PlayerPrefs=\"{PlayerPrefs.GetString("LANGUAGE")}\"");
             _lang = Localization.Instance;
             _lang.Init(language);
+            Debug.Log($"[Lang] Localization.Init: loaded language=\"{_lang.CurrentLanguage}\"");
         }
 
         void SetDescription(string text) => _description.text = text;

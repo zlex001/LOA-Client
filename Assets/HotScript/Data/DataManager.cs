@@ -312,8 +312,11 @@ namespace Game.Data
             }
             
             raw[Type.SceneScale] = loadedScale;
-            string langSource = PlayerPrefs.GetString("LANGUAGE", User.Language ?? "");
+            string prefsLang = PlayerPrefs.GetString("LANGUAGE", "");
+            string userLang = User.Language ?? "";
+            string langSource = !string.IsNullOrEmpty(prefsLang) ? prefsLang : userLang;
             Languages parsedLang = Enum.TryParse(langSource, out Languages lang) ? lang : Languages.ChineseSimplified;
+            Utils.Debug.Log("Lang", $"DataManager.Awake: PlayerPrefs LANGUAGE=\"{prefsLang}\", User.Language=\"{userLang}\", langSource=\"{langSource}\", parsedLang={parsedLang}");
             raw[Type.Language] = parsedLang;
             raw[Type.FontSize] = User.FontSize > 0 ? User.FontSize : 30;
             
