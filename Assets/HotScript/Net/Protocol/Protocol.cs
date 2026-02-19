@@ -715,16 +715,4 @@ namespace Game.Net.Protocol
         }
     }
 
-    public class RequestTexts : Base
-    {
-        public string language;
-        public List<string> keys;
-
-        public RequestTexts(string language, List<string> keys)
-        {
-            this.language = language;
-            this.keys = keys;
-        }
-    }
-
 }

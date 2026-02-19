@@ -1,1 +1,1 @@
-[删除] 移除 Net/Protocol.cs 历史残留副本，消除与 Net/Protocol/Protocol.cs 的重复定义冲突
+[修复] 根据服务端反馈移除 RequestTexts 协议，更新多语言文本系统文档（明确 key 归属、迁移策略、推送范围）
