@@ -27,19 +27,15 @@ echo "Project directory: $PROJECT_DIR"
 echo "Commit message: $COMMIT_MSG"
 echo ""
 
-# Add all new files (excluding Unity generated folders)
+# Add untracked files, skipping Unity generated folders
 echo "Adding new files..."
-svn add --force . --auto-props --parents --depth infinity -q 2>/dev/null
-
-# Revert Unity generated folders that should not be committed
-svn revert --depth infinity Library/ 2>/dev/null
-svn revert --depth infinity Logs/ 2>/dev/null
-svn revert --depth infinity Temp/ 2>/dev/null
-svn revert --depth infinity UserSettings/ 2>/dev/null
-svn revert --depth infinity obj/ 2>/dev/null
+EXCLUDE_PATTERN='^\?\s+(Library|Logs|Temp|UserSettings|obj)(/|$)'
+svn status | grep '^\?' | grep -v -E "$EXCLUDE_PATTERN" | awk '{print $2}' | while IFS= read -r f; do
+    svn add --parents -q "$f" 2>/dev/null
+done
 
 # Check for changes
-svn status
+svn status --ignore-externals | grep -v -E '^\?\s+(Library|Logs|Temp|UserSettings|obj)(/|$)'
 
 # Commit
 echo ""
