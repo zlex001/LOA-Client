@@ -45,10 +45,7 @@ alwaysApply: true
 
 4) 正文使用中文撰写
 
-5) 客户端核心概念：
-- Manager（管理器）：继承 Singleton<T> 的核心单例类，如 Data.Instance、Net.Instance、UI.Instance
-- System（系统）：功能模块的统称，如热更新系统、本地化系统
-- Module（模块）：系统或管理器内的具体功能类或子模块
+5) Manager、System、Module 的概念与约定，以规则《system-and-module-definition》为准
 
 6) 标题数字编号规范：
 - 二级标题（##）：使用中文数字 + 顿号，如：`## 一、架构总览`、`## 二、数据层`
