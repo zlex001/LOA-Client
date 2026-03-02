@@ -1,1 +1,1 @@
-[重构] 启动与登陆系统解耦，将业务逻辑从Net/Presentation层迁移到Logic层Authentication模块
+[文档] 同步启动与登陆系统文档，匹配Logic.Authentication重构后的架构
