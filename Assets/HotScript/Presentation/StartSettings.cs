@@ -1,6 +1,6 @@
 using Framework;
 using Game.Data;
-using Game.Net;
+using Game.Logic;
 using Game.Utils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,6 +55,13 @@ namespace Game.Presentation
             {
                 return texts[key];
             }
+            if (_loggedMissingKeys.Add(key))
+            {
+                if (texts == null)
+                    Utils.Debug.LogWarning("StartSettings", $"StartSettingsTexts is null, missing key: {key}");
+                else
+                    Utils.Debug.LogWarning("StartSettings", $"StartSettingsTexts missing key: {key}");
+            }
             return key;
         }
         
@@ -96,6 +103,7 @@ namespace Game.Presentation
         private Image _maskImage;
         private GameObject _scrollContent;
         private List<GameObject> _accountItemObjects = new List<GameObject>();
+        private HashSet<string> _loggedMissingKeys = new HashSet<string>();
         #endregion
 
         #region Sprite Cache
@@ -107,8 +115,6 @@ namespace Game.Presentation
         #region Lifecycle
         public override void OnCreate(params object[] args)
         {
-            Utils.Debug.Log("StartSettings", "OnCreate - Simplified version with dynamic UI");
-            
             // Load sprites
             _rectangleSolid = AssetManager.Instance.LoadSprite("Textures", "RectangleSolid");
             _bottomBorderGradient = AssetManager.Instance.LoadSprite("Textures", "BottomBorder");
@@ -174,14 +180,18 @@ namespace Game.Presentation
 
         public override void OnEnter(params object[] args)
         {
-            Utils.Debug.Log("StartSettings", "OnEnter - starting slide-up animation");
-            
             // Receive and store UI texts from server
             if (args.Length > 0 && args[0] is Dictionary<string, string> texts)
             {
                 DataManager.Instance.StartSettingsTexts = texts;
+                _loggedMissingKeys.Clear();
+                Utils.Debug.Log("StartSettings", $"StartSettingsTexts set from args, keyCount={texts.Count}");
             }
-            
+            else
+            {
+                Utils.Debug.LogWarning("StartSettings", "StartSettingsTexts not set (args empty or invalid). UI will show key names as fallback.");
+            }
+
             // Register language change observer
             DataManager.Instance.after.Register(DataManager.Type.Language, OnLanguageChanged);
             
@@ -197,14 +207,10 @@ namespace Game.Presentation
             var sequence = DOTween.Sequence();
             sequence.Append(_maskImage.DOColor(ColorMaskBackground, 0.25f));
             sequence.Join(_panelRect.DOAnchorPosY(0, AnimationDuration).SetEase(Ease.OutCubic));
-            
-            Utils.Debug.Log("StartSettings", "Animation sequence started");
         }
 
         public override void OnExit()
         {
-            Utils.Debug.Log("StartSettings", "OnExit - closing panel");
-            
             // Unregister language change observer
             DataManager.Instance.after.Unregister(DataManager.Type.Language, OnLanguageChanged);
             
@@ -214,8 +220,6 @@ namespace Game.Presentation
         
         private void OnLanguageChanged(params object[] args)
         {
-            Utils.Debug.Log("StartSettings", $"Language changed, rebuilding UI");
-            
             // FIX: Reload localization for new language
             Localization.Instance.Init(DataManager.Instance.Language.ToString());
             
@@ -236,8 +240,6 @@ namespace Game.Presentation
             _panelRect.pivot = new Vector2(0.5f, 0);
             _panelRect.sizeDelta = new Vector2(0, panelHeight); // x=0 means stretch to parent width
             _panelRect.anchoredPosition = new Vector2(0, 0);
-            
-            Utils.Debug.Log("StartSettings", $"Panel layout applied: width=full screen, height={panelHeight}");
         }
 
         private void SetupButtons()
@@ -264,7 +266,6 @@ namespace Game.Presentation
             _accounts = DataManager.Instance.User.Accounts.ToList();
             _selectedIndex = DataManager.Instance.User.SelectedAccountIndex;
             
-            Utils.Debug.Log("StartSettings", $"Loaded {_accounts.Count} accounts, selected: {_selectedIndex}");
         }
         #endregion
 
@@ -283,8 +284,6 @@ namespace Game.Presentation
             // Build sections
             BuildAccountSection();
             BuildSettingsSection();
-            
-            Utils.Debug.Log("StartSettings", "UI built successfully (dynamic version)");
         }
 
         private void BuildAccountSection()
@@ -303,8 +302,6 @@ namespace Game.Presentation
             
             // Add account button
             CreateAddAccountButton();
-            
-            Utils.Debug.Log("StartSettings", $"Account section built with {_accounts.Count} items");
         }
 
         private void BuildSettingsSection()
@@ -321,7 +318,6 @@ namespace Game.Presentation
             // Sound item
             CreateSoundItem();
             
-            Utils.Debug.Log("StartSettings", "Settings section built");
         }
 
         private void CreateSectionHeader(string title)
@@ -772,25 +768,16 @@ namespace Game.Presentation
         #region Account Callbacks
         private void OnAccountSwitch(Account account)
         {
-            Utils.Debug.Log("StartSettings", $"Switching to account: {account.Id}");
-            
             int newIndex = _accounts.FindIndex(a => a.Id == account.Id);
             if (newIndex < 0) return;
-            
+
             _selectedIndex = newIndex;
-            DataManager.Instance.User.SelectedAccountIndex = _selectedIndex;
-            Local.Instance.Save(DataManager.Instance.User);
-            
-            // Close panel and reconnect
             Close();
-            NetManager.Instance.Disconnect();
-            NetManager.Instance.Connect(DataManager.Instance.SelectedServer.Ip, DataManager.Instance.SelectedServer.Port);
+            Authentication.SwitchAccount(account, newIndex);
         }
 
         private void OnAccountEdit(Account account)
         {
-            Utils.Debug.Log("StartSettings", $"Editing account: {account.Id}");
-            
             ShowEditAccountDialog(account.Id ?? "", account.Password ?? "", account.Note ?? "", (newId, newPassword, newNote) =>
             {
                 if (string.IsNullOrEmpty(newId) || string.IsNullOrEmpty(newPassword))
@@ -809,8 +796,6 @@ namespace Game.Presentation
 
         private void OnAccountDelete(Account account)
         {
-            Utils.Debug.Log("StartSettings", $"Deleting account: {account.Id}");
-            
             if (_accounts.Count <= 1)
             {
                 Utils.Debug.LogWarning("StartSettings", "Cannot delete last account");
@@ -848,8 +833,6 @@ namespace Game.Presentation
 
         private void OnAddAccountClick()
         {
-            Utils.Debug.Log("StartSettings", "Add account clicked");
-            
             ShowAddAccountDialog((accountId, password, note) =>
             {
                 if (string.IsNullOrEmpty(accountId) || string.IsNullOrEmpty(password))
@@ -868,8 +851,6 @@ namespace Game.Presentation
                 _accounts.Add(newAccount);
                 DataManager.Instance.User.Accounts.Add(newAccount);
                 Local.Instance.Save(DataManager.Instance.User);
-                
-                Utils.Debug.Log("StartSettings", $"Added new account: {newAccount.Id}");
                 BuildUI();
             });
         }
@@ -883,8 +864,6 @@ namespace Game.Presentation
         
         private void OnLanguageItemClick()
         {
-            Utils.Debug.Log("StartSettings", "Language item clicked");
-            
             // Cycle through languages
             var allLanguages = Enum.GetValues(typeof(DataManager.Languages)).Cast<DataManager.Languages>().ToList();
             int currentIndex = allLanguages.IndexOf(DataManager.Instance.Language);
@@ -901,8 +880,6 @@ namespace Game.Presentation
 
         private void OnSoundToggle(bool enabled)
         {
-            Utils.Debug.Log("StartSettings", $"Sound toggled: {enabled}");
-            
             DataManager.Instance.User.UISoundEnabled = enabled;
             Local.Instance.Save(DataManager.Instance.User);
         }
@@ -920,7 +897,6 @@ namespace Game.Presentation
                 DataManager.Instance.FontSize = fontSizes[currentIndex];
                 Local.Instance.Save(DataManager.Instance.User);
                 BuildUI();
-                Utils.Debug.Log("StartSettings", $"Font size decreased to {fontSizes[currentIndex]}");
             }
         }
         
@@ -937,7 +913,6 @@ namespace Game.Presentation
                 DataManager.Instance.FontSize = fontSizes[currentIndex];
                 Local.Instance.Save(DataManager.Instance.User);
                 BuildUI();
-                Utils.Debug.Log("StartSettings", $"Font size increased to {fontSizes[currentIndex]}");
             }
         }
         #endregion
@@ -945,8 +920,6 @@ namespace Game.Presentation
         #region Dialog Helpers
         private void ShowAddAccountDialog(Action<string, string, string> onConfirm)
         {
-            Utils.Debug.Log("StartSettings", "Showing add account dialog");
-            
             // Create dialog overlay
             var dialogObj = new GameObject("AddAccountDialog");
             dialogObj.transform.SetParent(transform, false);
@@ -1029,8 +1002,6 @@ namespace Game.Presentation
 
         private void ShowEditAccountDialog(string defaultId, string defaultPassword, string defaultNote, Action<string, string, string> onConfirm)
         {
-            Utils.Debug.Log("StartSettings", "Showing edit account dialog");
-            
             // Create dialog overlay
             var dialogObj = new GameObject("EditAccountDialog");
             dialogObj.transform.SetParent(transform, false);
@@ -1175,8 +1146,6 @@ namespace Game.Presentation
 
         private void ShowConfirmDialog(string message, Action onConfirm)
         {
-            Utils.Debug.Log("StartSettings", $"Showing confirm dialog: {message}");
-            
             // Create dialog overlay
             var dialogObj = new GameObject("ConfirmDialog");
             dialogObj.transform.SetParent(transform, false);
@@ -1243,8 +1212,6 @@ namespace Game.Presentation
 
         private void ShowInputDialog(string title, string defaultValue, Action<string> onConfirm)
         {
-            Utils.Debug.Log("StartSettings", $"Showing input dialog: {title}");
-            
             // Create dialog overlay
             var dialogObj = new GameObject("InputDialog");
             dialogObj.transform.SetParent(transform, false);
@@ -1407,13 +1374,11 @@ namespace Game.Presentation
         #region Close
         private void OnCloseClick()
         {
-            Utils.Debug.Log("StartSettings", "Close button clicked");
             Close();
         }
 
         private void OnMaskClick()
         {
-            Utils.Debug.Log("StartSettings", "Mask clicked");
             Close();
         }
 

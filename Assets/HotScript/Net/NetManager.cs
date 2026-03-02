@@ -79,7 +79,6 @@ namespace Game.Net
 
         void Awake()
         {
-            DataManager.Instance.after.Register(DataManager.Type.LoginAccount, OnAfterLoginAccountChanged);
             DataManager.Instance.after.Register(DataManager.Type.Online, OnAfterOnlineChanged);
             DataManager.Instance.after.Register(DataManager.Type.Option, OnAfterOptionChanged);
             DataManager.Instance.befor.Register(DataManager.Type.OptionReturn, OnBeforOptionReturnChanged);
@@ -532,58 +531,12 @@ namespace Game.Net
 
         #region Event Handlers
 
-        private void OnAfterLoginAccountChanged(params object[] args)
-        {
-            Utils.Debug.Log("Net", $"LoginAccount changed. Online: {DataManager.Instance.Online}");
-            
-            if (DataManager.Instance.LoginAccount == null)
-            {
-                Utils.Debug.LogWarning("Net", "LoginAccount is null, skipping login");
-                return;
-            }
-            
-            if (DataManager.Instance.Online)
-            {
-                // Send Login protocol (works for both guest and regular accounts)
-                Utils.Debug.Log("Net", "Sending Login protocol");
-                Send(new Login(DataManager.Instance.LoginAccount));
-            }
-            else
-            {
-                Utils.Debug.Log("Net", $"Not online, initiating TCP connection to {DataManager.Instance.SelectedServer.Ip}:{DataManager.Instance.SelectedServer.Port}");
-                Connect(DataManager.Instance.SelectedServer.Ip, DataManager.Instance.SelectedServer.Port);
-            }
-        }
-
         private void OnAfterOnlineChanged(params object[] args)
         {
             bool isOnline = (bool)args[0];
             if (isOnline)
             {
-                // During reconnect, don't auto-login; let user re-login from Start UI
-                bool wasReconnecting = isReconnecting;
                 ResetReconnectState();
-                
-                if (!wasReconnecting && DataManager.Instance.LoginAccount != null)
-                {
-                    // Check if this is a QuickStart login
-                    if (DataManager.Instance.LoginAccount.Id == "__QuickStart__")
-                    {
-                        Utils.Debug.Log("Net", "Connected, sending QuickStartRequest");
-                        Send(new QuickStartRequest
-                        {
-                            device = DataManager.Instance.Device,
-                            version = DataManager.Instance.AppVersion,
-                            platform = Application.platform.ToString(),
-                            language = DataManager.Instance.Language.ToString()
-                        });
-                    }
-                    else
-                    {
-                        Utils.Debug.Log("Net", "Connected, sending Login protocol");
-                        Send(new Login(DataManager.Instance.SelectedAccount));
-                    }
-                }
             }
             else
             {

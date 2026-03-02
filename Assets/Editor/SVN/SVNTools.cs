@@ -31,7 +31,7 @@ public class SVNTools
     }
 
     /// <summary>
-    /// 获取当前项目路径当做SVN本地路径
+    /// 锟斤拷取锟斤拷前锟斤拷目路锟斤拷锟斤拷锟斤拷SVN锟斤拷锟斤拷路锟斤拷
     /// </summary>
     static string SVNProjectPath
     {
@@ -44,10 +44,10 @@ public class SVNTools
     }
 
     /// <summary>
-    /// 通过Unity进程类调用SVN
+    /// 通锟斤拷Unity锟斤拷锟斤拷锟斤拷锟斤拷锟絊VN
     /// </summary>
-    /// <param name="command">需要执行的名称</param>
-    /// <param name="argument">参数</param>
+    /// <param name="command">锟斤拷要执锟叫碉拷锟斤拷锟斤拷</param>
+    /// <param name="argument">锟斤拷锟斤拷</param>
     public static void ProcessCommand(string command, string argument)
     {
 

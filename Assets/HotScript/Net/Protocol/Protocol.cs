@@ -81,44 +81,20 @@ namespace Game.Net.Protocol
         public override void Processed()
         {
             Utils.Debug.Log("Protocol", $"LoginResponse.Processed() called: code={code}, message={message}");
-            
-            // For QuickStart: Save guest account to local if provided
+
             if (!string.IsNullOrEmpty(accountId) && !string.IsNullOrEmpty(password))
             {
-                var account = new Account
+                DataManager.Instance.LoginResponseAccountData = new LoginResponseAccountData
                 {
-                    Id = accountId,
+                    AccountId = accountId,
                     Password = password,
-                    Note = isGuest ? "Guest Account" : "Bound Account"
+                    IsGuest = isGuest,
+                    IsNewAccount = isNewAccount
                 };
-                
-                // Check if account already exists
-                bool accountExists = false;
-                foreach (var existingAccount in DataManager.Instance.User.Accounts)
-                {
-                    if (existingAccount.Id == accountId)
-                    {
-                        accountExists = true;
-                        break;
-                    }
-                }
-                
-                if (!accountExists)
-                {
-                    DataManager.Instance.User.Accounts.Add(account);
-                    DataManager.Instance.User.SelectedAccountIndex = DataManager.Instance.User.Accounts.Count - 1;
-                    Local.Instance.Save(DataManager.Instance.User);
-                    Utils.Debug.Log("Protocol", $"Saved guest account: {accountId}, isNewAccount: {isNewAccount}");
-                }
-                else
-                {
-                    Utils.Debug.Log("Protocol", $"Guest account already exists: {accountId}");
-                }
             }
-            
+
             DataManager.Instance.LoginResponseMessage = message;
             DataManager.Instance.LoginResponse = code;
-            Utils.Debug.Log("Protocol", $"LoginResponse data set complete");
         }
     }
     public class Initialize : Base
@@ -713,6 +689,21 @@ namespace Game.Net.Protocol
             foreach (var kv in data)
                 existing[kv.Key] = kv.Value;
             DataManager.Instance.Texts = existing;
+            Utils.Debug.Log("Protocol", $"Texts protocol processed, keyCount={existing.Count}");
+        }
+    }
+
+    public class StartSettingsTexts : Base
+    {
+        public Dictionary<string, string> data;
+
+        public override void Processed()
+        {
+            if (data != null)
+            {
+                DataManager.Instance.StartSettingsTexts = data;
+                Utils.Debug.Log("Protocol", $"StartSettingsTexts protocol processed, keyCount={data.Count}");
+            }
         }
     }
 

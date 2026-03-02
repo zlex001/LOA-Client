@@ -1,7 +1,7 @@
 using DG.Tweening;
 using Framework;
 using Game.Data;
-using Game.Net;
+using Game.Logic;
 using UnityEngine.UI;
 using SuperScrollView;
 using UnityEngine;
@@ -13,7 +13,6 @@ using System;
 namespace Game.Presentation
 {
     using Config = Game.Data.Config;
-    using Protocol = Game.Net.Protocol;
 
     public class Start : UI.Core
     {
@@ -98,14 +97,12 @@ namespace Game.Presentation
             
             // Setup UI Listeners
             DataManager.Instance.after.Register(DataManager.Type.LoginResponse, OnAfterLoginResponseChanged);
-            Utils.Debug.Log("Start", "LoginResponse event listener registered");
 
             StartCoroutine(Animate());
         }
 
         public override void OnClose()
         {
-            Utils.Debug.Log("Start", "OnClose called, unregistering LoginResponse event listener");
             DataManager.Instance.after.Unregister(DataManager.Type.LoginResponse, OnAfterLoginResponseChanged);
         }
 
@@ -180,8 +177,6 @@ namespace Game.Presentation
             _titleText.alignment = TextAnchor.MiddleCenter;
             _titleText.color = new Color(1f, 1f, 1f, 0f); // Start with alpha=0 for animation
             _titleText.raycastTarget = false;
-            
-            Utils.Debug.Log("Start", $"Created Title UI at golden ratio position: {titleCenterY}px ({GoldenRatio * 100}%)");
         }
         
         private void CreateFooterUI()
@@ -214,8 +209,6 @@ namespace Game.Presentation
             
             // Add FontScaler
             footerObj.AddComponent<Framework.FontScaler>();
-            
-            Utils.Debug.Log("Start", $"Created Footer UI: width={footerWidth}px, height={footerHeight}px");
         }
         
         private void CreateTipUI()
@@ -280,45 +273,26 @@ namespace Game.Presentation
             
             // Hide initially (will show after title animation)
             _tipContainer.SetActive(false);
-            
-            Utils.Debug.Log("Start", $"Created Tip UI at middle position: {middleY}px");
         }
         #endregion
 
         #region Animation
         private void OnBlockClick()
         {
-            Utils.Debug.Log("Start", "Screen clicked, initiating login process");
-            
-            // Show connecting UI
             UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
-            
-            // Check if local accounts exist
+
             if (DataManager.Instance.User.Accounts.Count > 0)
             {
-                // Has accounts: use local account to login
-                Utils.Debug.Log("Start", $"Using local account: {DataManager.Instance.SelectedAccount.Id}");
-                DataManager.Instance.LoginAccount = DataManager.Instance.SelectedAccount;
+                Authentication.Login(DataManager.Instance.SelectedAccount);
             }
             else
             {
-                // No accounts: send QuickStart request
-                Utils.Debug.Log("Start", "No local accounts, sending QuickStartRequest");
-                NetManager.Instance.Send(new Protocol.QuickStartRequest
-                {
-                    device = DataManager.Instance.Device,
-                    version = DataManager.Instance.AppVersion,
-                    platform = Application.platform.ToString(),
-                    language = DataManager.Instance.Language.ToString()
-                });
+                Authentication.QuickStart();
             }
         }
 
         private System.Collections.IEnumerator Animate()
         {
-            Utils.Debug.Log("Start", $"=== Title Animation Started: {TITLE_ANIMATION} ===");
-            Utils.Debug.Log("Start", $"Animation Time: {ANIMATION_TIME} seconds");
-            
             if (_titleText == null)
             {
                 Utils.Debug.LogError("Start", "Title text is null, cannot animate");
@@ -335,13 +309,11 @@ namespace Game.Presentation
             switch (TITLE_ANIMATION)
             {
                 case AnimationType.SimpleFade:
-                    Utils.Debug.Log("Start", "Animation: Simple Fade");
                     _titleText.color = new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 0f);
                     _titleText.DOFade(1, ANIMATION_TIME).SetEase(Ease.InOutQuad);
                     break;
                     
                 case AnimationType.GoldGlow:
-                    Utils.Debug.Log("Start", "Animation: Gold Glow");
                     _titleText.color = new Color(1f, 0.84f, 0f, 0f);  // Gold color, alpha 0
                     DOTween.To(
                         () => _titleText.color,
@@ -352,7 +324,6 @@ namespace Game.Presentation
                     break;
                     
                 case AnimationType.ScaleFade:
-                    Utils.Debug.Log("Start", "Animation: Scale + Fade");
                     _titleText.color = new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 0f);
                     titleRect.localScale = originalScale * 0.5f;
                     _titleText.DOFade(1, ANIMATION_TIME).SetEase(Ease.OutQuad);
@@ -360,7 +331,6 @@ namespace Game.Presentation
                     break;
                     
                 case AnimationType.SlideFade:
-                    Utils.Debug.Log("Start", "Animation: Slide from top + Fade");
                     _titleText.color = new Color(originalTitleColor.r, originalTitleColor.g, originalTitleColor.b, 0f);
                     titleRect.anchoredPosition = originalPos + new Vector3(0, 200, 0);
                     _titleText.DOFade(1, ANIMATION_TIME).SetEase(Ease.InOutQuad);
@@ -368,7 +338,6 @@ namespace Game.Presentation
                     break;
                     
                 case AnimationType.OverbrightGlow:
-                    Utils.Debug.Log("Start", "Animation: Overbright Glow");
                     _titleText.color = new Color(2f, 2f, 2f, 0f);
                     DOTween.To(
                         () => _titleText.color,
@@ -411,18 +380,9 @@ namespace Game.Presentation
             if (_tipContainer != null && _tipText != null)
             {
                 _tipContainer.SetActive(true);
-                Utils.Debug.Log("Start", "Starting Tip fade-in animation");
-                
-                // Fade in from alpha=0 to alpha=1
                 yield return _tipText.DOFade(1f, 0.8f).SetEase(Ease.InOutQuad).WaitForCompletion();
-                
-                Utils.Debug.Log("Start", "Tip fade-in completed, starting pulse animation");
-                
-                // Start pulsing animation (1.0 -> 0.3 -> 1.0, loop)
                 _tipText.DOFade(0.3f, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutQuad);
             }
-            
-            Utils.Debug.Log("Start", "=== Title Animation Finished ===");
         }
         #endregion
 
@@ -434,7 +394,6 @@ namespace Game.Presentation
             // If Settings button doesn't exist, create it dynamically
             if (settingsButton == null)
             {
-                Utils.Debug.Log("Start", "Settings button not found, creating dynamically");
                 settingsButton = CreateSettingsButton();
             }
 
@@ -453,7 +412,6 @@ namespace Game.Presentation
             }
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(OnSettingsClick);
-            Utils.Debug.Log("Start", "Settings button enabled (always visible)");
         }
 
         private Transform CreateSettingsButton()
@@ -492,7 +450,6 @@ namespace Game.Presentation
                     image.type = Image.Type.Simple;
                     image.preserveAspect = true;
                     image.color = Color.white;
-                    Utils.Debug.Log("Start", "Settings sprite loaded successfully from Textures/Settings");
                 }
                 else
                 {
@@ -510,15 +467,12 @@ namespace Game.Presentation
             // Add Button component
             var button = settingsObj.AddComponent<Button>();
             button.targetGraphic = image;
-
-            Utils.Debug.Log("Start", "Settings button created dynamically");
             return settingsObj.transform;
         }
 
         private void OnSettingsClick()
         {
-            Utils.Debug.Log("Start", "Settings button clicked");
-            UI.Instance.Open(Config.UI.StartSettings);
+            UI.Instance.Open(Config.UI.StartSettings, DataManager.Instance.StartSettingsTexts);
         }
         #endregion
 
@@ -527,26 +481,18 @@ namespace Game.Presentation
 
         private void OnAfterLoginResponseChanged(params object[] args)
         {
-            Utils.Debug.Log("Start", $"OnAfterLoginResponseChanged triggered, args count: {args.Length}");
             int v = (int)args[0];
-            Protocol.LoginResponse.Code code = (Protocol.LoginResponse.Code)v;
-            Utils.Debug.Log("Start", $"LoginResponse code: {code} ({v})");
-            
-            if (code == Protocol.LoginResponse.Code.Success)
+            var code = (Game.Net.Protocol.LoginResponse.Code)v;
+            if (code == Game.Net.Protocol.LoginResponse.Code.Success)
             {
-                Utils.Debug.Log("Start", "Login success, closing Start UI");
                 Close();
             }
             else
             {
-                Utils.Debug.Log("Start", $"Login failed, closing Dark and showing error");
                 DataManager.Instance.Dark = null;
-                
                 string message = DataManager.Instance.LoginResponseMessage;
-                Utils.Debug.Log("Start", $"Error message: {message}");
                 if (!string.IsNullOrEmpty(message))
                 {
-                    Utils.Debug.Log("Start", "Setting FlyTip");
                     DataManager.Instance.Tip = (TipType.Fly, message);
                 }
             }

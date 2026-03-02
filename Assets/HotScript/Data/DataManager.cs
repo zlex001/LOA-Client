@@ -269,6 +269,13 @@ namespace Game.Data
         public Dictionary<string, string> ErrorTexts { get => Get<Dictionary<string, string>>(Type.ErrorTexts); set => Change(Type.ErrorTexts, value); }
 
         public Dictionary<string, string> Texts { get => Get<Dictionary<string, string>>(Type.Texts); set => Change(Type.Texts, value); }
+
+        /// <summary>
+        /// Temporary storage for guest account data from LoginResponse.
+        /// Set by Net (Protocol.Processed), consumed and cleared by Logic (Authentication).
+        /// Not reactive -- no Monitor events, just a pass-through container.
+        /// </summary>
+        public LoginResponseAccountData LoginResponseAccountData { get; set; }
         #endregion
 
         #region Public Methods
