@@ -223,11 +223,11 @@ namespace Framework
             {
                 SetDescription(_lang.Get("launching_game"));
                 var assemblies = LoadHotUpdateAssemblies();
-                var gateAssembly = assemblies.FirstOrDefault(a => a.GetName().Name == "Start");
-                if (gateAssembly == null) throw new System.Exception("Start assembly not found");
+                var gateAssembly = assemblies.FirstOrDefault(a => a.GetName().Name == "Presentation");
+                if (gateAssembly == null) throw new System.Exception("Presentation assembly not found");
 
-                var gateType = gateAssembly.GetType("Game.Start.Gate");
-                if (gateType == null) throw new System.Exception("Game.Start.Gate not found");
+                var gateType = gateAssembly.GetType("Game.Presentation.Gate");
+                if (gateType == null) throw new System.Exception("Game.Presentation.Gate not found");
                 
                 var entranceMethod = gateType.GetMethod("Entrance");
                 if (entranceMethod == null) throw new System.Exception("Entrance not found");
@@ -249,7 +249,7 @@ namespace Framework
 #if UNITY_EDITOR
             string[] hotUpdateAssemblyNames = new string[] 
             {
-                "Utils", "Basic", "Data", "Net", "Presentation", "Start", "SDK"
+                "Utils", "Basic", "Data", "Net", "Presentation", "SDK"
             };
             
             var assemblies = new List<System.Reflection.Assembly>();
@@ -276,7 +276,6 @@ namespace Framework
                 "data.dll.bytes",
                 "net.dll.bytes",
                 "presentation.dll.bytes",
-                "start.dll.bytes",
                 "sdk.dll.bytes"
             };
             

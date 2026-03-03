@@ -35,7 +35,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// Google.Protobuf.IDeepCloneable<object>
 	// Google.Protobuf.IMessage<object>
 	// Google.Protobuf.MessageParser<object>
-	// System.Action<Game.Start.StartStep>
 	// System.Action<byte,object>
 	// System.Action<float>
 	// System.Action<int,object>
@@ -45,7 +44,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<object,object>
 	// System.Collections.Generic.Dictionary.ValueCollection<object,object>
 	// System.Collections.Generic.Dictionary<Game.Data.OptionItemType,object>
-	// System.Collections.Generic.Dictionary<Game.Start.StartStep,object>
 	// System.Collections.Generic.Dictionary<object,byte>
 	// System.Collections.Generic.Dictionary<object,int>
 	// System.Collections.Generic.Dictionary<object,object>

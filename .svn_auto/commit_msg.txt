@@ -1,1 +1,1 @@
-[重构] 将Gateway请求逻辑从Gate.cs移入认证系统(Net/Authentication/Gateway.cs)
+[删除] 移除 Start 层，将启动入口 Gate.Entrance 合并至 Presentation 层

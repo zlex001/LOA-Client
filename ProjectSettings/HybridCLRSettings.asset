@@ -23,7 +23,6 @@ MonoBehaviour:
   - Data
   - Net
   - Presentation
-  - Start
   - SDK
   preserveHotUpdateAssemblies: []
   hotUpdateDllCompileOutputRootDir: HybridCLRData/HotUpdateDlls

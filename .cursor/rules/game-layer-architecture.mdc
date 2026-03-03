@@ -4,7 +4,7 @@ alwaysApply: true
 
 # LOA 客户端分层架构规则（Layered Architecture Rules v4.0）
 
-LOA 客户端采用与服务端对齐的严格分层架构。代码组织为 7 个独立程序集（Assembly），通过 .asmdef 强制执行显式依赖约束。依赖关系从高层单向流向低层，反向通信仅使用事件机制。
+LOA 客户端采用与服务端对齐的严格分层架构。代码组织为 6 个独立程序集（Assembly），通过 .asmdef 强制执行显式依赖约束。依赖关系从高层单向流向低层，反向通信仅使用事件机制。
 
 **完整架构说明：** `Documents/Architecture/客户端架构文档.md`
 
@@ -19,9 +19,7 @@ Utils（工具层）    Basic（基础设施层）
              ↓
        Net（网络层）
              ↓
-   Presentation（表现层）
-             ↓
-      Start（启动层）
+   Presentation（表现层 + 启动入口）
 
 SDK（独立，仅依赖 Framework）
 ```
@@ -35,7 +33,6 @@ SDK（独立，仅依赖 Framework）
 | Data | `Data` → `Data/` | `Game.Data` | Utils, Basic, Framework, LitJson | 数据模型放 Models/，其余根目录 |
 | Net | `Net` → `Net/` | `Game.Net`（协议：`Game.Net.Protocol`） | Data, Basic, Framework, Utils | 协议放 Protocol/，其余根目录 |
 | Presentation | `Presentation` → `Presentation/` | `Game.Presentation` | Data, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView, Unity.Addressables, UnityEngine.Purchasing | 平铺 |
-| Start | `Start` → `Start/` | `Game.Start` | Framework, Basic, Data, Net, Presentation | 平铺 |
 | SDK | `SDK` → `SDK/` | `Game.SDK` | Framework | 平台实现按 {Platform}/ 子目录 |
 
 ---

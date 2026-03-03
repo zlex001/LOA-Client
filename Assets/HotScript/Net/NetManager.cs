@@ -666,8 +666,6 @@ namespace Game.Net
                     ResetReconnectState();
                     
                     // TODO: Use event to notify upper layer to restart startup flow
-                    // Net layer should not directly call StartupFlowManager (violates layering)
-                    // StartupFlowManager.Start();
                     yield break;
                 }
             }
