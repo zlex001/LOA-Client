@@ -177,7 +177,7 @@ namespace Game.Presentation
 
             _selectedIndex = newIndex;
             Close();
-            Authentication.SwitchAccount(account, newIndex);
+            Authentication.Agent.SwitchAccount(account, newIndex);
         }
 
         private void OnAccountEdit(Account account)

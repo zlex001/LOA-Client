@@ -172,7 +172,7 @@ namespace Game.Presentation
                 string id = transform.Find("Id").GetComponent<InputField>().text;
                 string password = transform.Find("Password").GetComponent<InputField>().text;
                 string note = transform.Find("Note").GetComponent<InputField>().text;
-                Authentication.Login(new Account { Id = id, Password = password, Note = note });
+                Authentication.Agent.Login(new Account { Id = id, Password = password, Note = note });
                 Close();
             }
             else
