@@ -215,7 +215,7 @@ namespace Game.Data
 
     /// <summary>
     /// Temporary container for guest account data from LoginResponse.
-    /// Set by Net layer, consumed and cleared by Logic layer.
+    /// Set by Net layer, consumed and cleared by Presentation layer.
     /// </summary>
     public class LoginResponseAccountData
     {

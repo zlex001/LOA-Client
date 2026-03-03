@@ -4,7 +4,7 @@ alwaysApply: true
 
 # LOA 客户端分层架构规则（Layered Architecture Rules v4.0）
 
-LOA 客户端采用与服务端对齐的严格分层架构。代码组织为 8 个独立程序集（Assembly），通过 .asmdef 强制执行显式依赖约束。依赖关系从高层单向流向低层，反向通信仅使用事件机制。
+LOA 客户端采用与服务端对齐的严格分层架构。代码组织为 7 个独立程序集（Assembly），通过 .asmdef 强制执行显式依赖约束。依赖关系从高层单向流向低层，反向通信仅使用事件机制。
 
 **完整架构说明：** `Documents/Architecture/客户端架构文档.md`
 
@@ -18,8 +18,6 @@ Utils（工具层）    Basic（基础设施层）
        Data（数据层）
              ↓
        Net（网络层）
-             ↓
-      Logic（逻辑层）
              ↓
    Presentation（表现层）
              ↓
@@ -36,9 +34,8 @@ SDK（独立，仅依赖 Framework）
 | Basic | `Basic` → `Basic/` | `Game.Basic` | Framework | 平铺 |
 | Data | `Data` → `Data/` | `Game.Data` | Utils, Basic, Framework, LitJson | 数据模型放 Models/，其余根目录 |
 | Net | `Net` → `Net/` | `Game.Net`（协议：`Game.Net.Protocol`） | Data, Basic, Framework, Utils | 协议放 Protocol/，其余根目录 |
-| Logic | `Logic` → `Logic/` | `Game.Logic` | Net, Data, Utils, Basic, Framework | 平铺 |
-| Presentation | `Presentation` → `Presentation/` | `Game.Presentation` | Logic, Data, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView, Unity.Addressables, UnityEngine.Purchasing | 平铺 |
-| Start | `Start` → `Start/` | `Game.Start` | Framework, Basic, Data, Net, Logic, Presentation | 平铺 |
+| Presentation | `Presentation` → `Presentation/` | `Game.Presentation` | Data, Utils, Basic, Framework, Net, LitJson, DOTweenModules, SuperScrollView, Unity.Addressables, UnityEngine.Purchasing | 平铺 |
+| Start | `Start` → `Start/` | `Game.Start` | Framework, Basic, Data, Net, Presentation | 平铺 |
 | SDK | `SDK` → `SDK/` | `Game.SDK` | Framework | 平台实现按 {Platform}/ 子目录 |
 
 ---
@@ -71,7 +68,7 @@ Data.Instance.after.Fire(Data.Type.Home, newHomeData);         // fire (lower)
 - 禁止引用更高层
 
 ```json
-{ "name": "Logic", "references": ["Net", "Data", "Utils", "Basic", "Framework"] }
+{ "name": "Net", "references": ["Data", "Basic", "Framework", "Utils"] }
 ```
 
 ---
