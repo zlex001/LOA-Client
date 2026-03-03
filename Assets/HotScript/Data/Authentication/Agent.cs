@@ -33,6 +33,12 @@ namespace Game.Data
         /// </summary>
         public LoginResponseAccountData LoginResponseAccountData { get; set; }
 
+        public UICommand GatewayUI
+        {
+            get => Get<UICommand>(Type.GatewayUI);
+            set => Change(Type.GatewayUI, value);
+        }
+
         #endregion
 
         #region Auth Initialization

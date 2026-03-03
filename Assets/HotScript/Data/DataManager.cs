@@ -136,6 +136,7 @@ namespace Game.Data
             ErrorTexts,
 
             Texts,
+            GatewayUI,
         }
         #endregion
 

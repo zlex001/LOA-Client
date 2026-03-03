@@ -1,1 +1,1 @@
-[重构] 认证系统引入Agent通用模块和Connection建立通信模块，与服务端系统/模块约定对齐
+[重构] 将Gateway请求逻辑从Gate.cs移入认证系统(Net/Authentication/Gateway.cs)
