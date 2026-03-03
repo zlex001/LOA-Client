@@ -272,13 +272,13 @@ namespace Game.Data
 
         private void RegisterEvents()
         {
-            Event.Instance.Add("UI.Event.Click", OnUIClick);
-            Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
-            Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
-            Event.Instance.Add("Game.Home.Event.SceneZoomIn", OnHomeSceneZoomIn);
-            Event.Instance.Add("Game.Home.Event.SceneZoomOut", OnHomeSceneZoomOut);
-            Event.Instance.Add("Game.Home.Event.ChannelToggle", OnHomeChannelToggle);
-            Event.Instance.Add("HeartbeatLog.Toggle", OnHeartbeatLogToggle);
+            Basic.Event.Instance.Add("UI.Event.Click", OnUIClick);
+            Basic.Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
+            Basic.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
+            Basic.Event.Instance.Add("Game.Home.Event.SceneZoomIn", OnHomeSceneZoomIn);
+            Basic.Event.Instance.Add("Game.Home.Event.SceneZoomOut", OnHomeSceneZoomOut);
+            Basic.Event.Instance.Add("Game.Home.Event.ChannelToggle", OnHomeChannelToggle);
+            Basic.Event.Instance.Add("HeartbeatLog.Toggle", OnHeartbeatLogToggle);
         }
 
         private void OnUIClick(params object[] args)

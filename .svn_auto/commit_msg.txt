@@ -1,1 +1,1 @@
-[重构] 消除Logic层，拆分大文件为partial class，优化分层架构一致性
+[修复] 解决DataManager中Event歧义引用错误，使用Basic.Event替代
