@@ -1,1 +1,1 @@
-[删除] 移除空壳Logic层，架构从8层简化为7层
+[重构] 认证系统改为三层Authentication文件夹结构，修复SwitchAccount双重重连和QuickStart脏数据bug

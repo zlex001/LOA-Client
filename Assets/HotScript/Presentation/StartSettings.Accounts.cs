@@ -1,5 +1,4 @@
 using Game.Data;
-using Game.Net;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -178,7 +177,7 @@ namespace Game.Presentation
 
             _selectedIndex = newIndex;
             Close();
-            NetManager.Instance.SwitchAccount(account, newIndex);
+            Authentication.SwitchAccount(account, newIndex);
         }
 
         private void OnAccountEdit(Account account)

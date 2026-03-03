@@ -283,11 +283,11 @@ namespace Game.Presentation
 
             if (DataManager.Instance.User.Accounts.Count > 0)
             {
-                DataManager.Instance.LoginAccount = DataManager.Instance.SelectedAccount;
+                Authentication.Login(DataManager.Instance.SelectedAccount);
             }
             else
             {
-                DataManager.Instance.LoginAccount = new Account { Id = "__QuickStart__" };
+                Authentication.QuickStart();
             }
         }
 

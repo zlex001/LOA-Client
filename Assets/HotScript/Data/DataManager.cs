@@ -264,8 +264,7 @@ namespace Game.Data
 
         private void RegisterMonitors()
         {
-            after.Register(Type.LoginAccount, OnAfterLoginAccountChanged);
-            after.Register(Type.LoginResponse, OnAfterLoginResponseChanged);
+            RegisterAuthMonitors();
             after.Register(Type.Language, OnAfterLanguageChanged);
             after.Register(Type.FontSize, OnAfterFontSizeChanged);
         }
