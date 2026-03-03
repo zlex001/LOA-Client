@@ -1,1 +1,1 @@
-[修复] 解决DataManager中Event歧义引用错误，使用Basic.Event替代
+[修复] 解决SystemProtocol中Event歧义引用错误

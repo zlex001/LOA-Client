@@ -107,7 +107,7 @@ namespace Game.Net.Protocol
             DataManager.Instance.User.ScreenUIAdaptation = value / 100f;
             Local.Instance.Save(DataManager.Instance.User);
 
-            Event.Instance.Fire("UI.ScreenUIAdaptation.Changed");
+            Game.Basic.Event.Instance.Fire("UI.ScreenUIAdaptation.Changed");
         }
     }
 
