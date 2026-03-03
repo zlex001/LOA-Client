@@ -1,6 +1,7 @@
 using Framework;
 using Game.Basic;
 using Game.Data;
+using Game.Logic;
 using Game.Net;
 using Game.Presentation;
 using Newtonsoft.Json;
@@ -35,6 +36,7 @@ namespace Game.Start
             UI.Instance.Init(9f, 16f);
             Audio.Instance.Init();
             NetManager.Instance.Init();
+            Authentication.Init();
             
             // Register event listeners for layer separation (Data -> Start -> Net)
             Game.Basic.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);

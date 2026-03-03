@@ -1,7 +1,7 @@
 using DG.Tweening;
 using Framework;
 using Game.Data;
-using Game.Net;
+using Game.Logic;
 using UnityEngine.UI;
 using SuperScrollView;
 using UnityEngine;
@@ -283,11 +283,11 @@ namespace Game.Presentation
 
             if (DataManager.Instance.User.Accounts.Count > 0)
             {
-                DataManager.Instance.LoginAccount = DataManager.Instance.SelectedAccount;
+                Authentication.Login(DataManager.Instance.SelectedAccount);
             }
             else
             {
-                DataManager.Instance.LoginAccount = new Account { Id = "__QuickStart__" };
+                Authentication.QuickStart();
             }
         }
 

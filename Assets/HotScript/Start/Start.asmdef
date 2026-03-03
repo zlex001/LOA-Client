@@ -6,7 +6,6 @@
         "Basic",
         "Data",
         "Net",
-        "Logic",
         "Presentation"
     ],
     "includePlatforms": [],

@@ -85,7 +85,6 @@ namespace Game.Net
             DataManager.Instance.befor.Register(DataManager.Type.SocketMissedHeartbeats, OnBeforeMissedHeartbeatsChanged);
             DataManager.Instance.befor.Register(DataManager.Type.Ping, OnAfterPingChanged);
             DataManager.Instance.after.Register(DataManager.Type.Servers, OnAfterServersChanged);
-            RegisterAuthMonitors();
         }
 
         void Update()
@@ -538,7 +537,6 @@ namespace Game.Net
             if (isOnline)
             {
                 ResetReconnectState();
-                OnAuthOnlineEstablished();
             }
             else
             {
