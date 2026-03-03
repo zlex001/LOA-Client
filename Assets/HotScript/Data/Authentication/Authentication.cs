@@ -1,5 +1,4 @@
 using System.Linq;
-using Game.Net.Protocol;
 
 namespace Game.Data
 {
@@ -62,7 +61,7 @@ namespace Game.Data
         private void OnAfterLoginResponseChanged(params object[] args)
         {
             int code = (int)args[0];
-            if (code != (int)LoginResponse.Code.Success) return;
+            if (code != 0) return;
 
             var responseData = LoginResponseAccountData;
             if (responseData == null) return;
