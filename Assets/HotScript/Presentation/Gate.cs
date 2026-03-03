@@ -27,8 +27,8 @@ namespace Game.Presentation
             Audio.Instance.Init();
             NetManager.Instance.Init();
 
-            Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
-            Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
+            Game.Basic.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
+            Game.Basic.Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
 
             DataManager.Instance.Dark = Localization.Instance.Get("loading");
             Net.Authentication.Gateway.Request();

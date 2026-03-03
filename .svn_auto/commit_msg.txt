@@ -1,1 +1,1 @@
-[删除] 移除 Start 层，将启动入口 Gate.Entrance 合并至 Presentation 层
+[修复] Gate.cs 中 Event 歧义引用，使用完全限定名 Game.Basic.Event
