@@ -440,7 +440,7 @@ namespace Game.Presentation
                 GameObject toggle = toggleGroup.AddPrefab("Prefabs/UI", "OptionToggle");
                 toggle.GetComponent<Toggle>().group = transform.GetComponent<ToggleGroup>();
                 OptionToggle toggleScript = toggle.GetComponent<OptionToggle>();
-                toggleScript.text.text = key == "" ? "全部" : key;
+                toggleScript.text.text = key == "" ? (DataManager.Instance.GetText("filterAll") ?? "All") : key;
                 toggleScript.SetToggleValue(value);
             }
             

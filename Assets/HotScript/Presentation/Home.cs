@@ -133,30 +133,30 @@ namespace Game.Presentation
                     }
                 }
 
-                // 设置资源名称文本
-                if (DataManager.Instance.Home.ui?.resourceLabels != null && DataManager.Instance.Home.ui.resourceLabels.ContainsKey(resouse.Key))
+                string resourceLabel = DataManager.Instance.GetText($"resource{resouse.Key}");
+                if (!string.IsNullOrEmpty(resourceLabel))
                 {
-                    transform.Find($"Resource/{resouse.Key}/Title").GetComponent<Text>().text = DataManager.Instance.Home.ui.resourceLabels[resouse.Key];
+                    transform.Find($"Resource/{resouse.Key}/Title").GetComponent<Text>().text = resourceLabel;
                 }
             }
 
-            // 设置频道按钮文本
-            if (DataManager.Instance.Home.ui?.channels != null)
+            string[] channelNames = { "System", "Private", "Local", "Battle", "Broadcast", "Rumor", "Automation" };
+            foreach (var channelName in channelNames)
             {
-                string[] channelNames = { "System", "Private", "Local", "Battle", "Broadcast", "Rumor", "Automation" };
-                for (int i = 0; i < channelNames.Length && i < DataManager.Instance.Home.ui.channels.Length; i++)
+                string channelLabel = DataManager.Instance.GetText($"channel{channelName}");
+                if (!string.IsNullOrEmpty(channelLabel))
                 {
-                    transform.Find($"Chat/Channel/{channelNames[i]}/Label").GetComponent<Text>().text = DataManager.Instance.Home.ui.channels[i];
+                    transform.Find($"Chat/Channel/{channelName}/Label").GetComponent<Text>().text = channelLabel;
                 }
             }
 
-            // 设置输入框提示文本
-            if (!string.IsNullOrEmpty(DataManager.Instance.Home.ui?.chatPlaceholder))
+            string chatPlaceholder = DataManager.Instance.GetText("chatPlaceholder");
+            if (!string.IsNullOrEmpty(chatPlaceholder))
             {
                 var placeholder = transform.Find("Chat/Input/Placeholder").GetComponent<Text>();
                 if (placeholder != null)
                 {
-                    placeholder.text = DataManager.Instance.Home.ui.chatPlaceholder;
+                    placeholder.text = chatPlaceholder;
                 }
             }
             var sceneGridView = transform.Find("Scene").GetComponent<LoopGridView>();
@@ -570,37 +570,41 @@ namespace Game.Presentation
         {
             Protocol.Home home = (Protocol.Home)args[0];
 
-            if (home.ui?.resourceLabels != null)
+            string[] resourceKeys = { "Hp", "Mp", "Lp" };
+            foreach (var key in resourceKeys)
             {
-                foreach (var label in home.ui.resourceLabels)
+                string label = DataManager.Instance.GetText($"resource{key}");
+                if (!string.IsNullOrEmpty(label))
                 {
-                    var titleObj = transform.Find($"Resource/{label.Key}/Title");
+                    var titleObj = transform.Find($"Resource/{key}/Title");
                     if (titleObj != null)
                     {
-                        titleObj.GetComponent<Text>().text = label.Value;
+                        titleObj.GetComponent<Text>().text = label;
                     }
                 }
             }
 
-            if (home.ui?.channels != null)
+            string[] channelNames = { "System", "Private", "Local", "Battle", "Broadcast", "Rumor", "Automation" };
+            foreach (var channelName in channelNames)
             {
-                string[] channelNames = { "System", "Private", "Local", "Battle", "Broadcast", "Rumor", "Automation" };
-                for (int i = 0; i < channelNames.Length && i < home.ui.channels.Length; i++)
+                string channelLabel = DataManager.Instance.GetText($"channel{channelName}");
+                if (!string.IsNullOrEmpty(channelLabel))
                 {
-                    var channelLabel = transform.Find($"Chat/Channel/{channelNames[i]}/Label");
-                    if (channelLabel != null)
+                    var labelObj = transform.Find($"Chat/Channel/{channelName}/Label");
+                    if (labelObj != null)
                     {
-                        channelLabel.GetComponent<Text>().text = home.ui.channels[i];
+                        labelObj.GetComponent<Text>().text = channelLabel;
                     }
                 }
             }
 
-            if (!string.IsNullOrEmpty(home.ui?.chatPlaceholder))
+            string chatPlaceholder = DataManager.Instance.GetText("chatPlaceholder");
+            if (!string.IsNullOrEmpty(chatPlaceholder))
             {
                 var placeholder = transform.Find("Chat/Input/Placeholder")?.GetComponent<Text>();
                 if (placeholder != null)
                 {
-                    placeholder.text = home.ui.chatPlaceholder;
+                    placeholder.text = chatPlaceholder;
                 }
             }
 
