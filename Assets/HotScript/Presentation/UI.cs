@@ -18,13 +18,6 @@ namespace Game.Presentation
 {
     public class UI : Singleton<UI>
     {
-        public enum Tips
-        {
-            Fly,
-            Numerical,
-            Attach,
-        }
-
         public enum Event
         {
             Click
@@ -238,17 +231,17 @@ namespace Game.Presentation
 
         private void OnAfterTipChanged(params object[] args)
         {
-            (Tips, string) tip = ((Tips, string))args[0];
+            (TipType, string) tip = ((TipType, string))args[0];
 
             switch (tip.Item1)
             {
-                case Tips.Fly:
+                case TipType.Fly:
                     ShowFlyTip(tip.Item2);
                     break;
-                case Tips.Numerical:
+                case TipType.Numerical:
                     ShowNumericalTip(tip.Item2);
                     break;
-                case Tips.Attach:
+                case TipType.Attach:
                     ShowAttachTip(tip.Item2);
                     break;
             }

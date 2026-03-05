@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Net.Protocol
 {
-    public class LoginRequest : Base
+    public class Login : Base
     {
         public string id;
         public string password;

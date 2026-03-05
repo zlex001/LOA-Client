@@ -20,8 +20,8 @@ namespace Game.Net.Authentication
 
         public static void SendLoginRequest(Account account)
         {
-            Utils.Debug.Log("Auth", $"Sending LoginRequest, id={account?.Id ?? "(quick)"}");
-            NetManager.Instance.Send(new LoginRequest
+            Utils.Debug.Log("Auth", $"Sending Login, id={account?.Id ?? "(quick)"}");
+            NetManager.Instance.Send(new Login
             {
                 id = account?.Id,
                 password = account?.Password,

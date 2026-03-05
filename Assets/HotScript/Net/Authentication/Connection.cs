@@ -58,7 +58,7 @@ namespace Game.Net.Authentication
             var loginAccount = DataManager.Instance.LoginAccount;
             if (loginAccount == null) return;
 
-            Utils.Debug.Log("Auth", "Connected, sending LoginRequest");
+            Utils.Debug.Log("Auth", "Connected, sending Login");
             Agent.SendLoginRequest(loginAccount);
         }
     }
