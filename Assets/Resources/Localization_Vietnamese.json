@@ -1,7 +1,7 @@
 {
   "loading": "Đang tải...",
   "connecting": "Đang kết nối...",
-  "connection_timeout": "Hết thời gian kết nối",
-  "network_error": "Lỗi mạng",
-  "parse_error": "Lỗi phân tích dữ liệu"
+  "connectionTimeout": "Hết thời gian kết nối",
+  "networkError": "Lỗi mạng",
+  "parseError": "Lỗi phân tích dữ liệu"
 }

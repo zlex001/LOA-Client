@@ -1,7 +1,7 @@
 {
   "loading": "Laddar...",
   "connecting": "Ansluter...",
-  "connection_timeout": "Timeout för anslutning",
-  "network_error": "Nätverksfel",
-  "parse_error": "Tolkningsfel data"
+  "connectionTimeout": "Timeout för anslutning",
+  "networkError": "Nätverksfel",
+  "parseError": "Tolkningsfel data"
 }

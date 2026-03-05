@@ -135,17 +135,4 @@ namespace Game.Net.Protocol
         }
     }
 
-    public class StartSettingsTexts : Base
-    {
-        public Dictionary<string, string> data;
-
-        public override void Processed()
-        {
-            if (data != null)
-            {
-                DataManager.Instance.StartSettingsTexts = data;
-                Utils.Debug.Log("Protocol", $"StartSettingsTexts protocol processed, keyCount={data.Count}");
-            }
-        }
-    }
 }

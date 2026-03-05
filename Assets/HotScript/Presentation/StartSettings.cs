@@ -39,17 +39,14 @@ namespace Game.Presentation
 
         private string GetText(string key)
         {
-            var texts = DataManager.Instance.StartSettingsTexts;
+            var texts = DataManager.Instance.Texts;
             if (texts != null && texts.ContainsKey(key))
             {
                 return texts[key];
             }
             if (_loggedMissingKeys.Add(key))
             {
-                if (texts == null)
-                    Utils.Debug.LogWarning("StartSettings", $"StartSettingsTexts is null, missing key: {key}");
-                else
-                    Utils.Debug.LogWarning("StartSettings", $"StartSettingsTexts missing key: {key}");
+                Utils.Debug.LogWarning("StartSettings", $"Texts missing key: {key}");
             }
             return key;
         }
@@ -149,16 +146,7 @@ namespace Game.Presentation
 
         public override void OnEnter(params object[] args)
         {
-            if (args.Length > 0 && args[0] is Dictionary<string, string> texts)
-            {
-                DataManager.Instance.StartSettingsTexts = texts;
-                _loggedMissingKeys.Clear();
-                Utils.Debug.Log("StartSettings", $"StartSettingsTexts set from args, keyCount={texts.Count}");
-            }
-            else
-            {
-                Utils.Debug.LogWarning("StartSettings", "StartSettingsTexts not set (args empty or invalid). UI will show key names as fallback.");
-            }
+            _loggedMissingKeys.Clear();
 
             DataManager.Instance.after.Register(DataManager.Type.Language, OnLanguageChanged);
 

@@ -1,7 +1,7 @@
 {
   "loading": "載入中...",
   "connecting": "連接中...",
-  "connection_timeout": "連接超時",
-  "network_error": "網絡錯誤",
-  "parse_error": "數據解析錯誤"
+  "connectionTimeout": "連接超時",
+  "networkError": "網絡錯誤",
+  "parseError": "數據解析錯誤"
 }

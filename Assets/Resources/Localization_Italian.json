@@ -1,7 +1,7 @@
 {
   "loading": "Caricamento...",
   "connecting": "Connessione in corso...",
-  "connection_timeout": "Timeout connessione",
-  "network_error": "Errore di rete",
-  "parse_error": "Errore di parsing dati"
+  "connectionTimeout": "Timeout connessione",
+  "networkError": "Errore di rete",
+  "parseError": "Errore di parsing dati"
 }

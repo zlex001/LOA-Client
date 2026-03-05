@@ -48,10 +48,6 @@ namespace Game.Data
         public Dictionary<string, bool> HomeChannelToggle { get; set; } = new Dictionary<string, bool>();
         public Dictionary<string, SceneData> SceneCache { get; set; } = new Dictionary<string, SceneData>();
 
-        public Dictionary<string, string> StartTexts { get => Get<Dictionary<string, string>>(Type.StartTexts); set => Change(Type.StartTexts, value); }
-        public Dictionary<string, string> StartSettingsTexts { get => Get<Dictionary<string, string>>(Type.StartSettingsTexts); set => Change(Type.StartSettingsTexts, value); }
-        public Dictionary<string, string> AccountTexts { get => Get<Dictionary<string, string>>(Type.AccountTexts); set => Change(Type.AccountTexts, value); }
-        public Dictionary<string, string> ErrorTexts { get => Get<Dictionary<string, string>>(Type.ErrorTexts); set => Change(Type.ErrorTexts, value); }
         public Dictionary<string, string> Texts { get => Get<Dictionary<string, string>>(Type.Texts); set => Change(Type.Texts, value); }
         #endregion
 

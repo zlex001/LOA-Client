@@ -1,7 +1,7 @@
 {
   "loading": "Laden...",
   "connecting": "Verbinding maken...",
-  "connection_timeout": "Verbindingstime-out",
-  "network_error": "Netwerkfout",
-  "parse_error": "Parsing-fout gegevens"
+  "connectionTimeout": "Verbindingstime-out",
+  "networkError": "Netwerkfout",
+  "parseError": "Parsing-fout gegevens"
 }

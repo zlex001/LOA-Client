@@ -2,11 +2,6 @@ using Game.Data;
 
 namespace Game.Presentation.Authentication
 {
-    /// <summary>
-    /// Common module for the Authentication system in Presentation layer.
-    /// Public API for UI classes: Start.cs, AccountUI.cs, StartSettings.
-    /// Callers are responsible for their own UI feedback (e.g. Dark overlay).
-    /// </summary>
     public static class Agent
     {
         public static void Login(Account account)
@@ -21,11 +16,11 @@ namespace Game.Presentation.Authentication
 
             if (!DataManager.Instance.Online)
             {
-                DataManager.Instance.LoginAccount = new Account { Id = "__QuickStart__" };
+                DataManager.Instance.LoginAccount = new Account();
             }
             else
             {
-                Net.Authentication.Agent.SendQuickStartRequest();
+                Net.Authentication.Agent.SendLoginRequest(null);
             }
         }
 

@@ -1,7 +1,6 @@
 using Game.Data;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 namespace Game.Presentation
 {
@@ -20,20 +19,11 @@ namespace Game.Presentation
 
         public override void OnEnter(params object[] args)
         {
-            if (args.Length > 0)
-            {
-                var texts = args[0] as Dictionary<string, string>;
-                if (texts != null)
-                {
-                    DataManager.Instance.AccountTexts = texts;
-                }
-            }
-
             RefreshUI();
 
-            if (args.Length > 1)
+            if (args.Length > 0)
             {
-                bool showCancel = (bool)args[1];
+                bool showCancel = (bool)args[0];
                 transform.Find("Buttons/Cancel").gameObject.SetActive(showCancel);
             }
 
@@ -47,7 +37,7 @@ namespace Game.Presentation
         
         private void RefreshUI()
         {
-            var texts = DataManager.Instance.AccountTexts;
+            var texts = DataManager.Instance.Texts;
             if (texts == null) return;
             
             var idPlaceholder = transform.Find("Id/Placeholder")?.GetComponent<Text>();
@@ -137,7 +127,7 @@ namespace Game.Presentation
             {
                 string id = transform.Find("Id").GetComponent<InputField>().text;
                 string password = transform.Find("Password").GetComponent<InputField>().text;
-                var texts = DataManager.Instance.AccountTexts;
+                var texts = DataManager.Instance.Texts;
                 
                 if (string.IsNullOrEmpty(id))
                     return texts != null && texts.ContainsKey("errorAccountEmpty") ? texts["errorAccountEmpty"] : "";
@@ -184,7 +174,7 @@ namespace Game.Presentation
         private void OnCancelClick()
         {
             Close();
-            UI.Instance.Open(Config.UI.Start, DataManager.Instance.StartTexts);
+            UI.Instance.Open(Config.UI.Start);
         }
     }
 }

@@ -25,14 +25,8 @@ namespace Game.Data
     }
 
     [Serializable]
-    public class ServerInfo
+    public class ServerEntry
     {
-        [JsonProperty("id")]
-        public string Id;
-
-        [JsonProperty("name")]
-        public string Name;
-
         [JsonProperty("ip")]
         public string Ip;
 
@@ -41,30 +35,19 @@ namespace Game.Data
     }
 
     [Serializable]
-    public class UICommand
-    {
-        [JsonProperty("name")]
-        public string Name;
-
-        [JsonProperty("data")]
-        public Dictionary<string, string> Data;
-    }
-
-    [Serializable]
     public class GatewayResponse
     {
         [JsonProperty("servers")]
-        public List<ServerInfo> Servers;
+        public Dictionary<string, ServerEntry> Servers;
 
-        [JsonProperty("ui")]
-        public UICommand UI;
+        [JsonProperty("texts")]
+        public Dictionary<string, string> Texts;
     }
 
     [Serializable]
     public class Server
     {
-        public string Id;
-        public string Name;
+        public string Key;
         public string Ip;
         public int Port;
     }
@@ -90,7 +73,6 @@ namespace Game.Data
             LoginAccount,
             Online,
             LoginResponse,
-            LoginResponseMessage,
             Initialize,
             InitialResponse,
             InitialResponseMessage,
@@ -130,13 +112,7 @@ namespace Game.Data
             FontSize,
             UILock,
 
-            StartTexts,
-            StartSettingsTexts,
-            AccountTexts,
-            ErrorTexts,
-
             Texts,
-            GatewayUI,
         }
         #endregion
 

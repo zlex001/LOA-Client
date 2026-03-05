@@ -1,7 +1,7 @@
 {
   "loading": "Indlæser...",
   "connecting": "Opretter forbindelse...",
-  "connection_timeout": "Forbindelse timeout",
-  "network_error": "Netværksfejl",
-  "parse_error": "Parsing-fejl data"
+  "connectionTimeout": "Forbindelse timeout",
+  "networkError": "Netværksfejl",
+  "parseError": "Parsing-fejl data"
 }

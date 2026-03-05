@@ -1,7 +1,7 @@
 {
   "loading": "Memuat...",
   "connecting": "Menghubungkan...",
-  "connection_timeout": "Waktu koneksi habis",
-  "network_error": "Kesalahan jaringan",
-  "parse_error": "Kesalahan parsing data"
+  "connectionTimeout": "Waktu koneksi habis",
+  "networkError": "Kesalahan jaringan",
+  "parseError": "Kesalahan parsing data"
 }

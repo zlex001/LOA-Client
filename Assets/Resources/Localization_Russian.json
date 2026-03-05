@@ -1,7 +1,7 @@
 {
   "loading": "Загрузка...",
   "connecting": "Подключение...",
-  "connection_timeout": "Время подключения истекло",
-  "network_error": "Ошибка сети",
-  "parse_error": "Ошибка парсинга данных"
+  "connectionTimeout": "Время подключения истекло",
+  "networkError": "Ошибка сети",
+  "parseError": "Ошибка парсинга данных"
 }

@@ -1,7 +1,7 @@
 {
   "loading": "กำลังโหลด...",
   "connecting": "กำลังเชื่อมต่อ...",
-  "connection_timeout": "หมดเวลาการเชื่อมต่อ",
-  "network_error": "ข้อผิดพลาดเครือข่าย",
-  "parse_error": "ข้อผิดพลาดการแยกข้อมูล"
+  "connectionTimeout": "หมดเวลาการเชื่อมต่อ",
+  "networkError": "ข้อผิดพลาดเครือข่าย",
+  "parseError": "ข้อผิดพลาดการแยกข้อมูล"
 }

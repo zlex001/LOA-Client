@@ -2,11 +2,6 @@ using Game.Data;
 
 namespace Game.Net.Authentication
 {
-    /// <summary>
-    /// Connection establishment module for the Authentication system.
-    /// Handles when to connect/disconnect during login flows.
-    /// Actual socket implementation stays in NetManager.
-    /// </summary>
     public static class Connection
     {
         internal static void Init()
@@ -45,14 +40,7 @@ namespace Game.Net.Authentication
 
             if (DataManager.Instance.Online)
             {
-                if (account.Id == "__QuickStart__")
-                {
-                    Agent.SendQuickStartRequest();
-                }
-                else
-                {
-                    Agent.SendLoginRequest(account);
-                }
+                Agent.SendLoginRequest(account);
             }
             else
             {
@@ -70,16 +58,8 @@ namespace Game.Net.Authentication
             var loginAccount = DataManager.Instance.LoginAccount;
             if (loginAccount == null) return;
 
-            if (loginAccount.Id == "__QuickStart__")
-            {
-                Utils.Debug.Log("Auth", "Connected, sending QuickStartRequest");
-                Agent.SendQuickStartRequest();
-            }
-            else
-            {
-                Utils.Debug.Log("Auth", "Connected, sending Login protocol");
-                Agent.SendLoginRequest(DataManager.Instance.SelectedAccount);
-            }
+            Utils.Debug.Log("Auth", "Connected, sending LoginRequest");
+            Agent.SendLoginRequest(loginAccount);
         }
     }
 }

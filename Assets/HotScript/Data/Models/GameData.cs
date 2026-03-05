@@ -213,15 +213,4 @@ namespace Game.Data
         public InformationChannel channel { get; set; }
     }
 
-    /// <summary>
-    /// Temporary container for guest account data from LoginResponse.
-    /// Set by Net layer, consumed and cleared by Presentation layer.
-    /// </summary>
-    public class LoginResponseAccountData
-    {
-        public string AccountId { get; set; }
-        public string Password { get; set; }
-        public bool IsGuest { get; set; }
-        public bool IsNewAccount { get; set; }
-    }
 }

@@ -45,18 +45,12 @@ namespace Game.Presentation
 
         public override void OnEnter(params object[] args)
         {
-            var texts = args[0] as Dictionary<string, string>;
-            if (texts != null)
-            {
-                DataManager.Instance.StartTexts = texts;
-            }
-            
             RefreshUI();
         }
         
         private void RefreshUI()
         {
-            var texts = DataManager.Instance.StartTexts;
+            var texts = DataManager.Instance.Texts;
             if (texts == null) return;
             
             if (_titleText != null && texts.ContainsKey("title"))
@@ -279,7 +273,7 @@ namespace Game.Presentation
         #region Animation
         private void OnBlockClick()
         {
-            UI.Instance.Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
+            UI.Instance.Open(Config.UI.Dark, DataManager.Instance.GetText("connecting") ?? "...");
 
             if (DataManager.Instance.User.Accounts.Count > 0)
             {
@@ -472,7 +466,7 @@ namespace Game.Presentation
 
         private void OnSettingsClick()
         {
-            UI.Instance.Open(Config.UI.StartSettings, DataManager.Instance.StartSettingsTexts);
+            UI.Instance.Open(Config.UI.StartSettings);
         }
         #endregion
 
@@ -490,7 +484,8 @@ namespace Game.Presentation
             else
             {
                 DataManager.Instance.Dark = null;
-                string message = DataManager.Instance.LoginResponseMessage;
+                string codeKey = $"login{code}";
+                string message = DataManager.Instance.GetText(codeKey);
                 if (!string.IsNullOrEmpty(message))
                 {
                     DataManager.Instance.Tip = (TipType.Fly, message);

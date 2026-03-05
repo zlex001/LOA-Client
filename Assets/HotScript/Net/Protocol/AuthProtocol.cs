@@ -1,20 +1,11 @@
+using System.Linq;
 using Game.Data;
 using UnityEngine;
 
 namespace Game.Net.Protocol
 {
-    public class Login : Base
+    public class LoginRequest : Base
     {
-        public Login(Account account)
-        {
-            id = account.Id;
-            password = account.Password;
-            version = DataManager.Instance.AppVersion;
-            platform = Application.platform.ToString();
-            device = PlayerPrefs.GetString("DEVICE");
-            language = DataManager.Instance.Language.ToString();
-            Utils.Debug.Log("Lang", $"Login protocol: sending language=\"{language}\"");
-        }
         public string id;
         public string password;
         public string platform;
@@ -33,7 +24,6 @@ namespace Game.Net.Protocol
             UnsafeAccount
         }
         public int code;
-        public string message;
         public string accountId;
         public string password;
         public bool isGuest;
@@ -41,29 +31,38 @@ namespace Game.Net.Protocol
 
         public override void Processed()
         {
-            Utils.Debug.Log("Protocol", $"LoginResponse.Processed() called: code={code}, message={message}");
+            Utils.Debug.Log("Protocol", $"LoginResponse.Processed() called: code={code}");
 
-            if (!string.IsNullOrEmpty(accountId) && !string.IsNullOrEmpty(password))
+            if (code == (int)Code.Success)
             {
-                DataManager.Instance.LoginResponseAccountData = new LoginResponseAccountData
-                {
-                    AccountId = accountId,
-                    Password = password,
-                    IsGuest = isGuest,
-                    IsNewAccount = isNewAccount
-                };
+                SaveAccountIfNeeded();
             }
 
-            DataManager.Instance.LoginResponseMessage = message;
             DataManager.Instance.LoginResponse = code;
         }
-    }
 
-    public class QuickStartRequest : Base
-    {
-        public string device;
-        public string version;
-        public string platform;
-        public string language;
+        private void SaveAccountIfNeeded()
+        {
+            if (string.IsNullOrEmpty(accountId) || string.IsNullOrEmpty(password))
+                return;
+
+            var user = DataManager.Instance.User;
+            bool accountExists = user.Accounts.Any(a => a.Id == accountId);
+
+            if (!accountExists)
+            {
+                var account = new Account
+                {
+                    Id = accountId,
+                    Password = password,
+                    Note = isGuest ? "Guest Account" : "Bound Account"
+                };
+                user.Accounts.Add(account);
+                user.SelectedAccountIndex = user.Accounts.Count - 1;
+                Local.Instance.Save(user);
+                Utils.Debug.Log("Auth",
+                    $"Saved guest account: {accountId}, isNew: {isNewAccount}");
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 {
   "loading": "Laster...",
   "connecting": "Kobler til...",
-  "connection_timeout": "Tilkobling tidsavbrudd",
-  "network_error": "Nettverksfeil",
-  "parse_error": "Analyseringsfeil data"
+  "connectionTimeout": "Tilkobling tidsavbrudd",
+  "networkError": "Nettverksfeil",
+  "parseError": "Analyseringsfeil data"
 }

@@ -1,7 +1,7 @@
 {
   "loading": "Yükleniyor...",
   "connecting": "Bağlanıyor...",
-  "connection_timeout": "Bağlantı zaman aşımı",
-  "network_error": "Ağ hatası",
-  "parse_error": "Veri ayrıştırma hatası"
+  "connectionTimeout": "Bağlantı zaman aşımı",
+  "networkError": "Ağ hatası",
+  "parseError": "Veri ayrıştırma hatası"
 }

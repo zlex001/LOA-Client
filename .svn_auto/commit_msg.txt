@@ -1,1 +1,9 @@
-[修复] Gate.cs 中 Event 歧义引用，使用完全限定名 Game.Basic.Event
+[重构] 认证系统消息收发数据结构优化
+
+- GatewayResponse: servers改为Dictionary, 新增texts统一下发本地化文本, 移除UICommand
+- 合并Login和QuickStartRequest为统一LoginRequest, 移除__QuickStart__魔法字符串
+- LoginResponse移除message字段, 客户端按code从texts取文案
+- 删除ServerInfo/UICommand/LoginResponseAccountData等冗余类
+- 统一StartTexts/AccountTexts/ErrorTexts/StartSettingsTexts为单一Texts
+- 所有texts key统一为camelCase命名
+- 本地化JSON文件key同步更新为camelCase

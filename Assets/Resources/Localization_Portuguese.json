@@ -1,7 +1,7 @@
 {
   "loading": "Carregando...",
   "connecting": "Conectando...",
-  "connection_timeout": "Tempo de conexão esgotado",
-  "network_error": "Erro de rede",
-  "parse_error": "Erro de análise de dados"
+  "connectionTimeout": "Tempo de conexão esgotado",
+  "networkError": "Erro de rede",
+  "parseError": "Erro de análise de dados"
 }

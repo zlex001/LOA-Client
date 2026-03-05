@@ -1,7 +1,7 @@
 {
   "loading": "Chargement...",
   "connecting": "Connexion en cours...",
-  "connection_timeout": "Délai de connexion dépassé",
-  "network_error": "Erreur réseau",
-  "parse_error": "Erreur d'analyse des données"
+  "connectionTimeout": "Délai de connexion dépassé",
+  "networkError": "Erreur réseau",
+  "parseError": "Erreur d'analyse des données"
 }

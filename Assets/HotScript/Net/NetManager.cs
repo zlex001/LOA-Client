@@ -46,7 +46,7 @@ namespace Game.Net
         /// </summary>
         private string GetErrorText(string key, params object[] args)
         {
-            var texts = DataManager.Instance.ErrorTexts;
+            var texts = DataManager.Instance.Texts;
             if (texts != null && texts.ContainsKey(key))
             {
                 return args.Length > 0 ? string.Format(texts[key], args) : texts[key];
@@ -162,7 +162,7 @@ namespace Game.Net
                 Socket.Close();
                 
                 DataManager.Instance.Dark = null;
-                DataManager.Instance.Tip = (TipType.Fly, GetErrorText("connection_timeout"));
+                DataManager.Instance.Tip = (TipType.Fly, GetErrorText("connectionTimeout"));
                 DataManager.Instance.Online = false;
                 yield break;
             }
@@ -184,10 +184,10 @@ namespace Game.Net
             Socket.Close();
             
             DataManager.Instance.Dark = null;
-            string errorKey = "connection_failed";
+            string errorKey = "connectionFailed";
             if (e.SocketErrorCode == SocketError.ConnectionRefused)
             {
-                errorKey = "connection_refused";
+                errorKey = "connectionRefused";
             }
             DataManager.Instance.Tip = (TipType.Fly, GetErrorText(errorKey));
             DataManager.Instance.Online = false;
@@ -198,7 +198,7 @@ namespace Game.Net
             Socket.Close();
             
             DataManager.Instance.Dark = null;
-            DataManager.Instance.Tip = (TipType.Fly, GetErrorText("connection_failed"));
+            DataManager.Instance.Tip = (TipType.Fly, GetErrorText("connectionFailed"));
             DataManager.Instance.Online = false;
         }
         }
@@ -250,7 +250,7 @@ namespace Game.Net
                         {
                             Utils.Debug.LogWarning("Socket", "Server disconnected (Receive == 0)");
                             Socket.Close();
-                            DataManager.Instance.Tip = (TipType.Fly, GetErrorText("server_disconnected"));
+                            DataManager.Instance.Tip = (TipType.Fly, GetErrorText("serverDisconnected"));
                             DataManager.Instance.Online = false;
                             return;
                         }
@@ -282,13 +282,13 @@ namespace Game.Net
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Net", $"Receive data exception: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("network_communication_error"));
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("networkCommunicationError"));
                     DataManager.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Net", $"Receive data unexpected exception: {e.Message}\nStackTrace: {e.StackTrace}");
-                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("network_communication_error"));
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("networkCommunicationError"));
                     DataManager.Instance.Online = false;
                 }
                 }
@@ -331,13 +331,13 @@ namespace Game.Net
                 catch (SocketException e)
                 {
                     Utils.Debug.LogError("Socket", $"SocketException during send: {e.Message}, ErrorCode: {e.ErrorCode}, SocketErrorCode: {e.SocketErrorCode}");
-                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("send_failed"));
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("sendFailed"));
                     DataManager.Instance.Online = false;
                 }
                 catch (Exception e)
                 {
                     Utils.Debug.LogError("Socket", $"Unexpected exception during send: {e.Message}\nStackTrace: {e.StackTrace}");
-                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("send_failed"));
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("sendFailed"));
                     DataManager.Instance.Online = false;
                 }
             }
@@ -521,7 +521,7 @@ namespace Game.Net
                 
                 if (DataManager.Instance.Online)
                 {
-                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("server_disconnected"));
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("serverDisconnected"));
                 }
                 
                 DataManager.Instance.Online = false;
@@ -574,7 +574,7 @@ namespace Game.Net
             }
             else
             {
-                DataManager.Instance.Tip = (TipType.Fly, GetErrorText("rate_limit"));
+                DataManager.Instance.Tip = (TipType.Fly, GetErrorText("rateLimit"));
             }
         }
 
@@ -644,7 +644,7 @@ namespace Game.Net
                 );
 
                 DataManager.Instance.Dark = GetErrorText(
-                    "reconnecting_countdown",
+                    "reconnectingCountdown",
                     reconnectAttempts.ToString(),
                     Mathf.CeilToInt(delay).ToString()
                 );
@@ -652,7 +652,7 @@ namespace Game.Net
                 Utils.Debug.Log("Reconnect", $"Attempt #{reconnectAttempts}, waiting {delay}s");
                 yield return new WaitForSeconds(delay);
 
-                DataManager.Instance.Dark = GetErrorText("reconnecting_attempt", reconnectAttempts.ToString());
+                DataManager.Instance.Dark = GetErrorText("reconnectingAttempt", reconnectAttempts.ToString());
 
                 yield return ConnectCoroutine(
                     DataManager.Instance.SelectedServer.Ip,
@@ -662,7 +662,7 @@ namespace Game.Net
                 if (DataManager.Instance.Online)
                 {
                     Utils.Debug.LogSuccess("Reconnect", $"Reconnect successful after {reconnectAttempts} attempts");
-                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("reconnect_success"));
+                    DataManager.Instance.Tip = (TipType.Fly, GetErrorText("reconnectSuccess"));
                     ResetReconnectState();
                     
                     // TODO: Use event to notify upper layer to restart startup flow

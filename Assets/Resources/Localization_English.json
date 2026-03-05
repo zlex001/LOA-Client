@@ -1,7 +1,7 @@
 {
   "loading": "Loading...",
   "connecting": "Connecting...",
-  "connection_timeout": "Connection timeout",
-  "network_error": "Network error",
-  "parse_error": "Data parsing error"
+  "connectionTimeout": "Connection timeout",
+  "networkError": "Network error",
+  "parseError": "Data parsing error"
 }

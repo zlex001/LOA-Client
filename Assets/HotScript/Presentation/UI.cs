@@ -100,7 +100,6 @@ namespace Game.Presentation
             DataManager.Instance.after.Register(DataManager.Type.TutorialIndex, OnAfterTutorialIndexChanged);
             DataManager.Instance.after.Register(DataManager.Type.TutorialStep, OnAfterTutorialStepChanged);
             DataManager.Instance.after.Register(DataManager.Type.Dark, OnAfterDataDark);
-            DataManager.Instance.after.Register(DataManager.Type.GatewayUI, OnAfterGatewayUIChanged);
 
             DataManager.Instance.after.Register(DataManager.Type.Tip, OnAfterTipChanged);
         }
@@ -561,7 +560,7 @@ namespace Game.Presentation
                 loginDarkTimer?.Cancel();
                 loginDarkTimer = Timer.Register(1f, () => 
                 {
-                    Open(Config.UI.Dark, Localization.Instance.Get("connecting"));
+                    Open(Config.UI.Dark, DataManager.Instance.GetText("connecting") ?? "...");
                 });
             }
         }
@@ -625,15 +624,6 @@ namespace Game.Presentation
                 Close(Config.UI.Dark);
             }
         }
-        private void OnAfterGatewayUIChanged(params object[] args)
-        {
-            var uiCommand = args[0] as UICommand;
-            if (uiCommand == null) return;
-
-            var uiConfig = typeof(Config.UI).GetField(uiCommand.Name).GetValue(null);
-            Open(((string, string, int, bool))uiConfig, uiCommand.Data);
-        }
-
         private void OnAfterTutorialIndexChanged(params object[] args)
         {
             Open(Config.UI.Tutorial);

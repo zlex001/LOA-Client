@@ -4,10 +4,6 @@ using UnityEngine;
 
 namespace Game.Net.Authentication
 {
-    /// <summary>
-    /// Common module for the Authentication system in Net layer.
-    /// Shared state, initialization, and protocol helpers used by Connection and other modules.
-    /// </summary>
     public static class Agent
     {
         private static bool _initialized;
@@ -22,21 +18,18 @@ namespace Game.Net.Authentication
             Connection.Init();
         }
 
-        public static void SendQuickStartRequest()
-        {
-            NetManager.Instance.Send(new QuickStartRequest
-            {
-                device = DataManager.Instance.Device,
-                version = DataManager.Instance.AppVersion,
-                platform = Application.platform.ToString(),
-                language = DataManager.Instance.Language.ToString()
-            });
-        }
-
         public static void SendLoginRequest(Account account)
         {
-            Utils.Debug.Log("Auth", "Sending Login protocol");
-            NetManager.Instance.Send(new Login(account));
+            Utils.Debug.Log("Auth", $"Sending LoginRequest, id={account?.Id ?? "(quick)"}");
+            NetManager.Instance.Send(new LoginRequest
+            {
+                id = account?.Id,
+                password = account?.Password,
+                version = DataManager.Instance.AppVersion,
+                platform = Application.platform.ToString(),
+                device = DataManager.Instance.Device,
+                language = DataManager.Instance.Language.ToString()
+            });
         }
 
         private static void OnAfterLoginResponseChanged(params object[] args)

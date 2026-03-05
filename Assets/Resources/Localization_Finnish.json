@@ -1,7 +1,7 @@
 {
   "loading": "Ladataan...",
   "connecting": "Yhdistetään...",
-  "connection_timeout": "Yhteyden aikakatkaisu",
-  "network_error": "Verkkovirhe",
-  "parse_error": "Jäsennysvirhe data"
+  "connectionTimeout": "Yhteyden aikakatkaisu",
+  "networkError": "Verkkovirhe",
+  "parseError": "Jäsennysvirhe data"
 }

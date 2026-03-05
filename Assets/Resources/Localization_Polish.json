@@ -1,7 +1,7 @@
 {
   "loading": "Ładowanie...",
   "connecting": "Łączenie...",
-  "connection_timeout": "Przekroczono limit czasu połączenia",
-  "network_error": "Błąd sieci",
-  "parse_error": "Błąd parsowania danych"
+  "connectionTimeout": "Przekroczono limit czasu połączenia",
+  "networkError": "Błąd sieci",
+  "parseError": "Błąd parsowania danych"
 }
