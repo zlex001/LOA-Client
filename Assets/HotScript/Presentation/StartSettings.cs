@@ -173,6 +173,7 @@ namespace Game.Presentation
         private void OnLanguageChanged(params object[] args)
         {
             Localization.Instance.Init(DataManager.Instance.Language.ToString());
+            DataManager.Instance.Texts = Localization.Instance.GetAll();
             BuildUI();
         }
 

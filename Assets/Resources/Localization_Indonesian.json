@@ -3,5 +3,8 @@
   "connecting": "Menghubungkan...",
   "connectionTimeout": "Waktu koneksi habis",
   "networkError": "Kesalahan jaringan",
-  "parseError": "Kesalahan parsing data"
+  "parseError": "Kesalahan parsing data",
+  "footer": "Versi {0} | Perangkat {1}",
+  "connecting_auth": "Menghubungkan ke server autentikasi...",
+  "launching_game": "Meluncurkan game..."
 }

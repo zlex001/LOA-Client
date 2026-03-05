@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Framework;
 using Game.Data;
 using Newtonsoft.Json;
 
@@ -23,7 +22,7 @@ namespace Game.Net.Authentication
             {
                 Utils.Debug.LogError("Gateway", $"Request failed: {response ?? "Timeout"}");
                 string errorKey = string.IsNullOrEmpty(response) ? "connectionTimeout" : "networkError";
-                DataManager.Instance.Dark = Localization.Instance.Get(errorKey);
+                DataManager.Instance.Dark = DataManager.Instance.GetText(errorKey);
                 return;
             }
 
@@ -34,13 +33,16 @@ namespace Game.Net.Authentication
                 if (gatewayResponse?.Servers == null || gatewayResponse.Servers.Count == 0)
                 {
                     Utils.Debug.LogError("Gateway", "Parse failed: servers is null or empty");
-                    DataManager.Instance.Dark = Localization.Instance.Get("parseError");
+                    DataManager.Instance.Dark = DataManager.Instance.GetText("parseError");
                     return;
                 }
 
                 if (gatewayResponse.Texts != null)
                 {
                     DataManager.Instance.Texts = gatewayResponse.Texts;
+                    string lang = DataManager.Instance.Language.ToString();
+                    string titleSample = gatewayResponse.Texts != null && gatewayResponse.Texts.TryGetValue("title", out var t) ? t : "(none)";
+                    Utils.Debug.Log("Gateway", $"Texts set for language={lang}, keyCount={gatewayResponse.Texts.Count}, title=\"{titleSample}\"");
                 }
 
                 var servers = new List<Server>();
@@ -58,7 +60,7 @@ namespace Game.Net.Authentication
             catch (Exception ex)
             {
                 Utils.Debug.LogError("Gateway", $"Exception: {ex.Message}\nStackTrace: {ex.StackTrace}");
-                DataManager.Instance.Dark = Localization.Instance.Get("parseError");
+                DataManager.Instance.Dark = DataManager.Instance.GetText("parseError");
             }
         }
     }

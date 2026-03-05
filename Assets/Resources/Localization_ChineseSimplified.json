@@ -3,5 +3,8 @@
   "connecting": "连接中...",
   "connectionTimeout": "连接超时",
   "networkError": "网络错误",
-  "parseError": "数据解析错误"
+  "parseError": "数据解析错误",
+  "footer": "版本 {0} | 设备 {1}",
+  "connecting_auth": "正在连接认证服务器...",
+  "launching_game": "正在启动游戏..."
 }

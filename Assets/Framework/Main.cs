@@ -44,7 +44,6 @@ namespace Framework
         void Start()
         {
             string language = LanguageDetector.DetermineLanguage();
-            Debug.Log($"[Lang] Main.Start: DetermineLanguage returned \"{language}\", PlayerPrefs LANGUAGE=\"{PlayerPrefs.GetString("LANGUAGE", "(none)")}\"");
             InitLanguage(language);
             _footer.text = _lang.Get("footer", config.appVersion, Device.Split('-').Last());
             
@@ -62,10 +61,8 @@ namespace Framework
                 PlayerPrefs.SetString("LANGUAGE", language);
                 PlayerPrefs.Save();
             }
-            Debug.Log($"[Lang] Main.InitLanguage: input=\"{language}\", PlayerPrefs existed={hadKey}, final PlayerPrefs=\"{PlayerPrefs.GetString("LANGUAGE")}\"");
             _lang = Localization.Instance;
             _lang.Init(language);
-            Debug.Log($"[Lang] Localization.Init: loaded language=\"{_lang.CurrentLanguage}\"");
         }
 
         void SetDescription(string text) => _description.text = text;
@@ -105,7 +102,7 @@ namespace Framework
                     else
                     {
                         Debug.LogError($"[Main] Device auth failed: {response}");
-                        SetDescription(_lang.Get("auth_failed", _lang.Get(string.IsNullOrEmpty(response) ? "connection_timeout" : "network_error")));
+                        SetDescription(_lang.Get("auth_failed", _lang.Get(string.IsNullOrEmpty(response) ? "connectionTimeout" : "networkError")));
                     }
                 });
         }
@@ -238,7 +235,7 @@ namespace Framework
             catch (System.Exception ex)
             {
                 Debug.LogError($"[Main] Launch failed: {ex.Message}");
-                SetDescription(_lang.Get("launch_failed", _lang.Get("parse_error")));
+                SetDescription(_lang.Get("launch_failed", _lang.Get("parseError")));
                 gameObject.SetActive(true);
                 _isProcessing = false;
             }

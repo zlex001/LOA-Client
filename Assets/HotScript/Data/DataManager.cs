@@ -192,11 +192,6 @@ namespace Game.Data
                 if (typeof(T).IsValueType && v.Equals(default(T))) { v = default(T); }
                 befor.Fire(e, o, v);
                 raw[e] = v;
-                if (e is Type type2 && type2 == Type.LoginResponse)
-                {
-                    Utils.Debug.Log("DataManager", $"LoginResponse changed to: {v}, firing after event");
-                }
-
                 after.Fire(e, v);
             }
         }
@@ -227,7 +222,6 @@ namespace Game.Data
             string userLang = User.Language ?? "";
             string langSource = !string.IsNullOrEmpty(prefsLang) ? prefsLang : userLang;
             Languages parsedLang = Enum.TryParse(langSource, out Languages lang) ? lang : Languages.ChineseSimplified;
-            Utils.Debug.Log("Lang", $"DataManager.Awake: PlayerPrefs LANGUAGE=\"{prefsLang}\", User.Language=\"{userLang}\", langSource=\"{langSource}\", parsedLang={parsedLang}");
             raw[Type.Language] = parsedLang;
             raw[Type.FontSize] = User.FontSize > 0 ? User.FontSize : 30;
 

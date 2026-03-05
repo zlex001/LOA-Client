@@ -3,5 +3,8 @@
   "connecting": "Verbinding maken...",
   "connectionTimeout": "Verbindingstime-out",
   "networkError": "Netwerkfout",
-  "parseError": "Parsing-fout gegevens"
+  "parseError": "Parsing-fout gegevens",
+  "footer": "Versie {0} | Apparaat {1}",
+  "connecting_auth": "Verbinden met authenticatieserver...",
+  "launching_game": "Spel wordt gestart..."
 }

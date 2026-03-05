@@ -3,5 +3,8 @@
   "connecting": "Connexion en cours...",
   "connectionTimeout": "Délai de connexion dépassé",
   "networkError": "Erreur réseau",
-  "parseError": "Erreur d'analyse des données"
+  "parseError": "Erreur d'analyse des données",
+  "footer": "Version {0} | Appareil {1}",
+  "connecting_auth": "Connexion au serveur d'authentification...",
+  "launching_game": "Lancement du jeu..."
 }

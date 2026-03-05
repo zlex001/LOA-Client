@@ -3,5 +3,8 @@
   "connecting": "Opretter forbindelse...",
   "connectionTimeout": "Forbindelse timeout",
   "networkError": "Netværksfejl",
-  "parseError": "Parsing-fejl data"
+  "parseError": "Parsing-fejl data",
+  "footer": "Version {0} | Enhed {1}",
+  "connecting_auth": "Forbinder til godkendelsesserver...",
+  "launching_game": "Starter spillet..."
 }

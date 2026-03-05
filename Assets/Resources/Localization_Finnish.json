@@ -3,5 +3,8 @@
   "connecting": "Yhdistetään...",
   "connectionTimeout": "Yhteyden aikakatkaisu",
   "networkError": "Verkkovirhe",
-  "parseError": "Jäsennysvirhe data"
+  "parseError": "Jäsennysvirhe data",
+  "footer": "Versio {0} | Laite {1}",
+  "connecting_auth": "Yhdistetään tunnistautumispalvelimeen...",
+  "launching_game": "Käynnistetään peliä..."
 }

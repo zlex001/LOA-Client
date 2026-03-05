@@ -3,5 +3,8 @@
   "connecting": "Ansluter...",
   "connectionTimeout": "Timeout för anslutning",
   "networkError": "Nätverksfel",
-  "parseError": "Tolkningsfel data"
+  "parseError": "Tolkningsfel data",
+  "footer": "Version {0} | Enhet {1}",
+  "connecting_auth": "Ansluter till autentiseringsservern...",
+  "launching_game": "Startar spelet..."
 }

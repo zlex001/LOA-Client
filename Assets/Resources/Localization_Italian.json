@@ -3,5 +3,8 @@
   "connecting": "Connessione in corso...",
   "connectionTimeout": "Timeout connessione",
   "networkError": "Errore di rete",
-  "parseError": "Errore di parsing dati"
+  "parseError": "Errore di parsing dati",
+  "footer": "Versione {0} | Dispositivo {1}",
+  "connecting_auth": "Connessione al server di autenticazione...",
+  "launching_game": "Avvio del gioco..."
 }

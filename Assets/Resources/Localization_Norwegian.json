@@ -3,5 +3,8 @@
   "connecting": "Kobler til...",
   "connectionTimeout": "Tilkobling tidsavbrudd",
   "networkError": "Nettverksfeil",
-  "parseError": "Analyseringsfeil data"
+  "parseError": "Analyseringsfeil data",
+  "footer": "Versjon {0} | Enhet {1}",
+  "connecting_auth": "Kobler til autentiseringsserver...",
+  "launching_game": "Starter spillet..."
 }

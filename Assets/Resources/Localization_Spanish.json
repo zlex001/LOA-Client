@@ -3,5 +3,8 @@
   "connecting": "Conectando...",
   "connectionTimeout": "Tiempo de conexión agotado",
   "networkError": "Error de red",
-  "parseError": "Error de análisis de datos"
+  "parseError": "Error de análisis de datos",
+  "footer": "Versión {0} | Dispositivo {1}",
+  "connecting_auth": "Conectando al servidor de autenticación...",
+  "launching_game": "Iniciando el juego..."
 }

@@ -23,6 +23,7 @@ namespace Game.Presentation
             }
 
             DataManager.Instance.Init();
+            DataManager.Instance.Texts = Localization.Instance.GetAll();
             UI.Instance.Init(9f, 16f);
             Audio.Instance.Init();
             NetManager.Instance.Init();
@@ -30,7 +31,7 @@ namespace Game.Presentation
             Game.Basic.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
             Game.Basic.Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
 
-            DataManager.Instance.Dark = Localization.Instance.Get("loading");
+            DataManager.Instance.Dark = DataManager.Instance.GetText("loading");
             Net.Authentication.Gateway.Request();
         }
 

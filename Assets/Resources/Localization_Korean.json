@@ -3,5 +3,8 @@
   "connecting": "연결 중...",
   "connectionTimeout": "연결 시간 초과",
   "networkError": "네트워크 오류",
-  "parseError": "데이터 파싱 오류"
+  "parseError": "데이터 파싱 오류",
+  "footer": "버전 {0} | 기기 {1}",
+  "connecting_auth": "인증 서버에 연결 중...",
+  "launching_game": "게임 시작 중..."
 }

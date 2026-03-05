@@ -43,6 +43,12 @@ namespace Framework
             }
         }
 
+        public Dictionary<string, string> GetAll()
+        {
+            if (_texts == null) return new Dictionary<string, string>();
+            return new Dictionary<string, string>(_texts);
+        }
+
         public string Get(string key, params object[] args)
         {
             // Auto-initialize if not initialized yet (for hot-loaded assemblies)

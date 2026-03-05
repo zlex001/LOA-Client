@@ -3,5 +3,8 @@
   "connecting": "Łączenie...",
   "connectionTimeout": "Przekroczono limit czasu połączenia",
   "networkError": "Błąd sieci",
-  "parseError": "Błąd parsowania danych"
+  "parseError": "Błąd parsowania danych",
+  "footer": "Wersja {0} | Urządzenie {1}",
+  "connecting_auth": "Łączenie z serwerem uwierzytelniania...",
+  "launching_game": "Uruchamianie gry..."
 }

@@ -3,5 +3,8 @@
   "connecting": "接続中...",
   "connectionTimeout": "接続タイムアウト",
   "networkError": "ネットワークエラー",
-  "parseError": "データ解析エラー"
+  "parseError": "データ解析エラー",
+  "footer": "バージョン {0} | デバイス {1}",
+  "connecting_auth": "認証サーバーに接続中...",
+  "launching_game": "ゲームを起動中..."
 }

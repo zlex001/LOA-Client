@@ -46,6 +46,7 @@ namespace Game.Presentation
             if (servers.Count > 0)
             {
                 Close();
+                UI.Instance.Open(Config.UI.Start);
             }
         }
         private void OnAfterDataDark(params object[] args)

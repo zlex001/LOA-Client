@@ -3,5 +3,8 @@
   "connecting": "Bağlanıyor...",
   "connectionTimeout": "Bağlantı zaman aşımı",
   "networkError": "Ağ hatası",
-  "parseError": "Veri ayrıştırma hatası"
+  "parseError": "Veri ayrıştırma hatası",
+  "footer": "Sürüm {0} | Cihaz {1}",
+  "connecting_auth": "Kimlik doğrulama sunucusuna bağlanılıyor...",
+  "launching_game": "Oyun başlatılıyor..."
 }

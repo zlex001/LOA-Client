@@ -3,5 +3,8 @@
   "connecting": "Verbindung wird hergestellt...",
   "connectionTimeout": "Verbindungstimeout",
   "networkError": "Netzwerkfehler",
-  "parseError": "Parsing-Fehler"
+  "parseError": "Parsing-Fehler",
+  "footer": "Version {0} | Gerät {1}",
+  "connecting_auth": "Verbindung zum Authentifizierungsserver...",
+  "launching_game": "Spiel wird gestartet..."
 }

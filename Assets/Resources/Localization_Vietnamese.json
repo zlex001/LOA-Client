@@ -3,5 +3,8 @@
   "connecting": "Đang kết nối...",
   "connectionTimeout": "Hết thời gian kết nối",
   "networkError": "Lỗi mạng",
-  "parseError": "Lỗi phân tích dữ liệu"
+  "parseError": "Lỗi phân tích dữ liệu",
+  "footer": "Phiên bản {0} | Thiết bị {1}",
+  "connecting_auth": "Đang kết nối đến máy chủ xác thực...",
+  "launching_game": "Đang khởi chạy trò chơi..."
 }
