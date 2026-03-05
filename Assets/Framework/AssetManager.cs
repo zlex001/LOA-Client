@@ -41,7 +41,7 @@ namespace Framework
         {
 #if UNITY_EDITOR
             return;
-#endif
+#else
             abName = NormalizeBundleName(abName);
             string path = GetBundlePath(abName);
             if (!System.IO.File.Exists(path))
@@ -60,6 +60,7 @@ namespace Framework
                 foreach (var dep in dependencies)
                     SyncLoadAssetBundle(dep);
             }
+#endif
         }
 
         public void AsyncLoadRes<T>(string abName, string resName, Action<T> callback) where T : UnityEngine.Object

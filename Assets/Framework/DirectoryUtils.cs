@@ -32,7 +32,7 @@ namespace Framework
                 }
                 ret = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ret = false;
             }
