@@ -1,0 +1,16 @@
+# Git commit message temp file (AI task-complete flow)
+.git_commit_msg.txt
+
+# Unity
+Library/
+Temp/
+Logs/
+UserSettings/
+obj/
+
+# IDE / OS
+.vs/
+.vscode/
+*.user
+*.suo
+*.DS_Store
