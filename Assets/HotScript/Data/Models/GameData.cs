@@ -213,4 +213,16 @@ namespace Game.Data
         public InformationChannel channel { get; set; }
     }
 
+    /// <summary>
+    /// Temporary container for guest account data from LoginResponse.
+    /// Set by Net (Protocol.LoginResponse.Processed), consumed by DataManager.OnAfterLoginResponseChanged.
+    /// </summary>
+    public class LoginResponseAccountData
+    {
+        public string AccountId { get; set; }
+        public string Password { get; set; }
+        public bool IsGuest { get; set; }
+        public bool IsNewAccount { get; set; }
+    }
+
 }

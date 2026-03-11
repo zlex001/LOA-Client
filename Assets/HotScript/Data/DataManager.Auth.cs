@@ -18,6 +18,16 @@ namespace Game.Data
         public LoginResponseAccountData LoginResponseAccountData { get; set; }
         #endregion
 
+        #region Auth Initialization
+
+        private void RegisterAuthMonitors()
+        {
+            after.Register(Type.LoginAccount, OnAfterLoginAccountChanged);
+            after.Register(Type.LoginResponse, OnAfterLoginResponseChanged);
+        }
+
+        #endregion
+
         #region Auth Monitor Handlers
 
         private void OnAfterLoginAccountChanged(params object[] args)
@@ -57,7 +67,12 @@ namespace Game.Data
                 User.SelectedAccountIndex = User.Accounts.Count - 1;
                 Local.Instance.Save(User);
                 Utils.Debug.Log("Auth",
-                    $"Saved guest account: {responseData.AccountId}");
+                    $"Saved guest account: {responseData.AccountId}, isNew: {responseData.IsNewAccount}");
+            }
+            else
+            {
+                Utils.Debug.Log("Auth",
+                    $"Guest account already exists: {responseData.AccountId}");
             }
 
             LoginResponseAccountData = null;
