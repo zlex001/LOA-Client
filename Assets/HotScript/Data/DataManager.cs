@@ -73,7 +73,6 @@ namespace Game.Data
             LoginAccount,
             Online,
             LoginResponse,
-            LoginResponseMessage,
             Initialize,
             InitialResponse,
             InitialResponseMessage,

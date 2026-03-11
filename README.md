@@ -55,21 +55,21 @@ Unity引擎 + Framework程序集
 - **Unity 版本**：Unity 2021.3 LTS 或更高
 - **操作系统**：Windows 10+ / macOS 12+ / Linux
 - **开发工具**：Visual Studio 2022 / JetBrains Rider / VSCode
-- **版本管理**：Git（由 SVN 迁移，见 [SVN-to-Git-Migration](Documents/SVN-to-Git-Migration.md)）
+- **版本管理**：SVN
 
 ### 克隆项目
 
 ```bash
-# 使用 Git 克隆
-git clone [GIT_REPO_URL] LOA-Client-git
-cd LOA-Client-git
+# 使用SVN克隆
+svn checkout [SVN_URL] LOA-Client
+cd LOA-Client/trunk
 ```
 
 ### 打开项目
 
 1. 启动 Unity Hub
 2. 点击"添加项目"
-3. 选择 `LOA-Client-git` 目录（即本仓库根目录）
+3. 选择 `LOA-Client/trunk` 目录
 4. 使用 Unity 2021.3+ 打开
 
 ### 首次运行
@@ -88,7 +88,7 @@ cd LOA-Client-git
 ## 目录结构
 
 ```
-LOA-Client-git/
+LOA-Client/trunk/
 ├── Assets/                     # Unity 资源目录
 │   ├── Basic/                  # Unity 主程序集
 │   │   ├── Main.cs             # Unity 启动入口
@@ -267,7 +267,7 @@ Debug.Log($"[Net] Online: {online}");
 
 ## 相关链接
 
-- **服务端项目**：`LOA-Server/trunk/`（若服务端已迁 Git 则对应仓库路径）
+- **服务端项目**：`LOA-Server/trunk/`
 - **设计文档**：`Documents/`
 - **技术支持**：[内部Wiki]
 
