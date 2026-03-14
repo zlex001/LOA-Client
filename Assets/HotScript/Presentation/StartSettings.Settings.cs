@@ -167,12 +167,13 @@ namespace Game.Presentation
             valueTextObj.AddComponent<Framework.FontScaler>();
 
             int[] fontSizes = { 25, 30, 35, 40 };
-            string[] fontLabels = {
-                GetText("font_size_small"),
-                GetText("font_size_medium"),
-                GetText("font_size_large"),
-                GetText("font_size_extra_large")
-            };
+            string[] fontLabelKeys = { "font_size_small", "font_size_medium", "font_size_large", "font_size_extra_large" };
+            string[] fontLabels = new string[4];
+            for (int i = 0; i < 4; i++)
+            {
+                var s = GetText(fontLabelKeys[i]);
+                fontLabels[i] = string.IsNullOrEmpty(s) ? fontLabelKeys[i] : s;
+            }
             int currentFontSize = DataManager.Instance.FontSize;
             int currentIndex = System.Array.IndexOf(fontSizes, currentFontSize);
             if (currentIndex < 0) currentIndex = 1;
@@ -290,7 +291,9 @@ namespace Game.Presentation
 
         private string GetLanguageName(DataManager.Languages language)
         {
-            return GetText($"lang_{language}");
+            var key = $"lang_{language}";
+            var s = GetText(key);
+            return string.IsNullOrEmpty(s) ? key : s;
         }
 
         private void OnLanguageItemClick()

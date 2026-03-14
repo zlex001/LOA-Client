@@ -91,6 +91,7 @@ namespace Game.Presentation
             
             // Setup UI Listeners
             DataManager.Instance.after.Register(DataManager.Type.LoginResponse, OnAfterLoginResponseChanged);
+            DataManager.Instance.after.Register(DataManager.Type.Texts, OnTextsChanged);
 
             StartCoroutine(Animate());
         }
@@ -98,6 +99,12 @@ namespace Game.Presentation
         public override void OnClose()
         {
             DataManager.Instance.after.Unregister(DataManager.Type.LoginResponse, OnAfterLoginResponseChanged);
+            DataManager.Instance.after.Unregister(DataManager.Type.Texts, OnTextsChanged);
+        }
+
+        private void OnTextsChanged(params object[] args)
+        {
+            RefreshUI();
         }
 
         public override void OnScreenAdaptationChanged()

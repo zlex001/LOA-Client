@@ -1,5 +1,6 @@
 using Framework;
 using Game.Data;
+using Game.Net;
 using Game.Utils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,14 +41,10 @@ namespace Game.Presentation
         private string GetText(string key)
         {
             var texts = DataManager.Instance.Texts;
-            if (texts != null && texts.ContainsKey(key))
-            {
-                return texts[key];
-            }
+            if (texts != null && texts.TryGetValue(key, out var value) && !string.IsNullOrEmpty(value))
+                return value;
             if (_loggedMissingKeys.Add(key))
-            {
-                Utils.Debug.LogWarning("StartSettings", $"Texts missing key: {key}");
-            }
+                Utils.Debug.LogWarning("StartSettings", $"Texts missing or empty key: {key}");
             return key;
         }
 
@@ -173,8 +170,7 @@ namespace Game.Presentation
         private void OnLanguageChanged(params object[] args)
         {
             Localization.Instance.Init(DataManager.Instance.Language.ToString());
-            DataManager.Instance.Texts = Localization.Instance.GetAll();
-            BuildUI();
+            Net.Authentication.Gateway.Request(() => BuildUI());
         }
 
         #endregion
