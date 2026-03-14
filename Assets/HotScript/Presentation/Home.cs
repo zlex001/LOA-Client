@@ -568,7 +568,7 @@ namespace Game.Presentation
 
         private void OnAfterHomeChanged(params object[] args)
         {
-            Protocol.Home home = (Protocol.Home)args[0];
+            var home = args[0] as HomeData;
 
             string[] resourceKeys = { "Hp", "Mp", "Lp" };
             foreach (var key in resourceKeys)
@@ -608,7 +608,7 @@ namespace Game.Presentation
                 }
             }
 
-            if (home.scene?.maps != null)
+            if (home?.scene?.maps != null)
             {
                 transform.Find("Scene").GetComponent<LoopGridView>().RefreshAllShownItem();
             }
