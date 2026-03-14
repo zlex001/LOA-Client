@@ -14,7 +14,7 @@ namespace Game.Net.Authentication
         {
             _onComplete = onComplete;
             string gatewayUrl = $"http://{DataManager.Instance.Gateway}:8880";
-            Http.Instance.AcceptLanguage = DataManager.Instance.Language.ToString();
+            Http.Instance.AcceptLanguage = LanguageDetector.InternalToStandardCode(DataManager.Instance.Language.ToString());
             string url = $"{gatewayUrl}/api/authentication/ips";
 
             Http.Instance.RequestGet(url, OnResponse);
