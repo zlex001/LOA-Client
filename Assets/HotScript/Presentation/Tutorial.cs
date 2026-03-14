@@ -167,6 +167,22 @@ namespace Game.Presentation
         #endregion
 
         #region Map Highlighting
+        private HomeMap FindHomeMapAtPos(int[] pos)
+        {
+            if (pos == null || pos.Length < 3) return null;
+            var allMaps = FindObjectsOfType<HomeMap>();
+            foreach (var map in allMaps)
+            {
+                var mapField = map.GetType().GetField("map", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (mapField == null) continue;
+                var mapData = mapField.GetValue(map) as MapData;
+                if (mapData?.pos == null || mapData.pos.Length < 3) continue;
+                if (mapData.pos[0] == pos[0] && mapData.pos[1] == pos[1] && mapData.pos[2] == pos[2])
+                    return map;
+            }
+            return null;
+        }
+
         private IEnumerator HighlightMapLocation()
         {
             if (currentStep.targetPos == null || currentStep.targetPos.Length < 3)
@@ -177,38 +193,25 @@ namespace Game.Presentation
 
             Utils.Debug.Log("Tutorial", $"Map highlight requested for pos: [{currentStep.targetPos[0]},{currentStep.targetPos[1]},{currentStep.targetPos[2]}]");
 
-            // Find all HomeMap components and locate the one with matching position
-            var allMaps = FindObjectsOfType<HomeMap>();
-            Utils.Debug.Log("Tutorial", $"Found {allMaps.Length} HomeMap instances");
-
-            HomeMap targetMap = null;
-            foreach (var map in allMaps)
+            HomeMap targetMap = FindHomeMapAtPos(currentStep.targetPos);
+            const float retryInterval = 0.2f;
+            const float maxWait = 2.5f;
+            float elapsed = 0f;
+            while (targetMap == null && elapsed < maxWait)
             {
-                // Access the map's position through its RectTransform name or internal data
-                // HomeMap stores its Map data internally, we need to find by position
-                var mapField = map.GetType().GetField("map", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (mapField != null)
-                {
-                    var mapData = mapField.GetValue(map) as MapData;
-                    if (mapData != null && mapData.pos != null && mapData.pos.Length >= 3)
-                    {
-                        if (mapData.pos[0] == currentStep.targetPos[0] &&
-                            mapData.pos[1] == currentStep.targetPos[1] &&
-                            mapData.pos[2] == currentStep.targetPos[2])
-                        {
-                            targetMap = map;
-                            Utils.Debug.Log("Tutorial", $"Found target map: {mapData.name} at pos [{mapData.pos[0]},{mapData.pos[1]},{mapData.pos[2]}]");
-                            break;
-                        }
-                    }
-                }
+                Utils.Debug.Log("Tutorial", $"HomeMap not found yet, retrying in {retryInterval}s ({elapsed:F1}/{maxWait}s)");
+                yield return new WaitForSeconds(retryInterval);
+                elapsed += retryInterval;
+                targetMap = FindHomeMapAtPos(currentStep.targetPos);
             }
 
             if (targetMap == null)
             {
-                Utils.Debug.LogWarning("Tutorial", $"Map not found at pos: [{currentStep.targetPos[0]},{currentStep.targetPos[1]},{currentStep.targetPos[2]}]");
+                Utils.Debug.LogWarning("Tutorial", $"Map not found at pos: [{currentStep.targetPos[0]},{currentStep.targetPos[1]},{currentStep.targetPos[2]}] after {maxWait}s");
                 yield break;
             }
+
+            Utils.Debug.Log("Tutorial", $"Found target map at pos [{currentStep.targetPos[0]},{currentStep.targetPos[1]},{currentStep.targetPos[2]}]");
 
             highlightedTarget = targetMap.transform;
 
