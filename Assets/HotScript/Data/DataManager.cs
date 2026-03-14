@@ -243,8 +243,6 @@ namespace Game.Data
         private void RegisterEvents()
         {
             Basic.Event.Instance.Add("UI.Event.Click", OnUIClick);
-            Basic.Event.Instance.Add(InitializeClick.Random, OnInitializeRandomClick);
-            Basic.Event.Instance.Add(InitializeClick.Confirm, OnInitializeConfirmClick);
             Basic.Event.Instance.Add("Game.Home.Event.SceneZoomIn", OnHomeSceneZoomIn);
             Basic.Event.Instance.Add("Game.Home.Event.SceneZoomOut", OnHomeSceneZoomOut);
             Basic.Event.Instance.Add("Game.Home.Event.ChannelToggle", OnHomeChannelToggle);
