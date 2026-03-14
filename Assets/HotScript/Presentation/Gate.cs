@@ -28,8 +28,8 @@ namespace Game.Presentation
             Audio.Instance.Init();
             NetManager.Instance.Init();
 
-            Game.Basic.Event.Instance.Add("Game.Initialize.Click.Confirm", OnInitializeConfirmClick);
-            Game.Basic.Event.Instance.Add("Game.Initialize.Click.Random", OnInitializeRandomClick);
+            Game.Basic.Event.Instance.Add(Initialize.Click.Confirm, OnInitializeConfirmClick);
+            Game.Basic.Event.Instance.Add(Initialize.Click.Random, OnInitializeRandomClick);
 
             DataManager.Instance.Dark = DataManager.Instance.GetText("loading");
             Net.Authentication.Gateway.Request();

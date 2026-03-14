@@ -63,12 +63,12 @@ namespace Game.Data
         private void OnInitializeConfirmClick(params object[] args)
         {
             string name = (string)args[0];
-            Basic.Event.Instance.Fire("Game.Initialize.Click.Confirm", name);
+            Basic.Event.Instance.Fire(Game.Presentation.Initialize.Click.Confirm, name);
         }
 
         private void OnInitializeRandomClick(params object[] args)
         {
-            Basic.Event.Instance.Fire("Game.Initialize.Click.Random");
+            Basic.Event.Instance.Fire(Game.Presentation.Initialize.Click.Random);
         }
 
         #endregion
