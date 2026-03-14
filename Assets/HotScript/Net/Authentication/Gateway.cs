@@ -8,8 +8,11 @@ namespace Game.Net.Authentication
 {
     public static class Gateway
     {
-        public static void Request()
+        private static Action _onComplete;
+
+        public static void Request(Action onComplete = null)
         {
+            _onComplete = onComplete;
             string gatewayUrl = $"http://{DataManager.Instance.Gateway}:8880";
             Http.Instance.AcceptLanguage = DataManager.Instance.Language.ToString();
             string url = $"{gatewayUrl}/api/authentication/ips";
@@ -24,6 +27,9 @@ namespace Game.Net.Authentication
                 Utils.Debug.LogError("Gateway", $"Request failed: {response ?? "Timeout"}");
                 string errorKey = string.IsNullOrEmpty(response) ? "connectionTimeout" : "networkError";
                 DataManager.Instance.Dark = DataManager.Instance.GetText(errorKey);
+                var cb = _onComplete;
+                _onComplete = null;
+                cb?.Invoke();
                 return;
             }
 
@@ -35,14 +41,18 @@ namespace Game.Net.Authentication
                 {
                     Utils.Debug.LogError("Gateway", "Parse failed: servers is null or empty");
                     DataManager.Instance.Dark = DataManager.Instance.GetText("parseError");
+                    var cb = _onComplete;
+                    _onComplete = null;
+                    cb?.Invoke();
                     return;
                 }
 
                 if (gatewayResponse.Texts != null)
                 {
                     DataManager.Instance.Texts = gatewayResponse.Texts;
+                    FillPreConnectKeysFromLocal();
                     string lang = DataManager.Instance.Language.ToString();
-                    string titleSample = gatewayResponse.Texts != null && gatewayResponse.Texts.TryGetValue("title", out var t) ? t : "(none)";
+                    string titleSample = gatewayResponse.Texts.TryGetValue("title", out var t) ? t : "(none)";
                     Utils.Debug.Log("Gateway", $"Texts set for language={lang}, keyCount={gatewayResponse.Texts.Count}, title=\"{titleSample}\"");
                 }
 
@@ -62,6 +72,24 @@ namespace Game.Net.Authentication
             {
                 Utils.Debug.LogError("Gateway", $"Exception: {ex.Message}\nStackTrace: {ex.StackTrace}");
                 DataManager.Instance.Dark = DataManager.Instance.GetText("parseError");
+            }
+            var callback = _onComplete;
+            _onComplete = null;
+            callback?.Invoke();
+        }
+
+        private static readonly string[] PreConnectKeys = { "loading", "connecting", "connectionTimeout", "networkError", "parseError" };
+
+        private static void FillPreConnectKeysFromLocal()
+        {
+            var texts = DataManager.Instance.Texts;
+            if (texts == null) return;
+            Localization.Instance.Init(DataManager.Instance.Language.ToString());
+            var local = Localization.Instance.GetAll();
+            foreach (var key in PreConnectKeys)
+            {
+                if (!texts.ContainsKey(key) && local.TryGetValue(key, out var val))
+                    texts[key] = val;
             }
         }
     }
