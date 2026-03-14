@@ -548,13 +548,13 @@ namespace Game.Net
 
         private void OnAfterOptionChanged(params object[] args)
         {
-            Protocol.Option option = (Protocol.Option)args[0];
+            OptionData option = (OptionData)args[0];
 
             if (option != null && option.lefts != null)
             {
                 foreach (var item in option.lefts)
                 {
-                    if (item.type == Protocol.Option.Item.Type.ToggleGroup && item.data.ContainsKey("ID") && item.data["ID"] == "heartbeat_log")
+                    if (item.type == OptionItemType.ToggleGroup && item.data != null && item.data.ContainsKey("ID") && item.data["ID"] == "heartbeat_log")
                     {
                         bool enableHeartbeatLog = item.data.ContainsKey("Value") && item.data["Value"] == "True";
                         Utils.Debug.EnableHeartbeatLog = enableHeartbeatLog;
