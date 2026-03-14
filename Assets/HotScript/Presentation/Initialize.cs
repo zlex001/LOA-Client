@@ -17,12 +17,6 @@ namespace Game.Presentation
         #region Enums and Constants
         private const float UnitHeight = 83f;
         private const float GoldenRatio = 0.618f;
-
-        public enum Click
-        {
-            Random,
-            Confirm,
-        }
         #endregion
 
         #region Fields
@@ -176,7 +170,7 @@ namespace Game.Presentation
         #region UI Event Handlers
         private void OnRandomClick()
         {
-            Game.Basic.Event.Instance.Fire(Click.Random);
+            Game.Basic.Event.Instance.Fire(InitializeClick.Random);
         }
 
         private void OnConfirmClick()
@@ -184,7 +178,7 @@ namespace Game.Presentation
             string checkResult = NameCheck;
             if (checkResult == "")
             {
-                Game.Basic.Event.Instance.Fire(Click.Confirm, transform.Find("Name").GetComponent<InputField>().text);
+                Game.Basic.Event.Instance.Fire(InitializeClick.Confirm, transform.Find("Name").GetComponent<InputField>().text);
             }
             else
             {
