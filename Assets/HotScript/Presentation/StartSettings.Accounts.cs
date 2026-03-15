@@ -37,10 +37,19 @@ namespace Game.Presentation
             itemImage.preserveAspect = false;
             itemImage.color = Color.white;
 
-            var itemButton = itemObj.AddComponent<Button>();
-            itemButton.targetGraphic = itemImage;
-            itemButton.onClick.AddListener(() => OnAccountSwitch(account));
-            ApplyButtonColorBlock(itemButton);
+            var rowClickObj = new GameObject("RowClickArea");
+            rowClickObj.transform.SetParent(itemObj.transform, false);
+            var rowClickRect = rowClickObj.AddComponent<RectTransform>();
+            rowClickRect.anchorMin = new Vector2(0, 0);
+            rowClickRect.anchorMax = new Vector2(0.65f, 1);
+            rowClickRect.sizeDelta = Vector2.zero;
+            rowClickRect.anchoredPosition = Vector2.zero;
+            var rowClickImage = rowClickObj.AddComponent<Image>();
+            rowClickImage.color = ColorTransparent;
+            var rowClickButton = rowClickObj.AddComponent<Button>();
+            rowClickButton.targetGraphic = rowClickImage;
+            rowClickButton.onClick.AddListener(() => OnAccountSwitch(account));
+            ApplyButtonColorBlock(rowClickButton);
 
             var textObj = new GameObject("Text");
             textObj.transform.SetParent(itemObj.transform, false);
@@ -57,6 +66,7 @@ namespace Game.Presentation
             text.fontSize = 38;
             text.color = isSelected ? ColorTextAccent : ColorTextPrimary;
             text.alignment = TextAnchor.MiddleLeft;
+            text.raycastTarget = false;
             textObj.AddComponent<Framework.FontScaler>();
 
             var editButtonObj = new GameObject("EditButton");

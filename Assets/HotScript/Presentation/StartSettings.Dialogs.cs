@@ -216,6 +216,7 @@ namespace Game.Presentation
         {
             var dialogObj = new GameObject("ConfirmDialog");
             dialogObj.transform.SetParent(transform, false);
+            dialogObj.transform.SetAsLastSibling();
 
             var dialogRect = dialogObj.AddComponent<RectTransform>();
             dialogRect.anchorMin = Vector2.zero;

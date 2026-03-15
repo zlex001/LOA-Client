@@ -79,6 +79,8 @@ namespace Game.Presentation
         private RectTransform _panelRect;
         private Image _maskImage;
         private GameObject _scrollContent;
+        private ScrollRect _scrollRect;
+        private const float HeaderHeight = 83f;
         private List<GameObject> _accountItemObjects = new List<GameObject>();
         private HashSet<string> _loggedMissingKeys = new HashSet<string>();
         private Sprite _rectangleSolid;
@@ -108,15 +110,36 @@ namespace Game.Presentation
             panelImage.raycastTarget = true;
 
             var contentTransform = transform.Find("Panel/Content");
-            if (contentTransform == null)
+            var scrollViewTransform = transform.Find("Panel/ScrollView");
+            if (contentTransform == null && scrollViewTransform == null)
             {
-                var contentObj = new GameObject("Content");
-                contentObj.transform.SetParent(_panelRect, false);
+                var scrollViewObj = new GameObject("ScrollView");
+                scrollViewObj.transform.SetParent(_panelRect, false);
+                var scrollViewRect = scrollViewObj.AddComponent<RectTransform>();
+                scrollViewRect.anchorMin = new Vector2(0, 0);
+                scrollViewRect.anchorMax = new Vector2(1, 1);
+                scrollViewRect.offsetMin = new Vector2(0, 0);
+                scrollViewRect.offsetMax = new Vector2(0, 0);
 
+                var viewportObj = new GameObject("Viewport");
+                viewportObj.transform.SetParent(scrollViewObj.transform, false);
+                var viewportRect = viewportObj.AddComponent<RectTransform>();
+                viewportRect.anchorMin = Vector2.zero;
+                viewportRect.anchorMax = Vector2.one;
+                viewportRect.offsetMin = Vector2.zero;
+                viewportRect.offsetMax = Vector2.zero;
+                var viewportImage = viewportObj.AddComponent<Image>();
+                viewportImage.color = Color.clear;
+                viewportImage.raycastTarget = true;
+                viewportObj.AddComponent<Mask>().showMaskGraphic = false;
+
+                var contentObj = new GameObject("Content");
+                contentObj.transform.SetParent(viewportObj.transform, false);
                 var contentRect = contentObj.AddComponent<RectTransform>();
-                contentRect.anchorMin = new Vector2(0, 0);
+                contentRect.anchorMin = new Vector2(0, 1);
                 contentRect.anchorMax = new Vector2(1, 1);
-                contentRect.sizeDelta = Vector2.zero;
+                contentRect.pivot = new Vector2(0.5f, 1f);
+                contentRect.sizeDelta = new Vector2(0, 0);
                 contentRect.anchoredPosition = Vector2.zero;
 
                 var layoutGroup = contentObj.AddComponent<VerticalLayoutGroup>();
@@ -128,11 +151,43 @@ namespace Game.Presentation
                 layoutGroup.spacing = 5;
                 layoutGroup.padding = new RectOffset(20, 20, 40, 20);
 
+                var contentSizeFitter = contentObj.AddComponent<ContentSizeFitter>();
+                contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+
                 _scrollContent = contentObj;
+                _scrollRect = scrollViewObj.AddComponent<ScrollRect>();
+                _scrollRect.content = contentRect;
+                _scrollRect.viewport = viewportRect;
+                _scrollRect.vertical = true;
+                _scrollRect.horizontal = false;
+                _scrollRect.movementType = ScrollRect.MovementType.Clamped;
             }
-            else
+            else if (contentTransform != null)
             {
                 _scrollContent = contentTransform.gameObject;
+                var contentRect = _scrollContent.GetComponent<RectTransform>();
+                var viewport = contentTransform.parent;
+                var scrollView = viewport != null ? viewport.parent : null;
+                if (scrollView != null)
+                {
+                    _scrollRect = scrollView.GetComponent<ScrollRect>();
+                    if (_scrollRect != null && contentRect != null)
+                    {
+                        var fitter = _scrollContent.GetComponent<ContentSizeFitter>();
+                        if (fitter == null) _scrollContent.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                    }
+                }
+            }
+            else if (scrollViewTransform != null)
+            {
+                _scrollRect = scrollViewTransform.GetComponent<ScrollRect>();
+                var viewport = scrollViewTransform.Find("Viewport");
+                if (viewport != null)
+                {
+                    var content = viewport.Find("Content");
+                    if (content != null) _scrollContent = content.gameObject;
+                }
             }
 
             ApplyLayout();
@@ -188,6 +243,26 @@ namespace Game.Presentation
             _panelRect.pivot = new Vector2(0.5f, 0);
             _panelRect.sizeDelta = new Vector2(0, panelHeight);
             _panelRect.anchoredPosition = new Vector2(0, 0);
+
+            var header = transform.Find("Panel/Header")?.GetComponent<RectTransform>();
+            if (header != null)
+            {
+                header.anchorMin = new Vector2(0, 1);
+                header.anchorMax = new Vector2(1, 1);
+                header.pivot = new Vector2(0.5f, 1f);
+                header.sizeDelta = new Vector2(0, HeaderHeight);
+                header.anchoredPosition = Vector2.zero;
+                header.SetAsFirstSibling();
+            }
+
+            if (_scrollRect != null)
+            {
+                var scrollViewRect = _scrollRect.GetComponent<RectTransform>();
+                scrollViewRect.anchorMin = new Vector2(0, 0);
+                scrollViewRect.anchorMax = new Vector2(1, 1);
+                scrollViewRect.offsetMin = new Vector2(0, 0);
+                scrollViewRect.offsetMax = new Vector2(0, -HeaderHeight);
+            }
         }
 
         private void SetupButtons()
