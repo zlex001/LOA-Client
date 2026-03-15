@@ -1,0 +1,12 @@
+---
+description: When debugging client behavior, read persistent dev log from workspace.
+---
+
+# Debug: read client log
+
+When debugging client behavior (e.g. UI, net, tutorial, home), prefer reading the persistent dev log from the workspace instead of asking the user to paste logs.
+
+- **Primary path**: `Client/Logs/player_latest.log`
+- This file is written only when running in the Unity Editor or in a Development build. If the file does not exist or the user ran a Release build, ask for the Player.log path or pasted log output.
+
+Use the log to correlate client-side errors, network events, and UI flow when investigating issues the user describes.
