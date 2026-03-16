@@ -7,6 +7,7 @@ using Game.Net;
 using System.Linq;
 using UnityEditor;
 using System.Collections.Generic;
+using DG.Tweening;
 
 namespace Game.Presentation
 {
@@ -27,6 +28,10 @@ namespace Game.Presentation
 
         private float previousScale = 1.0f;
         private MapTransition mapTransition;
+
+        private List<string> _previousUnlockedPanels;
+        private Sequence _layoutTween;
+        private const float LayoutTransitionDuration = 0.4f;
 
         public List<MapData> Maps
         {
@@ -620,13 +625,26 @@ namespace Game.Presentation
         {
             var uiLock = DataManager.Instance.UILock;
             
-            // If no UILock or empty list, show all panels (compatible with old players)
+            // If no UILock or empty list, default to only Scene (tutorial state) to avoid full-ui flash before UILock arrives
             if (uiLock == null || uiLock.unlockedPanels == null || uiLock.unlockedPanels.Count == 0)
             {
-                SetAllPanelsVisible(true);
-                ApplyAbsoluteLayout();
+                var scene = transform.Find("Scene");
+                var area = transform.Find("Area");
+                var information = transform.Find("Information");
+                var resource = transform.Find("Resource");
+                var chat = transform.Find("Chat");
+                if (scene != null) scene.gameObject.SetActive(true);
+                if (area != null) area.gameObject.SetActive(false);
+                if (information != null) information.gameObject.SetActive(false);
+                if (resource != null) resource.gameObject.SetActive(false);
+                if (chat != null) chat.gameObject.SetActive(false);
+                if (scene != null) ApplyFullScreenSceneLayout();
+                _previousUnlockedPanels = new List<string> { "Home.Scene" };
                 return;
             }
+
+            _layoutTween?.Kill();
+            _layoutTween = null;
             
             // Check which panels are unlocked
             bool sceneUnlocked = uiLock.unlockedPanels.Contains("Home.Scene");
@@ -634,14 +652,28 @@ namespace Game.Presentation
             bool infoUnlocked = uiLock.unlockedPanels.Contains("Home.Information");
             bool resourceUnlocked = uiLock.unlockedPanels.Contains("Home.Resource");
             bool chatUnlocked = uiLock.unlockedPanels.Contains("Home.Chat");
-            
+
+            bool isTransitionFromOnlySceneToMulti =
+                _previousUnlockedPanels != null
+                && _previousUnlockedPanels.Count == 1
+                && _previousUnlockedPanels[0] == "Home.Scene"
+                && sceneUnlocked && areaUnlocked && infoUnlocked
+                && !resourceUnlocked && !chatUnlocked;
+
             // Set panel visibility
             transform.Find("Scene").gameObject.SetActive(sceneUnlocked);
             transform.Find("Area").gameObject.SetActive(areaUnlocked);
             transform.Find("Information").gameObject.SetActive(infoUnlocked);
             transform.Find("Resource").gameObject.SetActive(resourceUnlocked);
             transform.Find("Chat").gameObject.SetActive(chatUnlocked);
-            
+
+            if (isTransitionFromOnlySceneToMulti)
+            {
+                AnimateToStandardLayout(LayoutTransitionDuration);
+                _previousUnlockedPanels = new List<string>(uiLock.unlockedPanels);
+                return;
+            }
+
             // Adjust layout based on unlocked state
             if (sceneUnlocked && !areaUnlocked && !infoUnlocked && !resourceUnlocked && !chatUnlocked)
             {
@@ -653,6 +685,8 @@ namespace Game.Presentation
                 // Other cases: standard layout
                 ApplyAbsoluteLayout();
             }
+
+            _previousUnlockedPanels = new List<string>(uiLock.unlockedPanels);
         }
 
         private void SetAllPanelsVisible(bool visible)
@@ -679,6 +713,73 @@ namespace Game.Presentation
                 sceneGridView.ItemSize = CalculateFillLayout();
                 sceneGridView.RefreshAllShownItem();
             }
+        }
+
+        private void AnimateToStandardLayout(float duration)
+        {
+            const float GoldenRatio = 0.618f;
+            float screenWidth = GetComponent<RectTransform>().rect.width;
+            float screenHeight = GetComponent<RectTransform>().rect.height;
+            float sceneSize = screenWidth * GoldenRatio;
+            float informationHeight = screenHeight - (UnitHeight * 3.5f + sceneSize);
+            float sceneAreaY = UnitHeight * 2f + informationHeight;
+            float infoY = UnitHeight * 2f;
+
+            var sceneRect = transform.Find("Scene").GetComponent<RectTransform>();
+            var areaRect = transform.Find("Area").GetComponent<RectTransform>();
+            var informationRect = transform.Find("Information").GetComponent<RectTransform>();
+
+            EnsureRectAnchor(sceneRect);
+            EnsureRectAnchor(areaRect);
+            EnsureRectAnchor(informationRect);
+
+            Vector2 sceneTargetPos = new Vector2(0, sceneAreaY);
+            Vector2 sceneTargetSize = new Vector2(sceneSize, sceneSize);
+            Vector2 areaTargetPos = new Vector2(sceneSize, sceneAreaY);
+            Vector2 areaTargetSize = new Vector2(screenWidth - sceneSize, sceneSize);
+            Vector2 infoTargetPos = new Vector2(0, infoY);
+            Vector2 infoTargetSize = new Vector2(screenWidth, informationHeight);
+
+            sceneRect.anchoredPosition = new Vector2(0, 0);
+            sceneRect.sizeDelta = new Vector2(screenWidth, screenHeight);
+
+            areaRect.anchoredPosition = new Vector2(sceneSize, sceneAreaY);
+            areaRect.sizeDelta = new Vector2(0, sceneSize);
+
+            informationRect.anchoredPosition = new Vector2(0, infoY);
+            informationRect.sizeDelta = new Vector2(screenWidth, 0);
+
+            var ease = Ease.OutCubic;
+            _layoutTween = DOTween.Sequence();
+            _layoutTween.Join(sceneRect.DOAnchorPos(sceneTargetPos, duration).SetEase(ease));
+            _layoutTween.Join(DOTween.To(() => sceneRect.sizeDelta, x => sceneRect.sizeDelta = x, sceneTargetSize, duration).SetEase(ease));
+            _layoutTween.Join(areaRect.DOAnchorPos(areaTargetPos, duration).SetEase(ease));
+            _layoutTween.Join(DOTween.To(() => areaRect.sizeDelta, x => areaRect.sizeDelta = x, areaTargetSize, duration).SetEase(ease));
+            _layoutTween.Join(informationRect.DOAnchorPos(infoTargetPos, duration).SetEase(ease));
+            _layoutTween.Join(DOTween.To(() => informationRect.sizeDelta, x => informationRect.sizeDelta = x, infoTargetSize, duration).SetEase(ease));
+            _layoutTween.OnComplete(OnLayoutTransitionComplete);
+            _layoutTween.SetTarget(this);
+        }
+
+        private static void EnsureRectAnchor(RectTransform rect)
+        {
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.zero;
+            rect.pivot = Vector2.zero;
+        }
+
+        private void OnLayoutTransitionComplete()
+        {
+            _layoutTween = null;
+            ApplyAbsoluteLayout();
+            var sceneGridView = transform.Find("Scene").GetComponent<LoopGridView>();
+            if (sceneGridView != null)
+            {
+                sceneGridView.ItemSize = CalculateFillLayout();
+                sceneGridView.RefreshAllShownItem();
+            }
+            transform.Find("Area").GetComponent<LoopListView2>().RefreshAllShownItem();
+            transform.Find("Information").GetComponent<LoopListView2>().RefreshAllShownItem();
         }
 
         private void OnAfterUILockChanged(params object[] args)
